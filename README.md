@@ -10,6 +10,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.11] - 2025-07-23
+### Features
+- "Compact Gene Banks/Processors" patch added. https://steamcommunity.com/sharedfiles/filedetails/?id=3466062158
+
 ## [1.0.10] - 2025-06-23
 ### Features
 - Added Rimworld version 1.6 support.
