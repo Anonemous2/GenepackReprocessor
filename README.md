@@ -6,6 +6,7 @@
 - Enhance mod settings (More features, better UI layout.)
 - Settings for archite penalty.
 - Change working on archite genes to need archite tech.
+- Add custom link range settings.
 
 # Changelog
 All notable changes to this project will be documented in this file.
