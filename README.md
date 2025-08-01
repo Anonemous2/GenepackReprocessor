@@ -11,6 +11,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.11] - 2025-07-31
+### Features
+- "Gene Banks Expanded" patch updated to reflect new mod name. https://steamcommunity.com/sharedfiles/filedetails/?id=3138968978
+
 ## [1.0.11] - 2025-07-23
 ### Features
 - "Compact Gene Banks/Processors" patch added. https://steamcommunity.com/sharedfiles/filedetails/?id=3466062158
