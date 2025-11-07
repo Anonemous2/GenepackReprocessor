@@ -940,17 +940,19 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
         else if (!PowerOn)
         {
-            command_Action.Disable("CannotUseNoPower".Translate());
-            command_Duplicate.Disable("CannotUseNoPower".Translate());
-            command_Merge.Disable("CannotUseNoPower".Translate());
-            command_Recycle.Disable("CannotUseNoPower".Translate());
+            var cannotUseReason = "CannotUseNoPower".Translate();
+            command_Action.Disable(cannotUseReason);
+            command_Duplicate.Disable(cannotUseReason);
+            command_Merge.Disable(cannotUseReason);
+            command_Recycle.Disable(cannotUseReason);
         }
         else if (!GetGenepacks(includePowered: true, includeUnpowered: false).Any())
         {
-            command_Action.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
-            command_Duplicate.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
-            command_Merge.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
-            command_Recycle.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
+            var cannotUseReason = "CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst());
+            command_Action.Disable(cannotUseReason);
+            command_Duplicate.Disable(cannotUseReason);
+            command_Merge.Disable(cannotUseReason);
+            command_Recycle.Disable(cannotUseReason);
         }
 
         // Hide the buttons if that command is disabled.
