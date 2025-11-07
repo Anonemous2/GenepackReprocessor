@@ -659,6 +659,11 @@ public class Building_GeneSeparator : Building, IThingHolder
             {
                 Messages.Message("GeneR_GenepackRecycleFinished".Translate(), thing, MessageTypeDefOf.PositiveEvent);
             }
+
+            if (Settings.consumeOnRecycle)
+            {
+                DestroyGeneBankHoldingPack(genepackToWork);
+            }
         }
     }
 
