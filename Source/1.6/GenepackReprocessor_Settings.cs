@@ -12,6 +12,7 @@ using HarmonyLib;
 using Multiplayer.API;
 
 using static GenepackReprocessor.GenepackReprocessorSettings;
+using static HarmonyLib.Code;
 
 namespace GenepackReprocessor;
 
@@ -172,171 +173,101 @@ public class GenepackImprovMod : Mod
         listingStandard.EndSection(sub);
     }
 
-    public void ContentsSeparting(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsSeparating(Rect inRect, ref Listing_Custom listingStandard)
     {
-        // Create a subsection.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-
-        // Separate settings. If it's not enabled, there's no reason to show them.
-        if (!settings.separateEnabled) { 
-            Listing_Custom subt = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-            line = subt.GetRectLine();
-            subt.NGCheckboxLabeled(line, 1, 0, "GeneR_CanSeparate".Translate(), ref settings.separateEnabled, fieldOffs / 4.5f,
-                "GeneR_CanSeparateHelp".Translate());
-            listingStandard.EndSection(subt); 
-            return;
-        }
-        // Else show all the settings.
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 3.7f);
-        line = sub.GetRectLine();
-        sub.NGCheckboxLabeled(line, 1, 0, "GeneR_CanSeparate".Translate(), ref settings.separateEnabled, fieldOffs / 4.5f,
-            "GeneR_CanSeparateHelp".Translate());
-        // Work multiplier.
-        roundedFactor = (int)(10f * sub.SliderLabeled("GeneR_WorkMultiplier".Translate() + settings.workToSplit.ToString("0.0") + "GeneR_X".Translate(),
-                settings.workToSplit, 0.1f, 5, 0.25f, "GeneR_SeparateMultiplierHelp".Translate()));
-        settings.workToSplit = (float)roundedFactor * 0.1f;
-
-        // Work curve.
-        line = sub.GetRectLine();
-        if (listingStandard.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
-            settings.split == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
-        { settings.split = CurveType.Log; }
-
-        if (listingStandard.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
-            settings.split == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
-        { settings.split = CurveType.Linear; }
-
-        if (listingStandard.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
-            settings.split == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
-        { settings.split = CurveType.Exponetial; }
-
-        listingStandard.EndSection(sub);
-
-        // Consumption.
-        Listing_Custom sub2 = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
-        line = sub2.GetRectLine();
-        
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_ArchiteCapsulesSet".Translate(), ref settings.separateNeedsArchites, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 1,
-            "GeneR_NeutroamineBase".Translate(), ref settings.separateBaseNeutroamine, ref bufSeparateBaseNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_NeutroamineComp".Translate(), ref settings.separateComplexityNeutroamine, ref bufSeparateComplexityNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
-        sub2.Gap(); line = sub2.GetRectLine();
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_GenepackConsume".Translate(), ref settings.consumeOnSplit, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
-        listingStandard.EndSection(sub2);
+        ContentsWork(inRect, ref listingStandard, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
+            "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp", true);
     }
 
-    public void ContentsDuplicate(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsDuplicate(Rect inRect, ref Listing_Custom parentSection)
     {
-        // Create a subsection.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-
-        // Duplicate settings. If it's not enabled, there's no reason to show them.
-        if (!settings.duplicateEnabled)
-        {
-            Listing_Custom subt = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-            line = subt.GetRectLine();
-            subt.NGCheckboxLabeled(line, 1, 0, "GeneR_CanDuplicate".Translate(), ref settings.duplicateEnabled, fieldOffs / 4.5f,
-                "GeneR_CanDuplicateHelp".Translate());
-            listingStandard.EndSection(subt);
-            return;
-        }
-        // Else show all the settings.
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 3.7f);
-        line = sub.GetRectLine();
-        sub.NGCheckboxLabeled(line, 1, 0, "GeneR_CanDuplicate".Translate(), ref settings.duplicateEnabled, fieldOffs / 4.5f,
-            "GeneR_CanDuplicateHelp".Translate());
-        // Work multiplier.
-        roundedFactor = (int)(10f * sub.SliderLabeled("GeneR_WorkMultiplier".Translate() + settings.workToDupli.ToString("0.0") + "GeneR_X".Translate(),
-                settings.workToDupli, 0.1f, 5, 0.25f, "GeneR_DuplicateMultiplierHelp".Translate()));
-        settings.workToDupli = (float)roundedFactor * 0.1f;
-
-        // Work curve.
-        line = sub.GetRectLine();
-        if (listingStandard.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
-            settings.dupli == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
-        { settings.dupli = CurveType.Log; }
-
-        if (listingStandard.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
-            settings.dupli == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
-        { settings.dupli = CurveType.Linear; }
-
-        if (listingStandard.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
-            settings.dupli == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
-        { settings.dupli = CurveType.Exponetial; }
-
-        listingStandard.EndSection(sub);
-
-        // Consumption.
-        Listing_Custom sub2 = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-        line = sub2.GetRectLine();
-
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_ArchiteCapsulesSet".Translate(), ref settings.duplicateNeedsArchites, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 1,
-            "GeneR_NeutroamineBase".Translate(), ref settings.duplicateBaseNeutroamine, ref bufDuplicateBaseNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_NeutroamineComp".Translate(), ref settings.duplicateComplexityNeutroamine, ref bufDuplicateComplexityNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
-        listingStandard.EndSection(sub2);
+        ContentsWork(inRect, ref parentSection, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
+            "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp", false);
     }
 
     public void ContentsMerge(Rect inRect, ref Listing_Custom listingStandard)
     {
+        ContentsWork(inRect, ref listingStandard, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+            "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp", true);
+    }
+
+    public void ContentsWork(Rect inRect, ref Listing_Custom parent, ref bool enabled, ref float workRequired, ref CurveType curve,
+        string jobName, string jobHelp, string jobMultiplierHelp, bool consumePacks)
+    {
         // Create a subsection.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
 
-        // Merge settings. If it's not enabled, there's no reason to show them.
-        if (!settings.mergeEnabled)
+        // Work settings. If it's not enabled, there's no reason to show them.
+        var size = enabled ? 3.7f : 1.1f;
+        Listing_Custom subSection = parent.BeginSection((line.yMax - line.yMin) * size);
+
+        DrawOptions_Enabled(parent, ref enabled, jobName, jobHelp);
+        if (!enabled)
+            parent.EndSection(subSection);
+        else    // Else show all the settings.
         {
-            Listing_Custom subt = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-            line = subt.GetRectLine();
-            subt.NGCheckboxLabeled(line, 1, 0, "GeneR_CanMerge".Translate(), ref settings.mergeEnabled, fieldOffs / 4.5f,
-                "GeneR_CanMergeHelp".Translate());
-            listingStandard.EndSection(subt);
-            return;
+            // Work multiplier.
+            DrawOptions_WorkMultiplier(ref workRequired, jobMultiplierHelp, subSection);
+
+            // Work curve.
+            DrawOptions_WorkCurve(ref curve, parent, subSection);
+            parent.EndSection(subSection);
+
+            // Consumption.
+            size = consumePacks ? 2.133f : 1.1f;
+            subSection = parent.BeginSection((line.yMax - line.yMin) * size);
+            DrawOptions_Consumption(subSection, consumePacks);
+            parent.EndSection(subSection);
         }
-        // Else show all the settings.
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 3.7f);
-        line = sub.GetRectLine();
-        sub.NGCheckboxLabeled(line, 1, 0, "GeneR_CanMerge".Translate(), ref settings.mergeEnabled, fieldOffs / 4.5f,
-            "GeneR_CanMergeHelp".Translate());
-        // Work multiplier.
-        roundedFactor = (int)(10f * sub.SliderLabeled("GeneR_WorkMultiplier".Translate() + settings.workToMerge.ToString("0.0") + "GeneR_X".Translate(),
-                settings.workToMerge, 0.1f, 5, 0.25f, "GeneR_MergeMultiplierHelp".Translate()));
-        settings.workToMerge = (float)roundedFactor * 0.1f;
+    }
 
-        // Work curve.
-        line = sub.GetRectLine();
-        if (listingStandard.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
-            settings.merge == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
-        { settings.merge = CurveType.Log; }
+    private void DrawOptions_Enabled(Listing_Custom subt, ref bool enabled, string jobName, string jobHelp)
+    {
+        var line = subt.GetRectLine();
+        subt.NGCheckboxLabeled(line, 1, 0, jobName.Translate(), ref enabled, fieldOffs / 4.5f,
+            jobHelp.Translate());
+    }
 
-        if (listingStandard.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
-            settings.merge == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
-        { settings.merge = CurveType.Linear; }
+    private void DrawOptions_WorkMultiplier(ref float workRequired, string jobMultiplierHelp, Listing_Custom sub)
+    {
+        var sliderLabel = "GeneR_WorkMultiplier".Translate() + workRequired.ToString("0.0") + "GeneR_X".Translate();
+        roundedFactor = (int)(10f * sub.SliderLabeled(sliderLabel, workRequired, 0.1f, 5, 0.25f, jobMultiplierHelp.Translate()));
+        workRequired = (float)roundedFactor * 0.1f;
+    }
 
-        if (listingStandard.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
-            settings.merge == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
-        { settings.merge = CurveType.Exponetial; }
+    private void DrawOptions_WorkCurve(ref CurveType curve, Listing_Custom parentSection, Listing_Custom subSection)
+    {
+        Rect line = subSection.GetRectLine();
+        if (parentSection.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
+            curve == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
+        { curve = CurveType.Log; }
 
-        listingStandard.EndSection(sub);
+        if (parentSection.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
+            curve == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
+        { curve = CurveType.Linear; }
 
-        // Consumption.
-        Listing_Custom sub2 = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
-        line = sub2.GetRectLine();
+        if (parentSection.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
+            curve == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
+        { curve = CurveType.Exponetial; }
+    }
 
-        sub2.NGCheckboxLabeled(line, 3, 0,
+    private void DrawOptions_Consumption(Listing_Custom subSection, bool consumePacks)
+    {
+        Rect line = subSection.GetRectLine();
+
+        subSection.NGCheckboxLabeled(line, 3, 0,
             "GeneR_ArchiteCapsulesSet".Translate(), ref settings.mergeNeedsArchites, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 1,
+        subSection.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_NeutroamineBase".Translate(), ref settings.mergeBaseNeutroamine, ref bufMergeBaseNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 2,
+        subSection.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_NeutroamineComp".Translate(), ref settings.mergeComplexityNeutroamine, ref bufMergeComplexityNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
-        sub2.Gap(); line = sub2.GetRectLine();
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_GenepackConsume".Translate(), ref settings.consumeOnMerge, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
-        listingStandard.EndSection(sub2);
+
+        if (consumePacks)
+        {
+            subSection.Gap(); line = subSection.GetRectLine();
+            subSection.NGCheckboxLabeled(line, 3, 0,
+                "GeneR_GenepackConsume".Translate(), ref settings.consumeOnMerge, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
+        }
     }
 
     // TODO: Implement. Also add translations after.
@@ -375,7 +306,7 @@ public class GenepackImprovMod : Mod
         // Work modes.
         //listingStandard.Label("Work Modes");
         listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
-        ContentsSeparting(inRect, ref listingStandard);
+        ContentsSeparating(inRect, ref listingStandard);
 
         listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
         ContentsDuplicate(inRect, ref listingStandard);
