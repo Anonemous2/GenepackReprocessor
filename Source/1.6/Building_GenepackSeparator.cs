@@ -64,8 +64,8 @@ public class Building_GeneSeparator : Building, IThingHolder
     private List<Genepack> tmpGenepacks = new List<Genepack>();
 
     [Unsaved(false)]
-    private HashSet<Thing> tmpUsedFacilities = new HashSet<Thing>(); 
-    
+    private HashSet<Thing> tmpUsedFacilities = new HashSet<Thing>();
+
     [Unsaved(false)]
     private int? cachedComplexity;
 
@@ -208,7 +208,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 			return true;
 		}
 	}
-                   
+
    /* 
     Implement: yeah, not entirely sure here
 	private int TotalGCX
@@ -267,7 +267,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 			return cachedComplexity.Value;
 		}
 	}
-        
+
    /* 
     * TODO: use mod settings to destroy this def if disabled
     Implement: Checks if this is still valid() every so often.
@@ -283,7 +283,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		base.PostPostMake();
         innerContainer = new ThingOwner<Thing>(this);
     }
-        
+
    /* 
     Implement: Checks if this is still valid() every so often.
 	public override void Tick()
@@ -308,19 +308,18 @@ public class Building_GeneSeparator : Building, IThingHolder
 	public void Start(List<Genepack> packs, int architesRequired, string xenotypeName, XenotypeIconDef iconDef)
     */
     public void StartSplit(Genepack pack, int architesRequired)
-
     {
         genepackToSeparate = pack;
         workJob = WorkJob.Split;
         StartJob(Settings.split, Settings.separateNeedsArchites, architesRequired, Settings.separateBaseNeutroamine, Settings.separateComplexityNeutroamine, Settings.workToSplit);
-        }
+    }
 
     public void StartDuplicate(Genepack pack, int architesRequired)
     {
         genepackToSeparate = pack;
         workJob = WorkJob.Copy;
         StartJob(Settings.dupli, Settings.duplicateNeedsArchites, architesRequired, Settings.duplicateBaseNeutroamine, Settings.duplicateComplexityNeutroamine, Settings.workToDupli);
-        }
+    }
 
     /* 
      Implement: sets up the work needed and all other vars.
@@ -335,7 +334,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 
     protected void StartJob(GenepackReprocessorSettings.CurveType curve, bool architesNeeded, int architesRequiredTotal, int baseNeutroamine, int complexityNeutroamine, float work)
     {
-		Reset();
+        Reset();
         architesInGenes = architesRequiredTotal;
         if (architesNeeded)
         {
@@ -372,13 +371,13 @@ public class Building_GeneSeparator : Building, IThingHolder
     Implement: updates the remaing work, workAmount fed in is probably based on another def
 	public void DoWork(float workAmount)
     */
-	public void DoWork(float workAmount)
+    public void DoWork(float workAmount)
 	{
 		workDone += workAmount;
 		lastWorkAmount = workAmount;
 		lastWorkedTick = Find.TickManager.TicksGame;
 	}
-                                       
+
    /* 
     Implement: Called when a xenogerm is finished, spawns the xenogerm, deletes any archite capsoles, then resets()
 	public void Finish()
@@ -629,12 +628,12 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
     }
 
-                     
+
    /* 
     Implement: Returns the all genepacks that are valid given the flags below
 	public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
     */
-	public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
+    public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
 	{
 		tmpGenepacks.Clear();
 		List<Thing> connectedFacilities = ConnectedFacilities;
@@ -655,7 +654,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		}
 		return tmpGenepacks;
 	}
- 
+
    /* 
     Implement: Returns the specific genebank with this pack
 	public CompGenepackContainer GetGeneBankHoldingPack(Genepack pack)
@@ -769,7 +768,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 				}
 			}
 		}
-		else { 
+		else {
 			if (genepackToSeparate == null)
 			{
 				return;
@@ -796,7 +795,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 	/* 
 	 Delegated commands, split here for Multiplayer compatablity.
 	 */
-	public void SeparateGenepack() { 
+	public void SeparateGenepack() {
 		Find.WindowStack.Add(new Dialog_SeparateGenepack(this));
 	}
 
@@ -812,7 +811,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 
     private void DevFill()
     {
-        if (NeutroamineRequiredNow > 0) { 
+        if (NeutroamineRequiredNow > 0) {
             Thing neutro = ThingMaker.MakeThing(GeneSeparator_DefOfs.Neutroamine);
             neutro.stackCount = NeutroamineRequiredNow;
 
@@ -910,7 +909,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 			yield return command_Action2;
 
             // Add repeat toggle
-            if (workJob == WorkJob.Split) { 
+            if (workJob == WorkJob.Split) {
                 Command_Toggle command_Repeat = new Command_Toggle();
                 command_Repeat.defaultLabel = "GeneR_ToggleRepeat".Translate();
                 command_Repeat.defaultDesc = "GeneR_ToggleRepeatDesc".Translate();
@@ -961,7 +960,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 				int numTicks = Mathf.RoundToInt((totalWorkRequired - workDone) / ((lastWorkAmount > 0f) ? lastWorkAmount : this.GetStatValue(StatDefOf.AssemblySpeedFactor)));
 				text = text + " (" + "DurationLeft".Translate(numTicks.ToStringTicksToPeriod()).Resolve() + ")";
 			}
-			else if (workJob == WorkJob.Split) { 
+			else if (workJob == WorkJob.Split) {
 				text = text + (string)("GeneR_SeparateJob".Translate() + ": " + genepackToSeparate.LabelNoCount.CapitalizeFirst() + "\n" + "GeneR_ComplexityPenalty".Translate() + ": ") + TotalGCX;
                 if (architesInGenes > 0) { text += "\n" + "GeneR_ArchitePenalty".Translate() + ": " + (1 + architesInGenes).ToString() + "GeneR_X".Translate(); }
                 text += "\n" + "Progress".Translate() + ": " + ProgressPercent.ToStringPercent();
