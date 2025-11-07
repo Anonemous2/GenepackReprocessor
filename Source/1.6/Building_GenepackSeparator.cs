@@ -844,6 +844,11 @@ public class Building_GeneSeparator : Building, IThingHolder
         Find.WindowStack.Add(new Dialog_MergeGenepack(this));
     }
 
+    public void RecycleGenepack()
+    {
+        Find.WindowStack.Add(new Dialog_RecycleArchiteGenepack(this));
+    }
+
     private void DevFill()
     {
         if (NeutroamineRequiredNow > 0)
