@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="Building_GenepackSeparator.cs" />
     <Compile Include="DialogBase_GeneSeparator.cs" />
+    <Compile Include="Dialog_RecycleArchiteGenepack.cs" />
     <Compile Include="Listing_Custom.cs" />
     <Compile Include="DefOfAdded.cs" />
     <Compile Include="Dialog_DuplicateGenepack.cs" />
