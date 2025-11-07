@@ -423,48 +423,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 
 		if (workJob == WorkJob.Merge)
 		{
-			SoundDefOf.GeneAssembler_Complete.PlayOneShot(SoundInfo.InMap(this));
-			if (!genepacksToMerge.NullOrEmpty())
-			{
-				List<GeneDef> genesToAdd = new List<GeneDef>();
-				foreach (Genepack genep in genepacksToMerge)
-				{
-					foreach (GeneDef gened in genep.GeneSet.GenesListForReading)
-					{
-						genesToAdd.Add(gened);
-					}
-				}
-
-				Genepack genepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
-
-				// Randomly reorder the genes in the new merged pack
-				List<GeneDef> genesToAdd2 = new List<GeneDef>();
-
-				int total = genesToAdd.Count;
-
-				for (int i = 0; i < total; i++)
-				{
-					int index = Rand.Range(0, genesToAdd.Count);
-					genesToAdd2.Add(genesToAdd[index]);
-					genesToAdd.RemoveAt(index);
-				}
-
-				genepack.Initialize(genesToAdd2);
-
-				if (GenPlace.TryPlaceThing(genepack, InteractionCell, base.Map, ThingPlaceMode.Near))
-				{
-					Messages.Message("GeneR_GenepackMergeFinished".Translate(), genepack, MessageTypeDefOf.PositiveEvent);
-				}
-
-                // TODO Settings
-                // Lazy method, we could instead just search once, and destroy if the correct pack
-                if (Settings.consumeOnMerge) { 
-                    foreach (Genepack genep in genepacksToMerge) 
-                    { 
-                        DestroyGeneBankHoldingPack(genep);
-                    }
-                }
-            }
+            FinishMerge();
 		}
 		else if (workJob == WorkJob.Copy && genepackToSeparate != null)
         {
@@ -476,6 +435,53 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
         Reset();
 	}
+
+    private void FinishMerge()
+    {
+        SoundDefOf.GeneAssembler_Complete.PlayOneShot(SoundInfo.InMap(this));
+        if (!genepacksToMerge.NullOrEmpty())
+        {
+            List<GeneDef> genesToAdd = new List<GeneDef>();
+            foreach (Genepack genep in genepacksToMerge)
+            {
+                foreach (GeneDef gened in genep.GeneSet.GenesListForReading)
+                {
+                    genesToAdd.Add(gened);
+                }
+            }
+
+            Genepack genepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
+
+            // Randomly reorder the genes in the new merged pack
+            List<GeneDef> genesToAdd2 = new List<GeneDef>();
+
+            int total = genesToAdd.Count;
+
+            for (int i = 0; i < total; i++)
+            {
+                int index = Rand.Range(0, genesToAdd.Count);
+                genesToAdd2.Add(genesToAdd[index]);
+                genesToAdd.RemoveAt(index);
+            }
+
+            genepack.Initialize(genesToAdd2);
+
+            if (GenPlace.TryPlaceThing(genepack, InteractionCell, base.Map, ThingPlaceMode.Near))
+            {
+                Messages.Message("GeneR_GenepackMergeFinished".Translate(), genepack, MessageTypeDefOf.PositiveEvent);
+            }
+
+            // TODO Settings
+            // Lazy method, we could instead just search once, and destroy if the correct pack
+            if (Settings.consumeOnMerge)
+            {
+                foreach (Genepack genep in genepacksToMerge)
+                {
+                    DestroyGeneBankHoldingPack(genep);
+                }
+            }
+        }
+    }
 
     private void FinishDuplicate()
     {
