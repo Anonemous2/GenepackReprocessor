@@ -335,6 +335,13 @@ public class Building_GeneSeparator : Building, IThingHolder
         StartJob(Settings.merge, Settings.mergeNeedsArchites, architesRequired, Settings.mergeBaseNeutroamine, Settings.mergeComplexityNeutroamine, Settings.workToMerge);
     }
 
+    public void StartRecycle(Genepack pack, int architesInGenes)
+    {
+        genepackToWork = pack;
+        workJob = WorkJob.Recycle;
+        StartJob(Settings.recycle, false, architesInGenes, Settings.recycleBaseNeutroamine, Settings.recycleComplexityNeutroamine, Settings.workToRecycle);
+    }
+
     protected void StartJob(GenepackReprocessorSettings.CurveType curve, bool architesNeeded, int architesRequiredTotal, int baseNeutroamine, int complexityNeutroamine, float work)
     {
         Reset();
