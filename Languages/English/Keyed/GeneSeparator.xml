@@ -4,6 +4,7 @@
 	<GeneR_GenepackMergeFinished>A new genepack has finished being merged.</GeneR_GenepackMergeFinished>
 	<GeneR_GenepackCloneFinished>A new genepack has finished being duplicated.</GeneR_GenepackCloneFinished>
 	<GeneR_GenepackSplitFinished>New genepacks have finished being separated.</GeneR_GenepackSplitFinished>
+	<GeneR_GenepackRecycleFinished>Archite capsules have been extracted from archite genepack.</GeneR_GenepackRecycleFinished>
 
 	<GeneR_MessageGenepackCancelledMissingPack>Work on creating a new genepack at {0_labelShort} was cancelled: Missing required genepack.</GeneR_MessageGenepackCancelledMissingPack>
   	<GeneR_MessageMergeCancelledMissingPack>Work on merging genepacks at {0_labelShort} was cancelled: Missing required genepack.</GeneR_MessageMergeCancelledMissingPack>
@@ -14,6 +15,8 @@
 	<GeneR_DublicDesc>Create a copy of a genepack in your gene library.</GeneR_DublicDesc>
 	<GeneR_MergeGenepack>Merge</GeneR_MergeGenepack>
 	<GeneR_MergeDesc>Create a larger genepack from multiple existing genepacks in your gene library.</GeneR_MergeDesc>
+	<GeneR_RecycleGenepack>Recycle</GeneR_RecycleGenepack>
+	<GeneR_RecycleDesc>Recycle an archite genepack by isolating the archites and extracting them from the genepack.</GeneR_RecycleDesc>
 
 	<GeneR_CancelGenepack>Cancel genepack</GeneR_CancelGenepack>
 	<GeneR_CancelGenepackDesc>Stop all work on creating new genepacks.</GeneR_CancelGenepackDesc>
@@ -21,6 +24,7 @@
 	<GeneR_MergeJob>Merging genepacks</GeneR_MergeJob>
 	<GeneR_SeparateJob>Separating genepacks</GeneR_SeparateJob>
 	<GeneR_CopyGenepack>Duplicating genepack</GeneR_CopyGenepack>
+	<GeneR_GenepackRecycle>Extracting archite from genepack</GeneR_GenepackRecycle>
 
 	<GeneR_ComplexityPenalty>Complexity penalty</GeneR_ComplexityPenalty>
 	<GeneR_ArchitePenalty>Archite penalty</GeneR_ArchitePenalty>
@@ -31,6 +35,7 @@
 	<GeneR_DuplicateGenes>Duplicate genepack</GeneR_DuplicateGenes>
 	<GeneR_IsolateGenes>Separate genes</GeneR_IsolateGenes>
 	<GeneR_MergeGenes>Merge genepacks</GeneR_MergeGenes>
+	<GeneR_RecycleGenes>Extract archite</GeneR_RecycleGenes>
 
 	<GeneR_AcceptGenes>Start processing</GeneR_AcceptGenes>
 	<GeneR_ConfirmGenepack>This will cancel the current job, start work on a new genepack?</GeneR_ConfirmGenepack>
@@ -41,9 +46,11 @@
 	<GeneR_MessageSelectMoreGenepacks>Must select two or more genepacks to merge.</GeneR_MessageSelectMoreGenepacks>
 	<GeneR_MessageTooFewGenes>Must select a genepack with at least 2 genes to separate.</GeneR_MessageTooFewGenes>
 	<GeneR_MessageTooManyGenes>Can not create a merged genepack, total genes must be less than {0}.</GeneR_MessageTooManyGenes>
+	<GeneR_MessageNoArchiteGenes>No archite in selected genepack.</GeneR_MessageNoArchiteGenes>
 
 	<!-- Repeat Separate -->
 	<GeneR_ToggleRepeat>Keep separating genes</GeneR_ToggleRepeat>
 	<GeneR_ToggleRepeatDesc>Should separate jobs keep being created until all unique genes have been isolated?</GeneR_ToggleRepeatDesc>
+
 
 </LanguageData>
