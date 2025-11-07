@@ -819,8 +819,8 @@ public class Building_GeneSeparator : Building, IThingHolder
     }
 
     /*
-	 Delegated commands, split here for Multiplayer compatablity.
-	 */
+     Delegated commands, split here for Multiplayer compatablity.
+     */
     public void SeparateGenepack()
     {
         Find.WindowStack.Add(new Dialog_SeparateGenepack(this));
@@ -900,20 +900,20 @@ public class Building_GeneSeparator : Building, IThingHolder
             command_Action.Disable("MissingRequiredResearch".Translate()
                 + ": "
                 + (from x in def.researchPrerequisites
-                    where !x.IsFinished
-                    select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+                   where !x.IsFinished
+                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
 
             command_Merge.Disable("MissingRequiredResearch".Translate()
                 + ": "
                 + (from x in def.researchPrerequisites
-                    where !x.IsFinished
-                    select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+                   where !x.IsFinished
+                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
 
             command_Duplicate.Disable("MissingRequiredResearch".Translate()
                 + ": "
                 + (from x in def.researchPrerequisites
-                    where !x.IsFinished
-                    select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+                   where !x.IsFinished
+                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
         }
         else if (!PowerOn)
         {
