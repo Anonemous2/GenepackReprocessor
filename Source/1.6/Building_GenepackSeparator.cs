@@ -418,6 +418,9 @@ public class Building_GeneSeparator : Building, IThingHolder
                 }
             }
         }
+
+        //todo: make a switch
+
 		if (workJob == WorkJob.Merge)
 		{
 			SoundDefOf.GeneAssembler_Complete.PlayOneShot(SoundInfo.InMap(this));
@@ -474,134 +477,140 @@ public class Building_GeneSeparator : Building, IThingHolder
                 Messages.Message("GeneR_GenepackCloneFinished".Translate(), genepack, MessageTypeDefOf.PositiveEvent);
             }
         }
-		else if (genepackToSeparate != null)
-		{
-			SoundDefOf.GeneAssembler_Complete.PlayOneShot(SoundInfo.InMap(this));
-			// TODO: Create new genepacks here. Might be only a shallow copy, so if there's errors
-			List<GeneDef> genesToAdd = new List<GeneDef>(genepackToSeparate.GeneSet.GenesListForReading);
-			List<GeneDef> genesToAdd2 = new List<GeneDef>();
-
-			Genepack genepack1 = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
-
-			// Check for a single gene, then just duplicate it.
-            // NOTE: This code should never be accessable.
-			if (genesToAdd.Count == 1)
-            {
-                Log.Warning("Genepack reprocessor: weird case of separating a 1 gene pack. Please report this as a bug and how you did it.");
-
-                genepack1.Initialize(genesToAdd);
-
-				if (GenPlace.TryPlaceThing(genepack1, InteractionCell, base.Map, ThingPlaceMode.Near))
-				{
-					Messages.Message("GeneR_GenepackCloneFinished".Translate(), genepack1, MessageTypeDefOf.PositiveEvent);
-				}
-			}
-			else
-			{
-				// Randomly pull out half of the genes, and assign them to genesToAdd2
-				int half = genesToAdd.Count / 2;
-
-				for (int i = 0; i < half; i++)
-				{
-					int index = Rand.Range(0, genesToAdd.Count);
-					genesToAdd2.Add(genesToAdd[index]);
-					genesToAdd.RemoveAt(index);
-				}
-
-				Genepack genepack2 = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
-
-				genepack1.Initialize(genesToAdd);
-				genepack2.Initialize(genesToAdd2);
-
-				if (GenPlace.TryPlaceThing(genepack1, InteractionCell, base.Map, ThingPlaceMode.Near) &&
-					GenPlace.TryPlaceThing(genepack2, InteractionCell, base.Map, ThingPlaceMode.Near))
-				{
-					Messages.Message("GeneR_GenepackSplitFinished".Translate(), genepack1, MessageTypeDefOf.PositiveEvent);
-				}
-
-                // TODO: If settings are destroy, 
-                if (Settings.consumeOnSplit) { DestroyGeneBankHoldingPack(genepackToSeparate); }
-
-                // Lastly, check if we should queue another separate job.
-
-
-                // Lastly, check if we should queue another separate job.
-                if (doForever)
-                {
-                    // Make sure we don't repeat separating the last job, as the packs won't have been loaded into banks yet.
-                    List<GeneDef> justSplitGenes = new List<GeneDef>(genesToAdd);
-                    justSplitGenes.Concat(genesToAdd2);
-
-
-                    // NOTE: This code is awful! But works. If there's a noticeable lag ingame I might comeback to optimize this mess.
-
-                    // Alright, now we create a list of genes already isolated, which we'll use to find the next job.
-                    // new List<GeneDef>(genepackToSeparate.GeneSet.GenesListForReading);
-                    List<GeneDef> doneGenes = new List<GeneDef>(justSplitGenes);
-                    // Search through all nearby containers, and append that gene if it's isolated already.
-                    List<Thing> connectedFacilities = ConnectedFacilities;
-                    for (int i = 0; i < connectedFacilities.Count; i++)
-                    {
-                        // Check to see if the connected is a genepack container
-                        CompGenepackContainer compGenepackContainer = connectedFacilities[i].TryGetComp<CompGenepackContainer>();
-                        if (compGenepackContainer != null)
-                        {
-                            for (int j = 0; j < compGenepackContainer.ContainedGenepacks.Count; j++)
-                            {
-                                // Now for each pack, see if it's 1 gene.
-                                Genepack temp = compGenepackContainer.ContainedGenepacks[j];
-                                if (temp.GeneSet.GenesListForReading.Count == 1)
-                                {
-                                    // Add to done list if new.
-                                    GeneDef geneTemp = temp.GeneSet.GenesListForReading[0];
-                                    if (!doneGenes.Contains(geneTemp)) { doneGenes.Add(geneTemp); }
-                                }
-                            }
-                        }
-                    }
-                    // Great, now do it again.
-                    bool valid = false;
-                    for (int i = 0; i < connectedFacilities.Count; i++)
-                    {
-                        // Check to see if the connected is a genepack container
-                        CompGenepackContainer compGenepackContainer = connectedFacilities[i].TryGetComp<CompGenepackContainer>();
-                        if (compGenepackContainer != null)
-                        {
-                            for (int j = 0; j < compGenepackContainer.ContainedGenepacks.Count; j++)
-                            {
-                                // Now for each pack, see if it's more than 1 gene.
-                                Genepack temp = compGenepackContainer.ContainedGenepacks[j];
-                                int arcs = 0;
-                                if (temp.GeneSet.GenesListForReading.Count > 1)
-                                {
-                                    // Cool, it is. Now see if there's a unique gene. If so, we'll start a new separate job.
-                                    for (int k = 0; k < temp.GeneSet.GenesListForReading.Count; k++)
-                                    {
-                                        GeneDef geneTemp = temp.GeneSet.GenesListForReading[k];
-                                        arcs += geneTemp.biostatArc;
-                                        if (!doneGenes.Contains(geneTemp)) { valid = true; }
-                                    }
-                                }
-                                if (valid)
-                                {
-                                    // Job
-                                    Reset();
-                                    StartSplit(temp, arcs);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    // If after all that no valid genepacks are found, then turn off forever
-                    if (!valid)
-                    {
-                        doForever = false;
-                    }
-                }
-            }
-		}
+        else if (genepackToSeparate != null)
+        {
+            FinishSeparate();
+        }
         Reset();
 	}
+
+
+    private void FinishSeparate()
+    {
+        SoundDefOf.GeneAssembler_Complete.PlayOneShot(SoundInfo.InMap(this));
+        // TODO: Create new genepacks here. Might be only a shallow copy, so if there's errors
+        List<GeneDef> genesToAdd = new List<GeneDef>(genepackToSeparate.GeneSet.GenesListForReading);
+        List<GeneDef> genesToAdd2 = new List<GeneDef>();
+
+        Genepack genepack1 = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
+
+        // Check for a single gene, then just duplicate it.
+        // NOTE: This code should never be accessable.
+        if (genesToAdd.Count == 1)
+        {
+            Log.Warning("Genepack reprocessor: weird case of separating a 1 gene pack. Please report this as a bug and how you did it.");
+
+            genepack1.Initialize(genesToAdd);
+
+            if (GenPlace.TryPlaceThing(genepack1, InteractionCell, base.Map, ThingPlaceMode.Near))
+            {
+                Messages.Message("GeneR_GenepackCloneFinished".Translate(), genepack1, MessageTypeDefOf.PositiveEvent);
+            }
+        }
+        else
+        {
+            // Randomly pull out half of the genes, and assign them to genesToAdd2
+            int half = genesToAdd.Count / 2;
+
+            for (int i = 0; i < half; i++)
+            {
+                int index = Rand.Range(0, genesToAdd.Count);
+                genesToAdd2.Add(genesToAdd[index]);
+                genesToAdd.RemoveAt(index);
+            }
+
+            Genepack genepack2 = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
+
+            genepack1.Initialize(genesToAdd);
+            genepack2.Initialize(genesToAdd2);
+
+            if (GenPlace.TryPlaceThing(genepack1, InteractionCell, base.Map, ThingPlaceMode.Near) &&
+                GenPlace.TryPlaceThing(genepack2, InteractionCell, base.Map, ThingPlaceMode.Near))
+            {
+                Messages.Message("GeneR_GenepackSplitFinished".Translate(), genepack1, MessageTypeDefOf.PositiveEvent);
+            }
+
+            // TODO: If settings are destroy,
+            if (Settings.consumeOnSplit) { DestroyGeneBankHoldingPack(genepackToSeparate); }
+
+            // Lastly, check if we should queue another separate job.
+
+
+            // Lastly, check if we should queue another separate job.
+            if (doForever)
+            {
+                // Make sure we don't repeat separating the last job, as the packs won't have been loaded into banks yet.
+                List<GeneDef> justSplitGenes = new List<GeneDef>(genesToAdd);
+                justSplitGenes.Concat(genesToAdd2);
+
+
+                // NOTE: This code is awful! But works. If there's a noticeable lag ingame I might comeback to optimize this mess.
+
+                // Alright, now we create a list of genes already isolated, which we'll use to find the next job.
+                // new List<GeneDef>(genepackToSeparate.GeneSet.GenesListForReading);
+                List<GeneDef> doneGenes = new List<GeneDef>(justSplitGenes);
+                // Search through all nearby containers, and append that gene if it's isolated already.
+                List<Thing> connectedFacilities = ConnectedFacilities;
+                for (int i = 0; i < connectedFacilities.Count; i++)
+                {
+                    // Check to see if the connected is a genepack container
+                    CompGenepackContainer compGenepackContainer = connectedFacilities[i].TryGetComp<CompGenepackContainer>();
+                    if (compGenepackContainer != null)
+                    {
+                        for (int j = 0; j < compGenepackContainer.ContainedGenepacks.Count; j++)
+                        {
+                            // Now for each pack, see if it's 1 gene.
+                            Genepack temp = compGenepackContainer.ContainedGenepacks[j];
+                            if (temp.GeneSet.GenesListForReading.Count == 1)
+                            {
+                                // Add to done list if new.
+                                GeneDef geneTemp = temp.GeneSet.GenesListForReading[0];
+                                if (!doneGenes.Contains(geneTemp)) { doneGenes.Add(geneTemp); }
+                            }
+                        }
+                    }
+                }
+                // Great, now do it again.
+                bool valid = false;
+                for (int i = 0; i < connectedFacilities.Count; i++)
+                {
+                    // Check to see if the connected is a genepack container
+                    CompGenepackContainer compGenepackContainer = connectedFacilities[i].TryGetComp<CompGenepackContainer>();
+                    if (compGenepackContainer != null)
+                    {
+                        for (int j = 0; j < compGenepackContainer.ContainedGenepacks.Count; j++)
+                        {
+                            // Now for each pack, see if it's more than 1 gene.
+                            Genepack temp = compGenepackContainer.ContainedGenepacks[j];
+                            int arcs = 0;
+                            if (temp.GeneSet.GenesListForReading.Count > 1)
+                            {
+                                // Cool, it is. Now see if there's a unique gene. If so, we'll start a new separate job.
+                                for (int k = 0; k < temp.GeneSet.GenesListForReading.Count; k++)
+                                {
+                                    GeneDef geneTemp = temp.GeneSet.GenesListForReading[k];
+                                    arcs += geneTemp.biostatArc;
+                                    if (!doneGenes.Contains(geneTemp)) { valid = true; }
+                                }
+                            }
+                            if (valid)
+                            {
+                                // Job
+                                Reset();
+                                StartSplit(temp, arcs);
+                                return;
+                            }
+                        }
+                    }
+                }
+                // If after all that no valid genepacks are found, then turn off forever
+                if (!valid)
+                {
+                    doForever = false;
+                }
+            }
+        }
+    }
 
                      
    /* 
