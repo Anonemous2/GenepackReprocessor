@@ -961,31 +961,26 @@ public class Building_GeneSeparator : Building, IThingHolder
             {
                 text += "\n";
             }
-			// Merge Job
-			if (workJob == WorkJob.Merge)
-			{
-				text += "GeneR_MergeJob".Translate() + "\n";
-                text += (string)("GeneR_ComplexityPenalty".Translate() + ": ") + TotalGCX;
-                if (architesInGenes > 0) { text += "\n" + "GeneR_ArchitePenalty".Translate() + ": " + (1 + architesInGenes).ToString() + "GeneR_X".Translate(); }
-                text += "\n" + "Progress".Translate() + ": " + ProgressPercent.ToStringPercent();
-				int numTicks = Mathf.RoundToInt((totalWorkRequired - workDone) / ((lastWorkAmount > 0f) ? lastWorkAmount : this.GetStatValue(StatDefOf.AssemblySpeedFactor)));
-				text = text + " (" + "DurationLeft".Translate(numTicks.ToStringTicksToPeriod()).Resolve() + ")";
-			}
-			else if (workJob == WorkJob.Split) {
-				text = text + (string)("GeneR_SeparateJob".Translate() + ": " + genepackToSeparate.LabelNoCount.CapitalizeFirst() + "\n" + "GeneR_ComplexityPenalty".Translate() + ": ") + TotalGCX;
-                if (architesInGenes > 0) { text += "\n" + "GeneR_ArchitePenalty".Translate() + ": " + (1 + architesInGenes).ToString() + "GeneR_X".Translate(); }
-                text += "\n" + "Progress".Translate() + ": " + ProgressPercent.ToStringPercent();
-				int numTicks = Mathf.RoundToInt((totalWorkRequired - workDone) / ((lastWorkAmount > 0f) ? lastWorkAmount : this.GetStatValue(StatDefOf.AssemblySpeedFactor)));
-				text = text + " (" + "DurationLeft".Translate(numTicks.ToStringTicksToPeriod()).Resolve() + ")";
-            }
-            else if (workJob == WorkJob.Copy)
+            text = text + workJob switch
             {
-                text = text + (string)("GeneR_CopyGenepack".Translate() + ": " + genepackToSeparate.LabelNoCount.CapitalizeFirst() + "\n" + "GeneR_ComplexityPenalty".Translate() + ": ") + TotalGCX;
-                if (architesInGenes > 0) { text += "\n" + "GeneR_ArchitePenalty".Translate() + ": " + (1 + architesInGenes).ToString() + "GeneR_X".Translate(); }
-                text += "\n" + "Progress".Translate() + ": " + ProgressPercent.ToStringPercent();
-                int numTicks = Mathf.RoundToInt((totalWorkRequired - workDone) / ((lastWorkAmount > 0f) ? lastWorkAmount : this.GetStatValue(StatDefOf.AssemblySpeedFactor)));
-                text = text + " (" + "DurationLeft".Translate(numTicks.ToStringTicksToPeriod()).Resolve() + ")";
-            }
+                WorkJob.Merge => (string)"GeneR_MergeJob".Translate(),
+                WorkJob.Split => (string)("GeneR_SeparateJob".Translate() + ": " + genepackToWork.LabelNoCount.CapitalizeFirst()),
+                WorkJob.Copy => (string)("GeneR_CopyGenepack".Translate() + ": " + genepackToWork.LabelNoCount.CapitalizeFirst()),
+                WorkJob.Recycle => (string)("GeneR_GenepackRecycle".Translate() + ": " + genepackToWork.LabelNoCount.CapitalizeFirst()),
+                _ => string.Empty,
+            };
+            text = text + "\n" + "GeneR_ComplexityPenalty".Translate() + ": " + TotalGCX;
+            text = text + workJob switch
+            {
+                WorkJob.Merge or WorkJob.Split or WorkJob.Copy =>
+                    (architesInGenes > 0)
+                        ? "\n" + "GeneR_ArchitePenalty".Translate() + ": " + (1 + architesInGenes).ToString() + "GeneR_X".Translate()
+                        : string.Empty,
+                _ => string.Empty,
+            };
+            text += "\n" + "Progress".Translate() + ": " + ProgressPercent.ToStringPercent();
+            int numTicks = Mathf.RoundToInt((totalWorkRequired - workDone) / ((lastWorkAmount > 0f) ? lastWorkAmount : this.GetStatValue(StatDefOf.AssemblySpeedFactor)));
+            text = text + " (" + "DurationLeft".Translate(numTicks.ToStringTicksToPeriod()).Resolve() + ")";
 
             if (architesRequired > 0)
             {
