@@ -419,20 +419,27 @@ public class Building_GeneSeparator : Building, IThingHolder
             }
         }
 
-        //todo: make a switch
+        switch (workJob)
+        {
+            case WorkJob.Merge:
+                FinishMerge();
+                break;
 
-		if (workJob == WorkJob.Merge)
-		{
-            FinishMerge();
-		}
-		else if (workJob == WorkJob.Copy && genepackToSeparate != null)
-        {
-            FinishDuplicate();
+            case WorkJob.Copy:
+                if (genepackToSeparate != null)
+                {
+                    FinishDuplicate();
+                }
+                break;
+
+            case WorkJob.Split:
+                if (genepackToSeparate != null)
+                {
+                    FinishSeparate();
+                }
+                break;
         }
-        else if (genepackToSeparate != null)
-        {
-            FinishSeparate();
-        }
+
         Reset();
 	}
 
