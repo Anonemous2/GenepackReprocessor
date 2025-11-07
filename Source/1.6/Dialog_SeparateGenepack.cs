@@ -16,6 +16,8 @@ public class Dialog_SeparateGenepack : DialogBase_GenepackReprocessor
 
     protected override bool SetGenepack => true;
 
+    protected override List<Genepack> FilteredLibraryGenepacks => this.libraryGenepacks;
+
     public Dialog_SeparateGenepack(Building_GeneSeparator geneSeparator) : base(geneSeparator) { }
 
     // Remove the xenotype name requirement.
