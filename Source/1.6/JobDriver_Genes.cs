@@ -19,7 +19,7 @@ public static class GeneSeparator_JobDefOfs
 public class JobDriver_SeparateGenepack : JobDriver
 {
     // Settings for mod
-    private static GenepackReprocessorSettings? _settings;
+    private static GenepackReprocessorSettings _settings;
     public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
     private const int JobEndInterval = 4000;

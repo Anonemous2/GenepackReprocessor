@@ -537,7 +537,7 @@ public class GenepackImprovMod : Mod
 public class GenepackReprocessor_OnDefsLoaded
 {
     // Settings for mod
-    private static GenepackReprocessorSettings? _settings;
+    private static GenepackReprocessorSettings _settings;
     public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
 

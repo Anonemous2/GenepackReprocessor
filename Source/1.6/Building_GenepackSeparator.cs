@@ -26,7 +26,7 @@ namespace GenepackReprocessor;
 public class Building_GeneSeparator : Building, IThingHolder
 {
 	// Settings for mod
-    private static GenepackReprocessorSettings? _settings;
+    private static GenepackReprocessorSettings _settings;
     public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
     private Genepack genepackToSeparate;
