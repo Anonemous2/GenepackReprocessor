@@ -18,7 +18,7 @@ namespace GenepackReprocessor;
 /// </summary>
 public class Building_GeneSeparator : Building, IThingHolder
 {
-	// Settings for mod
+    // Settings for mod
     private static GenepackReprocessorSettings _settings;
     public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
@@ -28,12 +28,12 @@ public class Building_GeneSeparator : Building, IThingHolder
     // Work vars
     private enum WorkJob : int
     {
-        None  = -1,
-        Copy  = 0,
-		Split = 1,
-		Merge = 2,
+        None = -1,
+        Copy = 0,
+        Split = 1,
+        Merge = 2,
         Recycle = 3,
-	}
+    }
     private bool doForever = false;     // If true, after splitting, it will see if there's more genes that can be isolated.
 
     private WorkJob workJob;
@@ -42,7 +42,7 @@ public class Building_GeneSeparator : Building, IThingHolder
     private float workDone;
     private float totalWorkRequired;
 
-	// Consumables used
+    // Consumables used
     public ThingOwner innerContainer;
     private int architesInGenes;
     private int architesRequired;
@@ -67,10 +67,10 @@ public class Building_GeneSeparator : Building, IThingHolder
 
     private static readonly Texture2D CancelIcon = ContentFinder<Texture2D>.Get("UI/Designators/Cancel");
 
-    private static readonly CachedTexture SeparateIcon  = new CachedTexture("GeneSeparator/Split");
-    private static readonly CachedTexture MergeIcon     = new CachedTexture("GeneSeparator/Merge");
+    private static readonly CachedTexture SeparateIcon = new CachedTexture("GeneSeparator/Split");
+    private static readonly CachedTexture MergeIcon = new CachedTexture("GeneSeparator/Merge");
     private static readonly CachedTexture DuplicateIcon = new CachedTexture("GeneSeparator/Duplicate");
-    private static readonly CachedTexture RepeatIcon    = new CachedTexture("GeneSeparator/Forever");
+    private static readonly CachedTexture RepeatIcon = new CachedTexture("GeneSeparator/Forever");
 
     // Getter methods
     public float ProgressPercent => workDone / totalWorkRequired;
@@ -126,23 +126,27 @@ public class Building_GeneSeparator : Building, IThingHolder
      private HashSet<Thing> UsedFacilities
      */
     private HashSet<Thing> UsedFacilities
-	{
-		get
-		{
-			// If splitting or copying a genepack
-			tmpUsedFacilities.Clear();
-			if (genepackToSeparate != null) {
-				List<Thing> connectedFacilities = ConnectedFacilities;
-				for (int j = 0; j < connectedFacilities.Count; j++) {
-					if (!tmpUsedFacilities.Contains(connectedFacilities[j])) {
-						CompGenepackContainer compGenepackContainer = connectedFacilities[j].TryGetComp<CompGenepackContainer>();
-						if (compGenepackContainer != null && compGenepackContainer.ContainedGenepacks.Contains(genepackToSeparate)) {
-							tmpUsedFacilities.Add(connectedFacilities[j]);
+    {
+        get
+        {
+            // If splitting or copying a genepack
+            tmpUsedFacilities.Clear();
+            if (genepackToWork != null)
+            {
+                List<Thing> connectedFacilities = ConnectedFacilities;
+                for (int j = 0; j < connectedFacilities.Count; j++)
+                {
+                    if (!tmpUsedFacilities.Contains(connectedFacilities[j]))
+                    {
+                        CompGenepackContainer compGenepackContainer = connectedFacilities[j].TryGetComp<CompGenepackContainer>();
+                        if (compGenepackContainer != null && compGenepackContainer.ContainedGenepacks.Contains(genepackToWork))
+                        {
+                            tmpUsedFacilities.Add(connectedFacilities[j]);
                             return tmpUsedFacilities;
                         }
-					}
-				}
-			}
+                    }
+                }
+            }
             // Else if Merging
             if (!genepacksToMerge.NullOrEmpty())
             {
@@ -164,20 +168,20 @@ public class Building_GeneSeparator : Building, IThingHolder
                 }
             }
             return tmpUsedFacilities;
-		}
-	}
+        }
+    }
 
-   /*
-    Implement: yeah, not entirely sure here. Maybe it runs the code whenver CanBeWorkedOnNow is being refed
-	public AcceptanceReport CanBeWorkedOnNow
-    */
+    /*
+     Implement: yeah, not entirely sure here. Maybe it runs the code whenver CanBeWorkedOnNow is being refed
+     public AcceptanceReport CanBeWorkedOnNow
+     */
     public AcceptanceReport CanBeWorkedOnNow
-	{
-		get
-		{
-			if (!Working)
-			{
-				return false;
+    {
+        get
+        {
+            if (!Working)
+            {
+                return false;
             }
             if (ArchitesRequiredNow > 0)
             {
@@ -188,38 +192,39 @@ public class Building_GeneSeparator : Building, IThingHolder
                 return false;
             }
             if (!PowerOn)
-			{
-				return "NoPower".Translate().CapitalizeFirst();
-			}
-			foreach (Thing usedFacility in UsedFacilities)
-			{
-				CompPowerTrader compPowerTrader = usedFacility.TryGetComp<CompPowerTrader>();
-				if (compPowerTrader != null && !compPowerTrader.PowerOn)
-				{
-					return "GenebankUnpowered".Translate();
-				}
-			}
-			return true;
-		}
-	}
+            {
+                return "NoPower".Translate().CapitalizeFirst();
+            }
+            foreach (Thing usedFacility in UsedFacilities)
+            {
+                CompPowerTrader compPowerTrader = usedFacility.TryGetComp<CompPowerTrader>();
+                if (compPowerTrader != null && !compPowerTrader.PowerOn)
+                {
+                    return "GenebankUnpowered".Translate();
+                }
+            }
+            return true;
+        }
+    }
 
-   /*
-    Implement: yeah, not entirely sure here
-	private int TotalGCX
-    */
+    /*
+     Implement: yeah, not entirely sure here
+     private int TotalGCX
+     */
     private int TotalGCX
-	{
-		get
-		{
-			if (!Working)
-			{
-				return 0;
-			}
-			if (!cachedComplexity.HasValue)
+    {
+        get
+        {
+            if (!Working)
+            {
+                return 0;
+            }
+            if (!cachedComplexity.HasValue)
             {
                 cachedComplexity = 0;
-				// If Merge Job
-				if (workJob == WorkJob.Merge) {
+                // If Merge Job
+                if (workJob == WorkJob.Merge)
+                {
                     if (!genepacksToMerge.NullOrEmpty())
                     {
                         List<GeneDefWithType> list = new List<GeneDefWithType>();
@@ -241,76 +246,79 @@ public class Building_GeneSeparator : Building, IThingHolder
                         return cachedComplexity.Value;
                     }
                 }
-				if (genepackToSeparate != null)
-				{
-					List<GeneDefWithType> list = new List<GeneDefWithType>();
-					if (genepackToSeparate.GeneSet != null) {
-						for (int j = 0; j < genepackToSeparate.GeneSet.GenesListForReading.Count; j++) {
+                if (genepackToWork != null)
+                {
+                    List<GeneDefWithType> list = new List<GeneDefWithType>();
+                    if (genepackToWork.GeneSet != null)
+                    {
+                        for (int j = 0; j < genepackToWork.GeneSet.GenesListForReading.Count; j++)
+                        {
                             // TODO: look here for the creating of a gen Def
                             // list.Add(new GeneDefWithType(genepackToSeparate.GeneSet.GenesListForReading[j], xenogene: true));
                             // list.Add(new GeneDefWithType(genepacksToRecombine[i].GeneSet.GenesListForReading[j], xenogene: true));
-                            list.Add(new GeneDefWithType(genepackToSeparate.GeneSet.GenesListForReading[j], xenogene: true));
+                            list.Add(new GeneDefWithType(genepackToWork.GeneSet.GenesListForReading[j], xenogene: true));
                         }
-					}
-					for (int k = 0; k < list.Count; k++) {
+                    }
+                    for (int k = 0; k < list.Count; k++)
+                    {
                         cachedComplexity += list[k].geneDef.biostatCpx;       // Add complexity for each gene
                         // architesInGenes  += list[k].geneDef.biostatArc;        // Also add 4 complexity for each Archite Capsule too.
                     }
-				}
-			}
-			return cachedComplexity.Value;
-		}
-	}
+                }
+            }
+            return cachedComplexity.Value;
+        }
+    }
 
-   /*
-    * TODO: use mod settings to destroy this def if disabled
-    Implement: Checks if this is still valid() every so often.
-	public override void Tick()
-    */
-   public override void PostPostMake()
-	{
-		if (!ModLister.CheckBiotech("Gene assembler"))	// TODO: update iwth the corret check
-		{
-			Destroy();
-			return;
-		}
-		base.PostPostMake();
+    /*
+     * TODO: use mod settings to destroy this def if disabled
+     Implement: Checks if this is still valid() every so often.
+     public override void Tick()
+     */
+    public override void PostPostMake()
+    {
+        if (!ModLister.CheckBiotech("Gene assembler"))  // TODO: update iwth the corret check
+        {
+            Destroy();
+            return;
+        }
+        base.PostPostMake();
         innerContainer = new ThingOwner<Thing>(this);
     }
 
-   /*
-    Implement: Checks if this is still valid() every so often.
-	public override void Tick()
-    */
-	protected override void Tick()
-	{
-		base.Tick();
+    /*
+     Implement: Checks if this is still valid() every so often.
+     public override void Tick()
+     */
+    protected override void Tick()
+    {
+        base.Tick();
         innerContainer.DoTick();
         if (this.IsHashIntervalTick(250))
-		{
-			bool flag = lastWorkedTick + 250 + 2 >= Find.TickManager.TicksGame;
-			PowerTraderComp.PowerOutput = (flag ? (0f - base.PowerComp.Props.PowerConsumption) : (0f - base.PowerComp.Props.idlePowerDraw));
-		}
-		if (Working && this.IsHashIntervalTick(180))
-		{
-			CheckContainerValid();
-		}
-	}
+        {
+            bool flag = lastWorkedTick + 250 + 2 >= Find.TickManager.TicksGame;
+            PowerTraderComp.PowerOutput = (flag ? (0f - base.PowerComp.Props.PowerConsumption) : (0f - base.PowerComp.Props.idlePowerDraw));
+        }
+        if (Working && this.IsHashIntervalTick(180))
+        {
+            CheckContainerValid();
+        }
+    }
 
-   /*
-    Implement: sets up the work needed and all other vars.
-	public void Start(List<Genepack> packs, int architesRequired, string xenotypeName, XenotypeIconDef iconDef)
-    */
+    /*
+     Implement: sets up the work needed and all other vars.
+     public void Start(List<Genepack> packs, int architesRequired, string xenotypeName, XenotypeIconDef iconDef)
+     */
     public void StartSplit(Genepack pack, int architesRequired)
     {
-        genepackToSeparate = pack;
+        genepackToWork = pack;
         workJob = WorkJob.Split;
         StartJob(Settings.split, Settings.separateNeedsArchites, architesRequired, Settings.separateBaseNeutroamine, Settings.separateComplexityNeutroamine, Settings.workToSplit);
     }
 
     public void StartDuplicate(Genepack pack, int architesRequired)
     {
-        genepackToSeparate = pack;
+        genepackToWork = pack;
         workJob = WorkJob.Copy;
         StartJob(Settings.dupli, Settings.duplicateNeedsArchites, architesRequired, Settings.duplicateBaseNeutroamine, Settings.duplicateComplexityNeutroamine, Settings.workToDupli);
     }
@@ -322,7 +330,7 @@ public class Building_GeneSeparator : Building, IThingHolder
     public void StartMerge(List<Genepack> packs, int architesRequired)
     {
         genepacksToMerge = packs;
-		workJob = WorkJob.Merge;
+        workJob = WorkJob.Merge;
         StartJob(Settings.merge, Settings.mergeNeedsArchites, architesRequired, Settings.mergeBaseNeutroamine, Settings.mergeComplexityNeutroamine, Settings.workToMerge);
     }
 
@@ -361,23 +369,23 @@ public class Building_GeneSeparator : Building, IThingHolder
         totalWorkRequired *= (1 + architesInGenes); // Penalty for archites in the genepack
     }
 
-   /*
-    Implement: updates the remaing work, workAmount fed in is probably based on another def
-	public void DoWork(float workAmount)
-    */
+    /*
+     Implement: updates the remaing work, workAmount fed in is probably based on another def
+     public void DoWork(float workAmount)
+     */
     public void DoWork(float workAmount)
-	{
-		workDone += workAmount;
-		lastWorkAmount = workAmount;
-		lastWorkedTick = Find.TickManager.TicksGame;
-	}
+    {
+        workDone += workAmount;
+        lastWorkAmount = workAmount;
+        lastWorkedTick = Find.TickManager.TicksGame;
+    }
 
-   /*
-    Implement: Called when a xenogerm is finished, spawns the xenogerm, deletes any archite capsoles, then resets()
-	public void Finish()
-    */
-	public void Finish()
-	{
+    /*
+     Implement: Called when a xenogerm is finished, spawns the xenogerm, deletes any archite capsoles, then resets()
+     public void Finish()
+     */
+    public void Finish()
+    {
         // Consume inputs
         if (architesRequired > 0)
         {
@@ -419,14 +427,14 @@ public class Building_GeneSeparator : Building, IThingHolder
                 break;
 
             case WorkJob.Copy:
-                if (genepackToSeparate != null)
+                if (genepackToWork != null)
                 {
                     FinishDuplicate();
                 }
                 break;
 
             case WorkJob.Split:
-                if (genepackToSeparate != null)
+                if (genepackToWork != null)
                 {
                     FinishSeparate();
                 }
@@ -434,7 +442,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
 
         Reset();
-	}
+    }
 
     private void FinishMerge()
     {
@@ -487,7 +495,7 @@ public class Building_GeneSeparator : Building, IThingHolder
     {
         Genepack genepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
 
-        genepack.Initialize(genepackToSeparate.GeneSet.GenesListForReading);
+        genepack.Initialize(genepackToWork.GeneSet.GenesListForReading);
 
         if (GenPlace.TryPlaceThing(genepack, InteractionCell, base.Map, ThingPlaceMode.Near))
         {
@@ -499,7 +507,7 @@ public class Building_GeneSeparator : Building, IThingHolder
     {
         SoundDefOf.GeneAssembler_Complete.PlayOneShot(SoundInfo.InMap(this));
         // TODO: Create new genepacks here. Might be only a shallow copy, so if there's errors
-        List<GeneDef> genesToAdd = new List<GeneDef>(genepackToSeparate.GeneSet.GenesListForReading);
+        List<GeneDef> genesToAdd = new List<GeneDef>(genepackToWork.GeneSet.GenesListForReading);
         List<GeneDef> genesToAdd2 = new List<GeneDef>();
 
         Genepack genepack1 = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
@@ -541,7 +549,7 @@ public class Building_GeneSeparator : Building, IThingHolder
             }
 
             // TODO: If settings are destroy,
-            if (Settings.consumeOnSplit) { DestroyGeneBankHoldingPack(genepackToSeparate); }
+            if (Settings.consumeOnSplit) { DestroyGeneBankHoldingPack(genepackToWork); }
 
             // Lastly, check if we should queue another separate job.
 
@@ -627,54 +635,54 @@ public class Building_GeneSeparator : Building, IThingHolder
     public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
     */
     public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
-	{
-		tmpGenepacks.Clear();
-		List<Thing> connectedFacilities = ConnectedFacilities;
-		if (connectedFacilities != null)
-		{
-			foreach (Thing item in connectedFacilities)
-			{
-				CompGenepackContainer compGenepackContainer = item.TryGetComp<CompGenepackContainer>();
-				if (compGenepackContainer != null)
-				{
-					bool flag = item.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
-					if ((includePowered && flag) || (includeUnpowered && !flag))
-					{
-						tmpGenepacks.AddRange(compGenepackContainer.ContainedGenepacks);
-					}
-				}
-			}
-		}
-		return tmpGenepacks;
-	}
+    {
+        tmpGenepacks.Clear();
+        List<Thing> connectedFacilities = ConnectedFacilities;
+        if (connectedFacilities != null)
+        {
+            foreach (Thing item in connectedFacilities)
+            {
+                CompGenepackContainer compGenepackContainer = item.TryGetComp<CompGenepackContainer>();
+                if (compGenepackContainer != null)
+                {
+                    bool flag = item.TryGetComp<CompPowerTrader>()?.PowerOn ?? true;
+                    if ((includePowered && flag) || (includeUnpowered && !flag))
+                    {
+                        tmpGenepacks.AddRange(compGenepackContainer.ContainedGenepacks);
+                    }
+                }
+            }
+        }
+        return tmpGenepacks;
+    }
 
-   /*
-    Implement: Returns the specific genebank with this pack
-	public CompGenepackContainer GetGeneBankHoldingPack(Genepack pack)
-    */
-	public CompGenepackContainer GetGeneBankHoldingPack(Genepack pack)
-	{
-		List<Thing> connectedFacilities = ConnectedFacilities;
-		if (connectedFacilities != null)
-		{
-			foreach (Thing item in connectedFacilities)
-			{
-				CompGenepackContainer compGenepackContainer = item.TryGetComp<CompGenepackContainer>();
-				if (compGenepackContainer == null)
-				{
-					continue;
-				}
-				foreach (Genepack containedGenepack in compGenepackContainer.ContainedGenepacks)
-				{
-					if (containedGenepack == pack)
-					{
-						return compGenepackContainer;
-					}
-				}
-			}
-		}
-		return null;
-	}
+    /*
+     Implement: Returns the specific genebank with this pack
+     public CompGenepackContainer GetGeneBankHoldingPack(Genepack pack)
+     */
+    public CompGenepackContainer GetGeneBankHoldingPack(Genepack pack)
+    {
+        List<Thing> connectedFacilities = ConnectedFacilities;
+        if (connectedFacilities != null)
+        {
+            foreach (Thing item in connectedFacilities)
+            {
+                CompGenepackContainer compGenepackContainer = item.TryGetComp<CompGenepackContainer>();
+                if (compGenepackContainer == null)
+                {
+                    continue;
+                }
+                foreach (Genepack containedGenepack in compGenepackContainer.ContainedGenepacks)
+                {
+                    if (containedGenepack == pack)
+                    {
+                        return compGenepackContainer;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     public void DestroyGeneBankHoldingPack(Genepack pack)
     {
@@ -713,13 +721,13 @@ public class Building_GeneSeparator : Building, IThingHolder
     {
         workJob = WorkJob.None;
         workingInt = false;
-        genepackToSeparate = null;
+        genepackToWork = null;
         genepacksToMerge = null;
         cachedComplexity = null;
-		workDone = 0f;
-		lastWorkedTick = -999;
-		neutroamineRequired = 0;
-		architesRequired = 0;
+        workDone = 0f;
+        lastWorkedTick = -999;
+        neutroamineRequired = 0;
+        architesRequired = 0;
         innerContainer.TryDropAll(def.hasInteractionCell ? InteractionCell : base.Position, base.Map, ThingPlaceMode.Near);
     }
 
@@ -733,64 +741,66 @@ public class Building_GeneSeparator : Building, IThingHolder
      private void CheckAllContainersValid()
      */
     private void CheckContainerValid()
-	{
-		if (workJob == WorkJob.Merge)
-		{
-			if (genepacksToMerge.NullOrEmpty())
-			{
-				return;
-			}
-			List<Thing> connectedFacilities = ConnectedFacilities;
-			for (int i = 0; i < genepacksToMerge.Count; i++)
-			{
-				bool flag = false;
-				for (int j = 0; j < connectedFacilities.Count; j++)
-				{
-					CompGenepackContainer compGenepackContainer = connectedFacilities[j].TryGetComp<CompGenepackContainer>();
-					if (compGenepackContainer != null && compGenepackContainer.ContainedGenepacks.Contains(genepacksToMerge[i]))
-					{
-						flag = true;
-						break;
-					}
-				}
-				if (!flag)
-				{
-					Messages.Message("GeneR_MessageMergeCancelledMissingPack".Translate(this), this, MessageTypeDefOf.NegativeEvent);
-					Reset();
-					break;
-				}
-			}
-		}
-		else {
-			if (genepackToSeparate == null)
-			{
-				return;
-			}
-			List<Thing> connectedFacilities = ConnectedFacilities;
-			bool flag = false;
-			for (int j = 0; j < connectedFacilities.Count; j++)
-			{
-				CompGenepackContainer compGenepackContainer = connectedFacilities[j].TryGetComp<CompGenepackContainer>();
-				if (compGenepackContainer != null && compGenepackContainer.ContainedGenepacks.Contains(genepackToSeparate))
-				{
-					flag = true;
-					break;
-				}
-			}
-			if (!flag)
-			{
-				Messages.Message("GeneR_MessageGenepackCancelledMissingPack".Translate(this), this, MessageTypeDefOf.NegativeEvent);
-				Reset();
-			}
-		}
-	}
+    {
+        if (workJob == WorkJob.Merge)
+        {
+            if (genepacksToMerge.NullOrEmpty())
+            {
+                return;
+            }
+            List<Thing> connectedFacilities = ConnectedFacilities;
+            for (int i = 0; i < genepacksToMerge.Count; i++)
+            {
+                bool flag = false;
+                for (int j = 0; j < connectedFacilities.Count; j++)
+                {
+                    CompGenepackContainer compGenepackContainer = connectedFacilities[j].TryGetComp<CompGenepackContainer>();
+                    if (compGenepackContainer != null && compGenepackContainer.ContainedGenepacks.Contains(genepacksToMerge[i]))
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    Messages.Message("GeneR_MessageMergeCancelledMissingPack".Translate(this), this, MessageTypeDefOf.NegativeEvent);
+                    Reset();
+                    break;
+                }
+            }
+        }
+        else
+        {
+            if (genepackToWork == null)
+            {
+                return;
+            }
+            List<Thing> connectedFacilities = ConnectedFacilities;
+            bool flag = false;
+            for (int j = 0; j < connectedFacilities.Count; j++)
+            {
+                CompGenepackContainer compGenepackContainer = connectedFacilities[j].TryGetComp<CompGenepackContainer>();
+                if (compGenepackContainer != null && compGenepackContainer.ContainedGenepacks.Contains(genepackToWork))
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag)
+            {
+                Messages.Message("GeneR_MessageGenepackCancelledMissingPack".Translate(this), this, MessageTypeDefOf.NegativeEvent);
+                Reset();
+            }
+        }
+    }
 
-	/*
+    /*
 	 Delegated commands, split here for Multiplayer compatablity.
 	 */
-	public void SeparateGenepack() {
-		Find.WindowStack.Add(new Dialog_SeparateGenepack(this));
-	}
+    public void SeparateGenepack()
+    {
+        Find.WindowStack.Add(new Dialog_SeparateGenepack(this));
+    }
 
     public void DuplicateGenepack()
     {
@@ -804,7 +814,8 @@ public class Building_GeneSeparator : Building, IThingHolder
 
     private void DevFill()
     {
-        if (NeutroamineRequiredNow > 0) {
+        if (NeutroamineRequiredNow > 0)
+        {
             Thing neutro = ThingMaker.MakeThing(GeneSeparator_DefOfs.Neutroamine);
             neutro.stackCount = NeutroamineRequiredNow;
 
@@ -824,19 +835,19 @@ public class Building_GeneSeparator : Building, IThingHolder
      public override IEnumerable<Gizmo> GetGizmos() { }
      */
     public override IEnumerable<Gizmo> GetGizmos()
-	{
-		foreach (Gizmo gizmo in base.GetGizmos())
-		{
-			yield return gizmo;
-		}
-		// Split Genepack
-		Command_Action command_Action = new Command_Action();
-		command_Action.defaultLabel = "GeneR_SeparateGenepack".Translate() + "...";
-		command_Action.defaultDesc = "GeneR_SeparateDesc".Translate();
-		command_Action.icon = SeparateIcon.Texture;
-		command_Action.action = delegate
-		{
-			SeparateGenepack();
+    {
+        foreach (Gizmo gizmo in base.GetGizmos())
+        {
+            yield return gizmo;
+        }
+        // Split Genepack
+        Command_Action command_Action = new Command_Action();
+        command_Action.defaultLabel = "GeneR_SeparateGenepack".Translate() + "...";
+        command_Action.defaultDesc = "GeneR_SeparateDesc".Translate();
+        command_Action.icon = SeparateIcon.Texture;
+        command_Action.action = delegate
+        {
+            SeparateGenepack();
         };
 
         // Duplicate Genepack
@@ -861,48 +872,55 @@ public class Building_GeneSeparator : Building, IThingHolder
 
         // TODO: see if we need to change this if the description is specific to the assembler
         if (!def.IsResearchFinished)
-		{
-			command_Action.Disable("MissingRequiredResearch".Translate() + ": " + (from x in def.researchPrerequisites
-				where !x.IsFinished
-				select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+        {
+            command_Action.Disable("MissingRequiredResearch".Translate()
+                + ": "
+                + (from x in def.researchPrerequisites
+                    where !x.IsFinished
+                    select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
 
-            command_Merge.Disable("MissingRequiredResearch".Translate() + ": " + (from x in def.researchPrerequisites
-                                                                                   where !x.IsFinished
-                                                                                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+            command_Merge.Disable("MissingRequiredResearch".Translate()
+                + ": "
+                + (from x in def.researchPrerequisites
+                    where !x.IsFinished
+                    select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
 
-            command_Duplicate.Disable("MissingRequiredResearch".Translate() + ": " + (from x in def.researchPrerequisites
-                                                                                  where !x.IsFinished
-                                                                                  select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+            command_Duplicate.Disable("MissingRequiredResearch".Translate()
+                + ": "
+                + (from x in def.researchPrerequisites
+                    where !x.IsFinished
+                    select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
         }
-		else if (!PowerOn)
-		{
-			command_Action.Disable("CannotUseNoPower".Translate());
+        else if (!PowerOn)
+        {
+            command_Action.Disable("CannotUseNoPower".Translate());
             command_Duplicate.Disable("CannotUseNoPower".Translate());
             command_Merge.Disable("CannotUseNoPower".Translate());
         }
-		else if (!GetGenepacks(includePowered: true, includeUnpowered: false).Any())
-		{
-			command_Action.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
+        else if (!GetGenepacks(includePowered: true, includeUnpowered: false).Any())
+        {
+            command_Action.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
             command_Duplicate.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
             command_Merge.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
         }
 
         // Hide the buttons if that command is disabled.
-        if (Settings.separateEnabled)   { yield return command_Action; }
-        if (Settings.duplicateEnabled)  { yield return command_Duplicate; }
-        if (Settings.mergeEnabled)      { yield return command_Merge; }
+        if (Settings.separateEnabled) { yield return command_Action; }
+        if (Settings.duplicateEnabled) { yield return command_Duplicate; }
+        if (Settings.mergeEnabled) { yield return command_Merge; }
 
         if (Working)
-		{
-			Command_Action command_Action2 = new Command_Action();
-			command_Action2.defaultLabel = "GeneR_CancelGenepack".Translate();
-			command_Action2.defaultDesc = "GeneR_CancelGenepackDesc".Translate();
-			command_Action2.action = Reset;
-			command_Action2.icon = CancelIcon;
-			yield return command_Action2;
+        {
+            Command_Action command_Action2 = new Command_Action();
+            command_Action2.defaultLabel = "GeneR_CancelGenepack".Translate();
+            command_Action2.defaultDesc = "GeneR_CancelGenepackDesc".Translate();
+            command_Action2.action = Reset;
+            command_Action2.icon = CancelIcon;
+            yield return command_Action2;
 
             // Add repeat toggle
-            if (workJob == WorkJob.Split) {
+            if (workJob == WorkJob.Split)
+            {
                 Command_Toggle command_Repeat = new Command_Toggle();
                 command_Repeat.defaultLabel = "GeneR_ToggleRepeat".Translate();
                 command_Repeat.defaultDesc = "GeneR_ToggleRepeatDesc".Translate();
@@ -912,12 +930,12 @@ public class Building_GeneSeparator : Building, IThingHolder
                 yield return command_Repeat;
             }
 
-			if (DebugSettings.ShowDevGizmos)
-			{
-				Command_Action command_Action3 = new Command_Action();
-				command_Action3.defaultLabel = "DEV: Finish Genepack";
-				command_Action3.action = Finish;
-				yield return command_Action3;
+            if (DebugSettings.ShowDevGizmos)
+            {
+                Command_Action command_Action3 = new Command_Action();
+                command_Action3.defaultLabel = "DEV: Finish Genepack";
+                command_Action3.action = Finish;
+                yield return command_Action3;
                 if (NeutroamineRequiredNow > 0 || ArchitesRequiredNow > 0)
                 {
                     Command_Action command_ActionFill = new Command_Action();
@@ -927,22 +945,22 @@ public class Building_GeneSeparator : Building, IThingHolder
                 }
             }
         }
-	}
+    }
 
     /*
      Implement: The informational text provided while selected
      public override string GetInspectString() { }
      */
-	public override string GetInspectString()
-	{
-		string text = base.GetInspectString();
-		if (Working)
+    public override string GetInspectString()
+    {
+        string text = base.GetInspectString();
+        if (Working)
         {
-			AcceptanceReport canBeWorkedOnNow = CanBeWorkedOnNow;
+            AcceptanceReport canBeWorkedOnNow = CanBeWorkedOnNow;
             if (!text.NullOrEmpty())
-			{
-				text += "\n";
-			}
+            {
+                text += "\n";
+            }
 			// Merge Job
 			if (workJob == WorkJob.Merge)
 			{
@@ -979,28 +997,29 @@ public class Building_GeneSeparator : Building, IThingHolder
             }
 
             if (!canBeWorkedOnNow.Accepted && !canBeWorkedOnNow.Reason.NullOrEmpty())
-			{
-				text = text + "\n" + ("AssemblyPaused".Translate() + ": " + canBeWorkedOnNow.Reason).Colorize(ColorLibrary.RedReadable);
-			}
-		}
-		return text;
-	}
+            {
+                text = text + "\n" + ("AssemblyPaused".Translate() + ": " + canBeWorkedOnNow.Reason).Colorize(ColorLibrary.RedReadable);
+            }
+        }
+        return text;
+    }
 
-	/// <summary>
-	/// I think this is what is saved by the game, say when we exit or load a save.
-	/// </summary>
-	public override void ExposeData()
-	{
-		base.ExposeData();
+    /// <summary>
+    /// I think this is what is saved by the game, say when we exit or load a save.
+    /// </summary>
+    public override void ExposeData()
+    {
+        base.ExposeData();
         Scribe_Deep.Look(ref innerContainer, "innerContainer", this);
         Scribe_Values.Look(ref workJob, "workJob", WorkJob.None);
-        Scribe_References.Look(ref genepackToSeparate, "genepacksToSeparate");  // What happens if there's a merge op?
+
+        //Backwards compatability -- keep the name the same
+        Scribe_References.Look(ref genepackToWork, "genepacksToSeparate");  // What happens if there's a merge op?
         Scribe_Collections.Look(ref genepacksToMerge, "genepacksToMerge", LookMode.Reference);
-        Scribe_References.Look(ref genepackToRecycle, nameof(genepackToRecycle));
         Scribe_Values.Look(ref workingInt, "workingInt", defaultValue: false);
-		Scribe_Values.Look(ref workDone, "workDone", 0f);
-		Scribe_Values.Look(ref totalWorkRequired, "totalWorkRequired", 0f);
-		Scribe_Values.Look(ref lastWorkedTick, "lastWorkedTick", -999);
+        Scribe_Values.Look(ref workDone, "workDone", 0f);
+        Scribe_Values.Look(ref totalWorkRequired, "totalWorkRequired", 0f);
+        Scribe_Values.Look(ref lastWorkedTick, "lastWorkedTick", -999);
         Scribe_Values.Look(ref architesRequired, "architesRequired", 0);
         Scribe_Values.Look(ref neutroamineRequired, "neutroamineRequired", 0);
         Scribe_Values.Look(ref doForever, "doForever", false);
