@@ -278,7 +278,7 @@ public class Building_GeneSeparator : Building, IThingHolder
      */
     public override void PostPostMake()
     {
-        if (!ModLister.CheckBiotech("Gene assembler"))  // TODO: update iwth the corret check
+        if (!ModLister.CheckBiotech("Gene assembler"))  // TODO: update with the corret check
         {
             Destroy();
             return;
