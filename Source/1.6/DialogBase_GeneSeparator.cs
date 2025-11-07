@@ -36,6 +36,8 @@ public abstract class DialogBase_GenepackReprocessor : GeneCreationDialogBase
     private Genepack selectedGenepack;
     protected Genepack SelectedGenepack => selectedGenepack;
 
+    protected abstract bool SetGenepack { get; }
+
     // Here just for interface
     protected override List<GeneDef> SelectedGenes
     {
@@ -177,9 +179,11 @@ public abstract class DialogBase_GenepackReprocessor : GeneCreationDialogBase
                     if (adding)
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        selectedGenepacks.Clear();
+                        if (SetGenepack)
+                            selectedGenepacks.Clear();
                         selectedGenepacks.Add(genepack);
-                        selectedGenepack = genepack;
+                        if (SetGenepack)
+                            selectedGenepack = genepack;
                     }
                     else
                     {
