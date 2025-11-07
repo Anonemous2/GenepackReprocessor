@@ -468,14 +468,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		}
 		else if (workJob == WorkJob.Copy && genepackToSeparate != null)
         {
-            Genepack genepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
-
-            genepack.Initialize(genepackToSeparate.GeneSet.GenesListForReading);
-
-            if (GenPlace.TryPlaceThing(genepack, InteractionCell, base.Map, ThingPlaceMode.Near))
-            {
-                Messages.Message("GeneR_GenepackCloneFinished".Translate(), genepack, MessageTypeDefOf.PositiveEvent);
-            }
+            FinishDuplicate();
         }
         else if (genepackToSeparate != null)
         {
@@ -484,6 +477,17 @@ public class Building_GeneSeparator : Building, IThingHolder
         Reset();
 	}
 
+    private void FinishDuplicate()
+    {
+        Genepack genepack = (Genepack)ThingMaker.MakeThing(ThingDefOf.Genepack);
+
+        genepack.Initialize(genepackToSeparate.GeneSet.GenesListForReading);
+
+        if (GenPlace.TryPlaceThing(genepack, InteractionCell, base.Map, ThingPlaceMode.Near))
+        {
+            Messages.Message("GeneR_GenepackCloneFinished".Translate(), genepack, MessageTypeDefOf.PositiveEvent);
+        }
+    }
 
     private void FinishSeparate()
     {
