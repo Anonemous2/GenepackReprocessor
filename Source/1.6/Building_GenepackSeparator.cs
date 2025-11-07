@@ -310,65 +310,17 @@ public class Building_GeneSeparator : Building, IThingHolder
     public void StartSplit(Genepack pack, int architesRequired)
 
     {
-		Reset();
-        architesInGenes = architesRequired;
-        if (Settings.separateNeedsArchites) {
-            this.architesRequired = architesRequired;
-        }
-        else {
-            this.architesRequired = 0;
-        }
         genepackToSeparate = pack;
         workJob = WorkJob.Split;
-        workingInt = true;
-        switch (Settings.split)
-        {
-            case GenepackReprocessorSettings.CurveType.Linear:
-                totalWorkRequired = GenepackLinCurves.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
-                break;
-            case GenepackReprocessorSettings.CurveType.Exponetial:
-                totalWorkRequired = GenepackExpCurves.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
-                break;
-            default:
-                totalWorkRequired = GenepackLogCurve.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
-                break;
+        StartJob(Settings.split, Settings.separateNeedsArchites, architesRequired, Settings.separateBaseNeutroamine, Settings.separateComplexityNeutroamine, Settings.workToSplit);
         }
-		neutroamineRequired = Settings.separateBaseNeutroamine + (TotalGCX * Settings.separateComplexityNeutroamine);
-        totalWorkRequired *= 4000f * Settings.workToSplit;
-        totalWorkRequired *= (1 + architesInGenes); // Penalty for archites in the genepack
-    }
 
     public void StartDuplicate(Genepack pack, int architesRequired)
     {
-        Reset();
-        architesInGenes = architesRequired;
-        if (Settings.duplicateNeedsArchites)
-        {
-            this.architesRequired = architesRequired;
-        }
-        else
-        {
-            this.architesRequired = 0;
-        }
         genepackToSeparate = pack;
         workJob = WorkJob.Copy;
-        workingInt = true;
-        switch (Settings.dupli)
-        {
-            case GenepackReprocessorSettings.CurveType.Linear:
-                totalWorkRequired = GenepackLinCurves.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
-                break;
-            case GenepackReprocessorSettings.CurveType.Exponetial:
-                totalWorkRequired = GenepackExpCurves.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
-                break;
-            default:
-                totalWorkRequired = GenepackLogCurve.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
-                break;
+        StartJob(Settings.dupli, Settings.duplicateNeedsArchites, architesRequired, Settings.duplicateBaseNeutroamine, Settings.duplicateComplexityNeutroamine, Settings.workToDupli);
         }
-        neutroamineRequired = Settings.duplicateBaseNeutroamine + (TotalGCX * Settings.duplicateComplexityNeutroamine);
-        totalWorkRequired *= 4000f * Settings.workToDupli;
-        totalWorkRequired *= (1 + architesInGenes); // Penalty for archites in the genepack
-    }
 
     /* 
      Implement: sets up the work needed and all other vars.
@@ -376,20 +328,30 @@ public class Building_GeneSeparator : Building, IThingHolder
      */
     public void StartMerge(List<Genepack> packs, int architesRequired)
     {
+        genepacksToMerge = packs;
+		workJob = WorkJob.Merge;
+        StartJob(Settings.merge, Settings.mergeNeedsArchites, architesRequired, Settings.mergeBaseNeutroamine, Settings.mergeComplexityNeutroamine, Settings.workToMerge);
+    }
+
+    protected void StartJob(GenepackReprocessorSettings.CurveType curve, bool architesNeeded, int architesRequiredTotal, int baseNeutroamine, int complexityNeutroamine, float work)
+    {
 		Reset();
-        architesInGenes = architesRequired;
-        if (Settings.mergeNeedsArchites)
+        architesInGenes = architesRequiredTotal;
+        if (architesNeeded)
         {
-            this.architesRequired = architesRequired;
+            this.architesRequired = architesRequiredTotal;
         }
         else
         {
             this.architesRequired = 0;
         }
-        genepacksToMerge = packs;
-		workJob = WorkJob.Merge;
+
+        //extracted the individual job set and merge/split genepack references from this location
+
         workingInt = true;
-        switch (Settings.merge) {
+
+        switch (curve)
+        {
             case GenepackReprocessorSettings.CurveType.Linear:
                 totalWorkRequired = GenepackLinCurves.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
                 break;
@@ -400,8 +362,9 @@ public class Building_GeneSeparator : Building, IThingHolder
                 totalWorkRequired = GenepackLogCurve.ComplexityToCreationHoursCurve.Evaluate(TotalGCX);
                 break;
         }
-        neutroamineRequired = Settings.mergeBaseNeutroamine + (TotalGCX * Settings.mergeComplexityNeutroamine);
-        totalWorkRequired *= 4000f * Settings.workToMerge;
+
+        neutroamineRequired = baseNeutroamine + (TotalGCX * complexityNeutroamine);
+        totalWorkRequired *= 4000f * work;
         totalWorkRequired *= (1 + architesInGenes); // Penalty for archites in the genepack
     }
 
