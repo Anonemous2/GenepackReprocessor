@@ -597,7 +597,7 @@ public class Building_GeneSeparator : Building, IThingHolder
                         }
                     }
                     // Great, now do it again.
-                    bool vaild = false;
+                    bool valid = false;
                     for (int i = 0; i < connectedFacilities.Count; i++)
                     {
                         // Check to see if the connected is a genepack container
@@ -616,10 +616,10 @@ public class Building_GeneSeparator : Building, IThingHolder
                                     {
                                         GeneDef geneTemp = temp.GeneSet.GenesListForReading[k];
                                         arcs += geneTemp.biostatArc;
-                                        if (!doneGenes.Contains(geneTemp)) { vaild = true; }
+                                        if (!doneGenes.Contains(geneTemp)) { valid = true; }
                                     }
                                 }
-                                if (vaild)
+                                if (valid)
                                 {
                                     // Job
                                     Reset();
@@ -629,8 +629,8 @@ public class Building_GeneSeparator : Building, IThingHolder
                             }
                         }
                     }
-                    // If after all that no vaild genepacks are found, then turn off forever
-                    if (!vaild)
+                    // If after all that no valid genepacks are found, then turn off forever
+                    if (!valid)
                     {
                         doForever = false;
                     }
