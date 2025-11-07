@@ -16,7 +16,7 @@ public class Dialog_MergeGenepack : DialogBase_GenepackReprocessor
 
     protected override bool SetGenepack => false;
 
-    protected override List<Genepack> FilteredLibraryGenepacks => this.libraryGenepacks;
+    protected override IEnumerable<Genepack> FilteredLibraryGenepacks => this.libraryGenepacks;
 
     public Dialog_MergeGenepack(Building_GeneSeparator geneSeparator) : base(geneSeparator) { }
 

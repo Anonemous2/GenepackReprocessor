@@ -18,7 +18,7 @@ public abstract class DialogBase_GenepackReprocessor : GeneCreationDialogBase
 
     protected List<Genepack> libraryGenepacks = new List<Genepack>();
 
-    protected abstract List<Genepack> FilteredLibraryGenepacks { get; }
+    protected abstract IEnumerable<Genepack> FilteredLibraryGenepacks { get; }
 
     protected List<Genepack> unpoweredGenepacks = new List<Genepack>();
 
@@ -129,7 +129,7 @@ public abstract class DialogBase_GenepackReprocessor : GeneCreationDialogBase
         GUI.EndGroup();
     }
 
-    private void DrawSection(Rect rect, List<Genepack> genepacks, string label, ref float curY, ref float sectionHeight, bool adding, Rect containingRect)
+    private void DrawSection(Rect rect, IEnumerable<Genepack> genepacks, string label, ref float curY, ref float sectionHeight, bool adding, Rect containingRect)
     {
         float curX = 4f;
         Rect rect2 = new Rect(10f, curY, rect.width - 16f - 10f, Text.LineHeight);
@@ -157,9 +157,8 @@ public abstract class DialogBase_GenepackReprocessor : GeneCreationDialogBase
         }
         else
         {
-            for (int i = 0; i < genepacks.Count; i++)
+            foreach (var genepack in genepacks)
             {
-                Genepack genepack = genepacks[i];
                 if (quickSearchWidget.filter.Active && (!matchingGenepacks.Contains(genepack) || (adding && selectedGenepacks.Contains(genepack))))
                 {
                     continue;
