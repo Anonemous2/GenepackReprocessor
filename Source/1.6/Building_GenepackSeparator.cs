@@ -127,7 +127,7 @@ public class Building_GeneSeparator : Building, IThingHolder
     public int NeutroamineRequiredNow => neutroamineRequired - NeutroamineCount;
 
 
-    /* 
+    /*
      Implement: list of used genebanks?
      private HashSet<Thing> UsedFacilities
      */
@@ -173,7 +173,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		}
 	}
 
-   /* 
+   /*
     Implement: yeah, not entirely sure here. Maybe it runs the code whenver CanBeWorkedOnNow is being refed
 	public AcceptanceReport CanBeWorkedOnNow
     */
@@ -209,7 +209,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		}
 	}
 
-   /* 
+   /*
     Implement: yeah, not entirely sure here
 	private int TotalGCX
     */
@@ -268,7 +268,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		}
 	}
 
-   /* 
+   /*
     * TODO: use mod settings to destroy this def if disabled
     Implement: Checks if this is still valid() every so often.
 	public override void Tick()
@@ -284,7 +284,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         innerContainer = new ThingOwner<Thing>(this);
     }
 
-   /* 
+   /*
     Implement: Checks if this is still valid() every so often.
 	public override void Tick()
     */
@@ -303,7 +303,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		}
 	}
 
-   /* 
+   /*
     Implement: sets up the work needed and all other vars.
 	public void Start(List<Genepack> packs, int architesRequired, string xenotypeName, XenotypeIconDef iconDef)
     */
@@ -321,7 +321,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         StartJob(Settings.dupli, Settings.duplicateNeedsArchites, architesRequired, Settings.duplicateBaseNeutroamine, Settings.duplicateComplexityNeutroamine, Settings.workToDupli);
     }
 
-    /* 
+    /*
      Implement: sets up the work needed and all other vars.
      public void Start(List<Genepack> packs, int architesRequired, string xenotypeName, XenotypeIconDef iconDef)
      */
@@ -367,7 +367,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         totalWorkRequired *= (1 + architesInGenes); // Penalty for archites in the genepack
     }
 
-   /* 
+   /*
     Implement: updates the remaing work, workAmount fed in is probably based on another def
 	public void DoWork(float workAmount)
     */
@@ -378,7 +378,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		lastWorkedTick = Find.TickManager.TicksGame;
 	}
 
-   /* 
+   /*
     Implement: Called when a xenogerm is finished, spawns the xenogerm, deletes any archite capsoles, then resets()
 	public void Finish()
     */
@@ -628,10 +628,9 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
     }
 
-
-   /* 
+    /*
     Implement: Returns the all genepacks that are valid given the flags below
-	public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
+    public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
     */
     public List<Genepack> GetGenepacks(bool includePowered, bool includeUnpowered)
 	{
@@ -655,7 +654,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		return tmpGenepacks;
 	}
 
-   /* 
+   /*
     Implement: Returns the specific genebank with this pack
 	public CompGenepackContainer GetGeneBankHoldingPack(Genepack pack)
     */
@@ -707,12 +706,12 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
     }
 
-    /* 
+    /*
      Implement: Returns the max complexity avaliable from this + gene processors
      public int MaxComplexity()
      */
 
-    /* 
+    /*
      Implement: Sets work vars to default (clears from the current job)
      private void Reset()
      */
@@ -735,7 +734,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         doForever = !doForever;
     }
 
-    /* 
+    /*
      Implement: Looks to see if the selected genes are in banks?
      private void CheckAllContainersValid()
      */
@@ -792,7 +791,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 		}
 	}
 
-	/* 
+	/*
 	 Delegated commands, split here for Multiplayer compatablity.
 	 */
 	public void SeparateGenepack() {
@@ -826,7 +825,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
     }
 
-    /* 
+    /*
      Implement: Critical, allows us to set up the split job.
      public override IEnumerable<Gizmo> GetGizmos() { }
      */
@@ -936,10 +935,10 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
 	}
 
-   /* 
-    Implement: The informational text provided while selected
-    public override string GetInspectString() { }
-    */
+    /*
+     Implement: The informational text provided while selected
+     public override string GetInspectString() { }
+     */
 	public override string GetInspectString()
 	{
 		string text = base.GetInspectString();
@@ -1003,6 +1002,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         Scribe_Values.Look(ref workJob, "workJob", WorkJob.None);
         Scribe_References.Look(ref genepackToSeparate, "genepacksToSeparate");  // What happens if there's a merge op?
         Scribe_Collections.Look(ref genepacksToMerge, "genepacksToMerge", LookMode.Reference);
+        Scribe_References.Look(ref genepackToRecycle, nameof(genepackToRecycle));
         Scribe_Values.Look(ref workingInt, "workingInt", defaultValue: false);
 		Scribe_Values.Look(ref workDone, "workDone", 0f);
 		Scribe_Values.Look(ref totalWorkRequired, "totalWorkRequired", 0f);
