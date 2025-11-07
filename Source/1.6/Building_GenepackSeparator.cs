@@ -22,7 +22,8 @@ public class Building_GeneSeparator : Building, IThingHolder
     private static GenepackReprocessorSettings _settings;
     public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
-    private Genepack genepackToSeparate;
+    //TODO: make these vars one List<Genepack> of "genepacksBeingWorked"
+    private Genepack genepackToWork;
     private List<Genepack> genepacksToMerge;
 
     // Work vars
