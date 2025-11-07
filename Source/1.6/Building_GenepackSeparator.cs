@@ -925,23 +925,16 @@ public class Building_GeneSeparator : Building, IThingHolder
         // TODO: see if we need to change this if the description is specific to the assembler
         if (!def.IsResearchFinished)
         {
-            command_Action.Disable("MissingRequiredResearch".Translate()
+            var disableReason = "MissingRequiredResearch".Translate()
                 + ": "
                 + (from x in def.researchPrerequisites
                    where !x.IsFinished
-                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst();
 
-            command_Merge.Disable("MissingRequiredResearch".Translate()
-                + ": "
-                + (from x in def.researchPrerequisites
-                   where !x.IsFinished
-                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
-
-            command_Duplicate.Disable("MissingRequiredResearch".Translate()
-                + ": "
-                + (from x in def.researchPrerequisites
-                   where !x.IsFinished
-                   select x.label).ToCommaList(useAnd: true).CapitalizeFirst());
+            command_Action.Disable(disableReason);
+            command_Merge.Disable(disableReason);
+            command_Duplicate.Disable(disableReason);
+            command_Recycle.Disable(disableReason);
         }
         else if (!PowerOn)
         {
