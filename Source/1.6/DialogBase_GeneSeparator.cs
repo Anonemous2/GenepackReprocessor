@@ -18,6 +18,7 @@ public abstract class DialogBase_GenepackReprocessor : GeneCreationDialogBase
 
     protected List<Genepack> libraryGenepacks = new List<Genepack>();
 
+    protected abstract List<Genepack> FilteredLibraryGenepacks { get; }
 
     protected List<Genepack> unpoweredGenepacks = new List<Genepack>();
 
@@ -119,7 +120,7 @@ public abstract class DialogBase_GenepackReprocessor : GeneCreationDialogBase
         containingRect.height = rect.height;
         DrawSection(rect, selectedGenepacks, "SelectedGenepacks".Translate(), ref curY, ref selectedHeight, adding: false, containingRect);
         curY += 8f;
-        DrawSection(rect, libraryGenepacks, "GenepackLibrary".Translate(), ref curY, ref unselectedHeight, adding: true, containingRect);
+        DrawSection(rect, FilteredLibraryGenepacks, "GenepackLibrary".Translate(), ref curY, ref unselectedHeight, adding: true, containingRect);
         if (Event.current.type == EventType.Layout)
         {
             scrollHeight = curY;
