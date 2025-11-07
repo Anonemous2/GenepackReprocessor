@@ -75,7 +75,6 @@ public class GenepackReprocessorSettings : ModSettings
     // materials cost
     public int recycleBaseNeutroamine = 12;
     public int recycleComplexityNeutroamine = 6;
-    public bool recycleNeedsArchites = false;
 
 
     // Archite penalty
@@ -147,7 +146,6 @@ public class GenepackReprocessorSettings : ModSettings
         // Recycle materials cost.
         Scribe_Values.Look(ref recycleBaseNeutroamine, "recycleBaseNeutroamine", 6);
         Scribe_Values.Look(ref recycleComplexityNeutroamine, "recycleComplexityNeutroamine", 3);
-        Scribe_Values.Look(ref recycleNeedsArchites, "recycleNeedsArchites", true);
 
         // Archite Penalty
         Scribe_Values.Look(ref architePen, "architePen", 1f);
