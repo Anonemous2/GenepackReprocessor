@@ -67,6 +67,17 @@ public class GenepackReprocessorSettings : ModSettings
     public int  mergeComplexityNeutroamine      = 3;
     public bool mergeNeedsArchites              = true;
 
+    //Recycle settings
+    public CurveType recycle = CurveType.Exponetial;
+    public bool recycleEnabled      = true;
+    public bool consumeOnRecycle    = true;
+    public float workToRecycle      = 3.0f;
+    // materials cost
+    public int recycleBaseNeutroamine = 12;
+    public int recycleComplexityNeutroamine = 6;
+    public bool recycleNeedsArchites = false;
+
+
     // Archite penalty
     public float architePen = 1;
 
@@ -127,6 +138,16 @@ public class GenepackReprocessorSettings : ModSettings
         Scribe_Values.Look(ref mergeBaseNeutroamine,        "mergeBaseNeutroamine",         6);
         Scribe_Values.Look(ref mergeComplexityNeutroamine,  "mergeComplexityNeutroamine",   3);
         Scribe_Values.Look(ref mergeNeedsArchites,          "mergeNeedsArchites",           true);
+
+        // Recycle settings
+        Scribe_Values.Look(ref merge, "recycle", CurveType.Log);
+        Scribe_Values.Look(ref recycleEnabled, "recycleEnabled", true);
+        Scribe_Values.Look(ref consumeOnRecycle, "consumeOnRecycle", false);
+        Scribe_Values.Look(ref workToRecycle, "workToRecycle", 1.0f);
+        // Recycle materials cost.
+        Scribe_Values.Look(ref recycleBaseNeutroamine, "recycleBaseNeutroamine", 6);
+        Scribe_Values.Look(ref recycleComplexityNeutroamine, "recycleComplexityNeutroamine", 3);
+        Scribe_Values.Look(ref recycleNeedsArchites, "recycleNeedsArchites", true);
 
         // Archite Penalty
         Scribe_Values.Look(ref architePen, "architePen", 1f);
