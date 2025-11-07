@@ -71,6 +71,7 @@ public class Building_GeneSeparator : Building, IThingHolder
     private static readonly CachedTexture SeparateIcon = new CachedTexture("GeneSeparator/Split");
     private static readonly CachedTexture MergeIcon = new CachedTexture("GeneSeparator/Merge");
     private static readonly CachedTexture DuplicateIcon = new CachedTexture("GeneSeparator/Duplicate");
+    private static readonly CachedTexture RecycleIcon = new CachedTexture("GeneSeparator/Recycle");
     private static readonly CachedTexture RepeatIcon = new CachedTexture("GeneSeparator/Forever");
 
     // Getter methods
