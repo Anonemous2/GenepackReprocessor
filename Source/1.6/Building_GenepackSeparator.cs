@@ -907,6 +907,16 @@ public class Building_GeneSeparator : Building, IThingHolder
             MergeGenepack();
         };
 
+        // Recycle Archite Genepack
+        Command_Action command_Recycle = new Command_Action();
+        command_Merge.defaultLabel = "GeneR_RecycleGenepack".Translate() + "...";
+        command_Merge.defaultDesc = "GeneR_RecycleDesc".Translate();
+        command_Merge.icon = RecycleIcon.Texture;
+        command_Merge.action = delegate
+        {
+            RecycleGenepack();
+        };
+
         // TODO: see if we need to change this if the description is specific to the assembler
         if (!def.IsResearchFinished)
         {
@@ -933,18 +943,21 @@ public class Building_GeneSeparator : Building, IThingHolder
             command_Action.Disable("CannotUseNoPower".Translate());
             command_Duplicate.Disable("CannotUseNoPower".Translate());
             command_Merge.Disable("CannotUseNoPower".Translate());
+            command_Recycle.Disable("CannotUseNoPower".Translate());
         }
         else if (!GetGenepacks(includePowered: true, includeUnpowered: false).Any())
         {
             command_Action.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
             command_Duplicate.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
             command_Merge.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
+            command_Recycle.Disable("CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst()));
         }
 
         // Hide the buttons if that command is disabled.
         if (Settings.separateEnabled) { yield return command_Action; }
         if (Settings.duplicateEnabled) { yield return command_Duplicate; }
         if (Settings.mergeEnabled) { yield return command_Merge; }
+        if (Settings.recycleEnabled) { yield return command_Recycle; }
 
         if (Working)
         {
