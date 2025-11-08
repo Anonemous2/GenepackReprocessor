@@ -258,9 +258,7 @@ public class GenepackImprovMod : Mod
             parent.EndSection(subSection);
 
             // Consumption.
-            size = (canConsumePacks && canRequireArchite) ? layoutRowsTextBoxes2 : layoutRowHeight;
-            subSection = parent.BeginSection((line.height) * size);
-            DrawOptions_Consumption(subSection, ref neutroAmount, ref bufferNeutroAmount,
+            DrawOptions_Consumption(parent, ref neutroAmount, ref bufferNeutroAmount,
                 ref neutroComplexity, ref bufferNeutroComplexity,
                 canRequireArchite, ref consumesArchite, canConsumePacks, ref consumesPacks);
             parent.EndSection(subSection);
@@ -297,13 +295,23 @@ public class GenepackImprovMod : Mod
         { curve = CurveType.Exponetial; }
     }
 
-    private void DrawOptions_Consumption(Listing_Custom subSection,
+    private void DrawOptions_Consumption(Listing_Custom parent,
         ref int neutroAmount, ref string bufferNeutroAmount,
         ref int neutroComplexity, ref string bufferNeutroComplexity,
         bool canRequireArchite, ref bool consumesArchite,
         bool canConsumePacks, ref bool consumesPacks)
     {
-        Rect line = subSection.GetRectLine();
+        var size = layoutRowHeight;
+        if (canRequireArchite || consumesPacks)
+        {
+            size = layoutRowsTextBoxes2;
+        }
+        if (canRequireArchite && consumesPacks)
+        {
+            size = layoutEnabledWork;
+        }
+        Rect line = parent.GetRectLine();
+        var subSection = parent.BeginSection((line.height) * size);
 
         //neutro settings
         subSection.NGTextFieldNumericLabeled<int>(line, 3, 0,
