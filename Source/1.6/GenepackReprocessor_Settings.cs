@@ -280,15 +280,21 @@ public class GenepackImprovMod : Mod
         Rect line = subSection.GetRectLine();
         if (parentSection.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
             curve == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
-        { curve = CurveType.Log; }
+        {
+            curve = CurveType.Log;
+        }
 
         if (parentSection.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
             curve == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
-        { curve = CurveType.Linear; }
+        {
+            curve = CurveType.Linear;
+        }
 
         if (parentSection.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
             curve == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
-        { curve = CurveType.Exponetial; }
+        { 
+            curve = CurveType.Exponetial;
+        }
     }
 
     private void DrawOptions_Consumption(Listing_Custom parent,
