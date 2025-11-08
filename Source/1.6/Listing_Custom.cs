@@ -43,6 +43,17 @@ public class Listing_Custom : Listing_Standard
         return listing_Standard;
     }
 
+    public Listing_Custom BeginSection(float height, float width, float sectionBorder = 4f, float bottomBorder = 4f)
+    {
+        Rect rect = GetRect(height + sectionBorder + bottomBorder);
+        rect.width = width;
+        Widgets.DrawMenuSection(rect);
+        Listing_Custom listing_Standard = new Listing_Custom();
+        Rect rect2 = new Rect(rect.x + sectionBorder, rect.y + sectionBorder, rect.width - sectionBorder * 2f, rect.height - (sectionBorder + bottomBorder));
+        listing_Standard.Begin(rect2);
+        return listing_Standard;
+    }
+
     public void EndSection(Listing_Custom listing)
     {
         listing.End();
