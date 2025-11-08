@@ -331,22 +331,22 @@ public class GenepackImprovMod : Mod
 
         // Work modes.
         //listingStandard.Label("Work Modes");
-        listing.Gap(); listing.Gap(); listing.Gap();
+        DrawTripleGap(listing);
         ContentsSeparating(viewRect, ref listing);
 
-        listing.Gap(); listing.Gap(); listing.Gap();
+        DrawTripleGap(listing);
         ContentsDuplicate(viewRect, ref listing);
 
-        listing.Gap(); listing.Gap(); listing.Gap();
+        DrawTripleGap(listing);
         ContentsMerge(viewRect, ref listing);
 
-        listing.Gap(); listing.Gap(); listing.Gap();
+        DrawTripleGap(listing);
         ContentsRecycle(viewRect, ref listing);
 
         // Draw some buttons below the Rect.
         Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
 
-        listing.Gap(); listing.Gap(); listing.Gap();
+        DrawTripleGap(listing);
         // ContentsArchiteSetting(inRect, ref listingStandard);
 
         if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
@@ -364,6 +364,13 @@ public class GenepackImprovMod : Mod
         listing.End();
 
         this.lastHeight = listing.CurHeight + 16f;
+    }
+
+    public void DrawTripleGap(Listing_Custom listing)
+    {
+        listing.Gap();
+        listing.Gap();
+        listing.Gap();
     }
 
     // Clear buffers.
