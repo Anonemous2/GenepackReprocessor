@@ -416,19 +416,19 @@ public class GenepackImprovMod : Mod
         // ContentsBuildingPower(listing, viewRect); TEMP: Not used.
 
         // Work modes.
-        DrawTripleGap(listing);
+        DrawGapBetweenSections(listing);
         ContentsSeparating(listing, viewRect);
 
-        DrawTripleGap(listing);
+        DrawGapBetweenSections(listing);
         ContentsDuplicate(listing, viewRect);
 
-        DrawTripleGap(listing);
+        DrawGapBetweenSections(listing);
         ContentsMerge(listing, viewRect);
 
-        DrawTripleGap(listing);
+        DrawGapBetweenSections(listing);
         ContentsRecycle(listing, viewRect);
 
-        DrawTripleGap(listing);
+        // DrawGapBetweenSections(listing);
         // ContentsArchiteSetting(listing, viewRect);
 
         listing.End();
@@ -465,7 +465,7 @@ public class GenepackImprovMod : Mod
         }
     }
 
-    public void DrawTripleGap(Listing_Custom listing)
+    public void DrawGapBetweenSections(Listing_Custom listing)
     {
         listing.Gap();
         listing.Gap();
