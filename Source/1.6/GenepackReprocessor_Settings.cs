@@ -391,7 +391,7 @@ public class GenepackImprovMod : Mod
 
         ContentsBuildingCost(listing, viewRect);
         ContentsBuildingSettings(listing, viewRect);
-        // ContentsBuildingPower(viewRect, listing); TEMP: Not used.
+        // ContentsBuildingPower(listing, viewRect); TEMP: Not used.
 
         // Work modes.
         DrawTripleGap(listing);
@@ -407,7 +407,7 @@ public class GenepackImprovMod : Mod
         ContentsRecycle(listing, viewRect);
 
         DrawTripleGap(listing);
-        // ContentsArchiteSetting(viewRect, listing);
+        // ContentsArchiteSetting(listing, viewRect);
 
         Widgets.EndScrollView();
     }
