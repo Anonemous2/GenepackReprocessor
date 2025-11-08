@@ -119,8 +119,8 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingCost(Rect inRect, Listing_Custom listingStandard)
     {
         // Create a subsection for the costs.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
+        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
+        Listing_Custom sub = listingStandard.BeginSection((line.height) * 2.133f);
 
         line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -143,8 +143,8 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingSettings(Rect inRect, Listing_Custom listingStandard)
     {
         // Create a subsection for the stats.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
+        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
+        Listing_Custom sub = listingStandard.BeginSection((line.height) * 2.133f);
 
         line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
@@ -169,8 +169,8 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingPower(Rect inRect, Listing_Custom listingStandard)
     {
         // Create a subsection for the power drain.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
+        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
+        Listing_Custom sub = listingStandard.BeginSection((line.height) * 1.1f);
 
         line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -211,11 +211,11 @@ public class GenepackImprovMod : Mod
         string jobName, string jobHelp, string jobMultiplierHelp, bool consumePacks)
     {
         // Create a subsection.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
+        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
 
         // Work settings.
         var size = enabled ? 3.7f : 1.1f;
-        Listing_Custom subSection = parent.BeginSection((line.yMax - line.yMin) * size);
+        Listing_Custom subSection = parent.BeginSection((line.height) * size);
 
         DrawOptions_Enabled(subSection, ref enabled, jobName, jobHelp);
         if (!enabled)   //If it's not enabled, there's no reason to show them.
@@ -231,7 +231,7 @@ public class GenepackImprovMod : Mod
 
             // Consumption.
             size = consumePacks ? 2.133f : 1.1f;
-            subSection = parent.BeginSection((line.yMax - line.yMin) * size);
+            subSection = parent.BeginSection((line.height) * size);
             DrawOptions_Consumption(subSection, consumePacks);
             parent.EndSection(subSection);
         }
@@ -291,10 +291,10 @@ public class GenepackImprovMod : Mod
     public void ContentsArchiteSetting(Rect inRect, ref Listing_Custom listingStandard)
     {
         // Create a subsection for the costs
-        Rect line = new Rect(inRect.xMin, inRect.yMin, (inRect.xMax - inRect.xMin) / 2f, Text.LineHeight);
+        Rect line = new Rect(inRect.xMin, inRect.yMin, (inRect.width) / 2f, Text.LineHeight);
 
         // Else show all the settings.
-        Listing_Custom sub = listingStandard.CBeginSection(line, (line.yMax - line.yMin) * 1.1f);
+        Listing_Custom sub = listingStandard.CBeginSection(line, (line.height) * 1.1f);
 
         sub.NGTextFieldNumericLabeled<float>(line, 1, 0,
             "Archite Penalty Multiplier:", ref settings.architePen, ref bufArchitePen, 0f, 5f, labelPart, fieldOffs, "Multiples the penalty for Archite genes.");
@@ -319,8 +319,7 @@ public class GenepackImprovMod : Mod
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
-        Listing_Custom settingsListing = listing.BeginSection(viewRect.yMax - viewRect.yMin);
-        listing.Begin(viewRect);
+        Listing_Custom settingsListing = listing.BeginSection(viewRect.height);
 
         // TODO: Add Reset and Hard buttons to the top of the window
 
@@ -345,7 +344,7 @@ public class GenepackImprovMod : Mod
         settingsListing.EndSection(settingsListing);
 
         // Draw some buttons below the viewRect.
-        Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
+        Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.width, 40f);
 
         DrawTripleGap(settingsListing);
         // ContentsArchiteSetting(inRect, settingsListing);
