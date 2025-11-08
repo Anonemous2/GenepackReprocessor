@@ -124,10 +124,9 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingCost(Listing_Custom listing, Rect viewRect)
     {
         // Create a subsection for the costs.
-        Rect line = new Rect(viewRect.xMin, viewRect.yMin, viewRect.width, Text.LineHeight);
-        Listing_Custom sub = listing.BeginSection((line.height) * layoutRowsTextBoxes2);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2);
 
-        line = sub.GetRectLine();
+        Rect line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
             "GeneR_Materials".Translate(), "GeneR_MaterialsHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
@@ -150,10 +149,9 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingSettings(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the stats.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listing.BeginSection((line.height) * layoutRowsTextBoxes2);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2);
 
-        line = sub.GetRectLine();
+        Rect line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
             "GeneR_HP".Translate(), ref settings.hp, ref bufHP, 1f, 10000, labelPart, fieldOffs, "GeneR_HPHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
@@ -176,10 +174,9 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingPower(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the power drain.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listing.BeginSection((line.height) * layoutRowHeight);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowHeight);
 
-        line = sub.GetRectLine();
+        Rect line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
             "Building Power Usage (W)", "How many Watts of power does this building consume while working.");
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
