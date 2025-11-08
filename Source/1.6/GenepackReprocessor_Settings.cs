@@ -322,46 +322,41 @@ public class GenepackImprovMod : Mod
         Listing_Custom settingsListing = listing.BeginSection(viewRect.yMax - viewRect.yMin);
         listing.Begin(viewRect);
 
-        try
-        {
-            // TODO: Add Reset and Hard buttons to the top of the window
+        // TODO: Add Reset and Hard buttons to the top of the window
 
-            ContentsBuildingCost(viewRect, settingsListing);
-            ContentsBuildingSettings(viewRect, settingsListing);
-            // ContentsBuildingPower(viewRect, settingsListing); TEMP: Not used.
+        ContentsBuildingCost(viewRect, settingsListing);
+        ContentsBuildingSettings(viewRect, settingsListing);
+        // ContentsBuildingPower(viewRect, settingsListing); TEMP: Not used.
 
-            // Work modes.
-            DrawTripleGap(settingsListing);
-            ContentsSeparating(viewRect, settingsListing);
+        // Work modes.
+        DrawTripleGap(settingsListing);
+        ContentsSeparating(viewRect, settingsListing);
 
-            DrawTripleGap(settingsListing);
-            ContentsDuplicate(viewRect, settingsListing);
+        DrawTripleGap(settingsListing);
+        ContentsDuplicate(viewRect, settingsListing);
 
-            DrawTripleGap(settingsListing);
-            ContentsMerge(viewRect, settingsListing);
+        DrawTripleGap(settingsListing);
+        ContentsMerge(viewRect, settingsListing);
 
-            DrawTripleGap(settingsListing);
-            ContentsRecycle(viewRect, settingsListing);
+        DrawTripleGap(settingsListing);
+        ContentsRecycle(viewRect, settingsListing);
 
-            //End Scrollable area
-            settingsListing.EndSection(settingsListing);
+        //End Scrollable area
+        settingsListing.EndSection(settingsListing);
 
-            // Draw some buttons below the viewRect.
-            Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
+        // Draw some buttons below the viewRect.
+        Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
 
-            DrawTripleGap(settingsListing);
-            // ContentsArchiteSetting(inRect, settingsListing);
+        DrawTripleGap(settingsListing);
+        // ContentsArchiteSetting(inRect, settingsListing);
 
-            DrawSettingsButtons(listing, bottom);
-        }
-        finally
-        {
-            base.DoSettingsWindowContents(inRect);
-            listing.End();
-            Widgets.EndScrollView();
+        DrawSettingsButtons(listing, bottom);
 
-            this.lastHeight = listing.CurHeight + 16f;
-        }
+        base.DoSettingsWindowContents(inRect);
+        listing.End();
+        Widgets.EndScrollView();
+
+        this.lastHeight = listing.CurHeight + 16f;
     }
 
     private void DrawSettingsButtons(Listing_Custom listing, Rect bottom)
@@ -619,7 +614,7 @@ public class GenepackReprocessor_OnDefsLoaded
                 // Add the help message about getting advanced components
                 ResearchProjectDef process = DefDatabase<ResearchProjectDef>.GetNamed("GeneProcessor");
                 process.discoveredLetterTitle = "GeneR_ResearchMes".Translate();
-                process.discoveredLetterText  = "GeneR_ResearchMesDes".Translate();
+                process.discoveredLetterText = "GeneR_ResearchMesDes".Translate();
             }
             // Update Stats.
             reprocessor.statBases.Clear();
