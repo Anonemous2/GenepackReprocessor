@@ -398,10 +398,10 @@ public class GenepackImprovMod : Mod
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
 
-        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width, _totalContentHeight);
+        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
-        Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), 9999f);
+        Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
 
 #if DEBUG
         debugMsg = $"{nameof(viewRect)} {{ {nameof(viewRect.yMin)}: {viewRect.yMin}; {nameof(viewRect.yMax)}: {viewRect.yMax}; {nameof(viewRect.xMin)}: {viewRect.xMin}; {nameof(viewRect.xMax)}: {viewRect.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
