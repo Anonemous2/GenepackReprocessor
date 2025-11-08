@@ -201,7 +201,7 @@ public class GenepackImprovMod : Mod
 
     public void ContentsRecycle(Rect inRect, ref Listing_Custom parentSection)
     {
-        ContentsWork(inRect, ref parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+        ContentsWork(inRect, ref parentSection, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
             "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp", true);
     }
 
