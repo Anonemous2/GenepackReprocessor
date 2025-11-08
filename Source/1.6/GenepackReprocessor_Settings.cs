@@ -313,15 +313,8 @@ public class GenepackImprovMod : Mod
         var debugMsg = $"{nameof(inRect)} -- {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} ... ";
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
-        //restrict ourselves to a 20px border on all sides
-        Rect outRect = new Rect(inRect);
-        outRect.yMin += 20f;
-        outRect.yMax -= 20f;
-        outRect.xMin += 20f;
-        outRect.xMax -= 20f;
-
-        Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, this.lastHeight);
-        Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
+        Rect viewRect = new Rect(0f, 0f, inRect.width - 16f, this.lastHeight);
+        Widgets.BeginScrollView(inRect, ref this.scrollPosition, viewRect);
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
@@ -349,7 +342,7 @@ public class GenepackImprovMod : Mod
             DrawTripleGap(listing);
             ContentsRecycle(viewRect, ref listing);
 
-            // Draw some buttons below the Rect.
+            // Draw some buttons below the viewRect.
             Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
 
             DrawTripleGap(listing);
@@ -361,6 +354,7 @@ public class GenepackImprovMod : Mod
         {
             base.DoSettingsWindowContents(inRect);
             listing.End();
+            Widgets.EndScrollView();
 
             this.lastHeight = listing.CurHeight + 16f;
         }
@@ -544,8 +538,8 @@ public class GenepackReprocessor_OnDefsLoaded
 {
     // Settings for mod
     private static GenepackReprocessorSettings _settings;
-    public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
+    public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
     static GenepackReprocessor_OnDefsLoaded()
     {
