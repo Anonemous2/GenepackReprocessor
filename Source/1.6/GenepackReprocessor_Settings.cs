@@ -203,7 +203,7 @@ public class GenepackImprovMod : Mod
     {
         bool _ = default;   //never consumes genes. Discard.
 
-        DrawOptions_Work(parentSection, inRect, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
+        DrawOptions_Work(parentSection, inRect, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.dupli,
             "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp",
             ref settings.duplicateBaseNeutroamine, ref bufDuplicateBaseNeutroamine,
             ref settings.duplicateComplexityNeutroamine, ref bufDuplicateComplexityNeutroamine,
