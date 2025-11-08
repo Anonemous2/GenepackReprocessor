@@ -383,6 +383,12 @@ public class GenepackImprovMod : Mod
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
         Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
+
+#if DEBUG
+        debugMsg = $"{nameof(viewRect)} {{ {nameof(viewRect.yMin)}: {viewRect.yMin}; {nameof(viewRect.yMax)}: {viewRect.yMax}; {nameof(viewRect.xMin)}: {viewRect.xMin}; {nameof(viewRect.xMax)}: {viewRect.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
+        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
+#endif
+
         ContentsBuildingCost(listing, viewRect);
         ContentsBuildingSettings(listing, viewRect);
         // ContentsBuildingPower(viewRect, listing); TEMP: Not used.
