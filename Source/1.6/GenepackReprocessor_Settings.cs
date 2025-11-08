@@ -377,12 +377,6 @@ public class GenepackImprovMod : Mod
 
         // TODO: Add Reset and Hard buttons to the top of the window
         DrawSettings_Variables(listing, settingsArea);
-#if DEBUG
-        if (Mouse.IsOver(settingsArea))
-        {
-            Widgets.DrawHighlight(settingsArea);
-        }
-#endif
         DrawSettings_DefaultButtons(listing, bottomButtons);
 #if DEBUG
         if (Mouse.IsOver(bottomButtons))
@@ -404,10 +398,10 @@ public class GenepackImprovMod : Mod
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
 
-        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN * 2f : 0f), _totalContentHeight);
+        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width, _totalContentHeight);
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
-        Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
+        Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), 9999f);
 
 #if DEBUG
         debugMsg = $"{nameof(viewRect)} {{ {nameof(viewRect.yMin)}: {viewRect.yMin}; {nameof(viewRect.yMax)}: {viewRect.yMax}; {nameof(viewRect.xMin)}: {viewRect.xMin}; {nameof(viewRect.xMax)}: {viewRect.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
@@ -435,6 +429,13 @@ public class GenepackImprovMod : Mod
         // ContentsArchiteSetting(listing, viewRect);
 
         Widgets.EndScrollView();
+
+#if DEBUG
+        if (Mouse.IsOver(viewRect))
+        {
+            Widgets.DrawHighlight(viewRect);
+        }
+#endif
     }
 
     private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect bottom)
