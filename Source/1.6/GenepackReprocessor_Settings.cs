@@ -225,7 +225,7 @@ public class GenepackImprovMod : Mod
             false, ref _, true, ref settings.consumeOnRecycle);
     }
 
-    public void DrawOptions_Work(Rect inRect, Listing_Custom parent, 
+    public void DrawOptions_Work(Rect inRect, Listing_Custom parent,
         ref bool enabled, ref float workRequired, ref CurveType curve,
         string jobName, string jobHelp, string jobMultiplierHelp,
         ref int neutroAmount, ref string bufferNeutroAmount,
@@ -302,11 +302,11 @@ public class GenepackImprovMod : Mod
 
         //neutro settings
         subSection.NGTextFieldNumericLabeled<int>(line, 3, 0,
-            "GeneR_NeutroamineBase".Translate(), ref neutroAmount, ref bufferNeutroAmount, 
+            "GeneR_NeutroamineBase".Translate(), ref neutroAmount, ref bufferNeutroAmount,
             0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
 
         subSection.NGTextFieldNumericLabeled<int>(line, 3, 1,
-            "GeneR_NeutroamineComp".Translate(), ref neutroComplexity, ref bufferNeutroComplexity, 
+            "GeneR_NeutroamineComp".Translate(), ref neutroComplexity, ref bufferNeutroComplexity,
             0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
 
         if (canRequireArchite)
@@ -371,7 +371,12 @@ public class GenepackImprovMod : Mod
     private void DrawSettings_Variables(Rect settingsArea, Listing_Custom listing)
     {
         bool scrollBarVisible = _totalContentHeight > settingsArea.height;
-        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0), _totalContentHeight);
+        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
+
+#if DEBUG
+        var debugMsg = $"{nameof(settingsArea)} {{ {nameof(settingsArea.yMin)}: {settingsArea.yMin}; {nameof(settingsArea.yMax)}: {settingsArea.yMax}; {nameof(settingsArea.xMin)}: {settingsArea.xMin}; {nameof(settingsArea.xMax)}: {settingsArea.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
+        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
+#endif
 
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
@@ -404,7 +409,7 @@ public class GenepackImprovMod : Mod
         // Draw some buttons below the viewRect.
 
         DrawTripleGap(settingsListing);
-        // ContentsArchiteSetting(inRect, settingsListing);
+        // ContentsArchiteSetting(scrollViewTotal, settingsListing);
         Widgets.EndScrollView();
     }
 
