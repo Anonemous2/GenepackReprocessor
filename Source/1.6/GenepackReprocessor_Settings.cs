@@ -70,6 +70,8 @@ public class GenepackImprovMod : Mod
     private Vector2 _scrollPosition = new(0f, 0f);
     private float _totalContentHeight = 850f;
     private const float SCROLL_BAR_WIDTH_MARGIN = 20f;
+    private const float SETTINGS_RECT_OFFSET_FOR_BUTTONS = 60f;
+    private const float SETTINGS_RECT_HEIGHT_FOR_BUTTONS = 40f;
 
     /// <summary>
     /// A mandatory constructor which resolves the reference to our settings.
@@ -366,8 +368,10 @@ public class GenepackImprovMod : Mod
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
         Rect outerRect = new Rect(inRect);
-        Rect settingsArea = new Rect(outerRect.xMin, outerRect.yMin, outerRect.width, outerRect.height - 80f);
-        Rect bottomButtons = new Rect(outerRect.xMin - 10f, outerRect.yMax - 80f, outerRect.width - 20f, 40f);
+        Rect settingsArea = new Rect(outerRect.xMin, outerRect.yMin, outerRect.width, outerRect.height - SETTINGS_RECT_OFFSET_FOR_BUTTONS);
+        Rect bottomButtons = new Rect(outerRect.xMin - 10f,
+            outerRect.yMax - (SETTINGS_RECT_HEIGHT_FOR_BUTTONS * 2),
+            outerRect.width - 20f, SETTINGS_RECT_HEIGHT_FOR_BUTTONS);
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
