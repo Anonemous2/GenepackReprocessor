@@ -211,14 +211,14 @@ public class GenepackImprovMod : Mod
         // Create a subsection.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
 
-        // Work settings. If it's not enabled, there's no reason to show them.
+        // Work settings.
         var size = enabled ? 3.7f : 1.1f;
         Listing_Custom subSection = parent.BeginSection((line.yMax - line.yMin) * size);
 
         DrawOptions_Enabled(subSection, ref enabled, jobName, jobHelp);
-        if (!enabled)
+        if (!enabled)   //If it's not enabled, there's no reason to show them.
             parent.EndSection(subSection);
-        else    // Else show all the settings.
+        else            // Else show all the settings.
         {
             // Work multiplier.
             DrawOptions_WorkMultiplier(subSection, ref workRequired, jobMultiplierHelp);
