@@ -129,7 +129,8 @@ public class GenepackImprovMod : Mod
             "GeneR_MatComp".Translate(), ref settings.costCompo, ref bufCompo, 0f, 75f, labelPart, fieldOffs, "GeneR_MatCompHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_MatAdvComp".Translate(), ref settings.costAdvCo, ref bufAdvCo, 0f, 75f, labelPart, fieldOffs, "GeneR_MatAdvCompHelp".Translate());
-        sub.Gap(); line = sub.GetRectLine();
+        sub.Gap();
+        line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
             "GeneR_MatSteel".Translate(), ref settings.costSteel, ref bufSteel, 0f, 500f, labelPart, fieldOffs, "GeneR_MatSteelHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
@@ -152,7 +153,8 @@ public class GenepackImprovMod : Mod
             "GeneR_BuildWork".Translate(), ref settings.buildWork, ref bufBuildWork, 0f, 100000f, labelPart, fieldOffs, "GeneR_BuildWorkHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_Mass".Translate(), ref settings.mass, ref bufMass, 1f, 100f, labelPart, fieldOffs, "GeneR_MassHelp".Translate());
-        sub.Gap(); line = sub.GetRectLine();
+        sub.Gap();
+        line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<float>(line, 3, 0,
             "GeneR_Flam".Translate(), ref settings.flammability, ref bufFlammability, 0f, 1f, labelPart, fieldOffs, "GeneR_FlamHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
@@ -277,7 +279,8 @@ public class GenepackImprovMod : Mod
 
         if (consumePacks)
         {
-            subSection.Gap(); line = subSection.GetRectLine();
+            subSection.Gap();
+            line = subSection.GetRectLine();
             subSection.NGCheckboxLabeled(line, 3, 0,
                 "GeneR_GenepackConsume".Translate(), ref settings.consumeOnMerge, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
         }
