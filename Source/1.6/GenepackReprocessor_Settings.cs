@@ -253,7 +253,7 @@ public class GenepackImprovMod : Mod
             parent.EndSection(subSection);
 
             // Consumption.
-            size = canConsumePacks ? 2.133f : 1.1f;
+            size = (canConsumePacks && canRequireArchite) ? 2.133f : 1.1f;
             subSection = parent.BeginSection((line.height) * size);
             DrawOptions_Consumption(subSection, ref neutroAmount, ref bufferNeutroAmount,
                 ref neutroComplexity, ref bufferNeutroComplexity,
