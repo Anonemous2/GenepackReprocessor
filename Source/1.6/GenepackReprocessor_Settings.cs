@@ -116,7 +116,7 @@ public class GenepackImprovMod : Mod
 
     }
 
-    public void ContentsBuildingCost(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsBuildingCost(Rect inRect, Listing_Custom listingStandard)
     {
         // Create a subsection for the costs.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
@@ -140,7 +140,7 @@ public class GenepackImprovMod : Mod
         listingStandard.EndSection(sub);
     }
 
-    public void ContentsBuildingSettings(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsBuildingSettings(Rect inRect, Listing_Custom listingStandard)
     {
         // Create a subsection for the stats.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
@@ -165,7 +165,7 @@ public class GenepackImprovMod : Mod
     }
 
     // TODO: Implement.
-    public void ContentsBuildingPower(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsBuildingPower(Rect inRect, Listing_Custom listingStandard)
     {
         // Create a subsection for the power drain.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
@@ -182,31 +182,31 @@ public class GenepackImprovMod : Mod
         listingStandard.EndSection(sub);
     }
 
-    public void ContentsSeparating(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsSeparating(Rect inRect, Listing_Custom listingStandard)
     {
-        DrawOptions_Work(inRect, ref listingStandard, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
+        DrawOptions_Work(inRect, listingStandard, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
             "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp", true);
     }
 
-    public void ContentsDuplicate(Rect inRect, ref Listing_Custom parentSection)
+    public void ContentsDuplicate(Rect inRect, Listing_Custom parentSection)
     {
-        DrawOptions_Work(inRect, ref parentSection, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
+        DrawOptions_Work(inRect, parentSection, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
             "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp", false);
     }
 
-    public void ContentsMerge(Rect inRect, ref Listing_Custom parentSection)
+    public void ContentsMerge(Rect inRect, Listing_Custom parentSection)
     {
-        DrawOptions_Work(inRect, ref parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+        DrawOptions_Work(inRect, parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
             "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp", true);
     }
 
-    public void ContentsRecycle(Rect inRect, ref Listing_Custom parentSection)
+    public void ContentsRecycle(Rect inRect, Listing_Custom parentSection)
     {
-        DrawOptions_Work(inRect, ref parentSection, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
+        DrawOptions_Work(inRect, parentSection, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
             "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp", true);
     }
 
-    public void DrawOptions_Work(Rect inRect, ref Listing_Custom parent, ref bool enabled, ref float workRequired, ref CurveType curve,
+    public void DrawOptions_Work(Rect inRect, Listing_Custom parent, ref bool enabled, ref float workRequired, ref CurveType curve,
         string jobName, string jobHelp, string jobMultiplierHelp, bool consumePacks)
     {
         // Create a subsection.
@@ -324,29 +324,29 @@ public class GenepackImprovMod : Mod
         {
             // TODO: Add Reset and Hard buttons to the top of the window
 
-            ContentsBuildingCost(viewRect, ref listing);
-            ContentsBuildingSettings(viewRect, ref listing);
-            // ContentsBuildingPower(viewRect, ref listing); TEMP: Not used.
+            ContentsBuildingCost(viewRect, listing);
+            ContentsBuildingSettings(viewRect, listing);
+            // ContentsBuildingPower(viewRect, listing); TEMP: Not used.
 
             // Work modes.
-            //listingStandard.Label("Work Modes");
+            //listing.Label("Work Modes");
             DrawTripleGap(listing);
-            ContentsSeparating(viewRect, ref listing);
+            ContentsSeparating(viewRect, listing);
 
             DrawTripleGap(listing);
-            ContentsDuplicate(viewRect, ref listing);
+            ContentsDuplicate(viewRect, listing);
 
             DrawTripleGap(listing);
-            ContentsMerge(viewRect, ref listing);
+            ContentsMerge(viewRect, listing);
 
             DrawTripleGap(listing);
-            ContentsRecycle(viewRect, ref listing);
+            ContentsRecycle(viewRect, listing);
 
             // Draw some buttons below the viewRect.
             Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
 
             DrawTripleGap(listing);
-            // ContentsArchiteSetting(inRect, ref listingStandard);
+            // ContentsArchiteSetting(inRect, listing);
 
             DrawSettingsButtons(listing, bottom);
         }
