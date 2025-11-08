@@ -361,14 +361,14 @@ public class GenepackImprovMod : Mod
         Listing_Custom listing = new Listing_Custom();
 
         listing.Begin(outerRect);
-        DrawSettings_Variables(settingsArea, listing);
+        DrawSettings_Variables(listing, settingsArea);
         DrawSettings_DefaultButtons(listing, bottomButtons);
         listing.End();
 
         base.DoSettingsWindowContents(inRect);
     }
 
-    private void DrawSettings_Variables(Rect settingsArea, Listing_Custom listing)
+    private void DrawSettings_Variables(Listing_Custom listing, Rect settingsArea)
     {
         bool scrollBarVisible = _totalContentHeight > settingsArea.height;
 
