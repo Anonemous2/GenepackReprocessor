@@ -188,29 +188,50 @@ public class GenepackImprovMod : Mod
     public void ContentsSeparating(Rect inRect, Listing_Custom listingStandard)
     {
         DrawOptions_Work(inRect, listingStandard, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
-            "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp", true);
+            "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp",
+            ref settings.separateBaseNeutroamine, ref bufSeparateBaseNeutroamine,
+            ref settings.separateComplexityNeutroamine, ref bufSeparateComplexityNeutroamine,
+            true, ref settings.separateNeedsArchites, true, ref settings.consumeOnSplit);
     }
 
     public void ContentsDuplicate(Rect inRect, Listing_Custom parentSection)
     {
+        bool _ = default;   //never consumes genes. Discard.
+
         DrawOptions_Work(inRect, parentSection, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
-            "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp", false);
+            "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp",
+            ref settings.duplicateBaseNeutroamine, ref bufDuplicateBaseNeutroamine,
+            ref settings.duplicateComplexityNeutroamine, ref bufDuplicateComplexityNeutroamine,
+            true, ref settings.duplicateNeedsArchites, false, ref _);
     }
 
     public void ContentsMerge(Rect inRect, Listing_Custom parentSection)
     {
         DrawOptions_Work(inRect, parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
-            "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp", true);
+            "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp",
+            ref settings.mergeBaseNeutroamine, ref bufMergeBaseNeutroamine,
+            ref settings.mergeComplexityNeutroamine, ref bufMergeComplexityNeutroamine,
+            true, ref settings.mergeNeedsArchites, true, ref settings.consumeOnMerge);
     }
 
     public void ContentsRecycle(Rect inRect, Listing_Custom parentSection)
     {
+        bool _ = default;   //never uses archite, creates it. Discard.
+
         DrawOptions_Work(inRect, parentSection, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
-            "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp", true);
+            "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp",
+            ref settings.recycleBaseNeutroamine, ref bufRecycleBaseNeutroamine,
+            ref settings.recycleComplexityNeutroamine, ref bufRecycleComplexityNeutroamine,
+            false, ref _, true, ref settings.consumeOnRecycle);
     }
 
-    public void DrawOptions_Work(Rect inRect, Listing_Custom parent, ref bool enabled, ref float workRequired, ref CurveType curve,
-        string jobName, string jobHelp, string jobMultiplierHelp, bool consumePacks)
+    public void DrawOptions_Work(Rect inRect, Listing_Custom parent, 
+        ref bool enabled, ref float workRequired, ref CurveType curve,
+        string jobName, string jobHelp, string jobMultiplierHelp,
+        ref int neutroAmount, ref string bufferNeutroAmount,
+        ref int neutroComplexity, ref string bufferNeutroComplexity,
+        bool canRequireArchite, ref bool consumesArchite,
+        bool canConsumePacks, ref bool consumesPacks)
     {
         // Create a subsection.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
@@ -232,9 +253,11 @@ public class GenepackImprovMod : Mod
             parent.EndSection(subSection);
 
             // Consumption.
-            size = consumePacks ? 2.133f : 1.1f;
+            size = canConsumePacks ? 2.133f : 1.1f;
             subSection = parent.BeginSection((line.height) * size);
-            DrawOptions_Consumption(subSection, consumePacks);
+            DrawOptions_Consumption(subSection, ref neutroAmount, ref bufferNeutroAmount,
+                ref neutroComplexity, ref bufferNeutroComplexity,
+                canRequireArchite, ref consumesArchite, canConsumePacks, ref consumesPacks);
             parent.EndSection(subSection);
         }
     }
@@ -269,23 +292,37 @@ public class GenepackImprovMod : Mod
         { curve = CurveType.Exponetial; }
     }
 
-    private void DrawOptions_Consumption(Listing_Custom subSection, bool consumePacks)
+    private void DrawOptions_Consumption(Listing_Custom subSection,
+        ref int neutroAmount, ref string bufferNeutroAmount,
+        ref int neutroComplexity, ref string bufferNeutroComplexity,
+        bool canRequireArchite, ref bool consumesArchite,
+        bool canConsumePacks, ref bool consumesPacks)
     {
         Rect line = subSection.GetRectLine();
 
-        subSection.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_ArchiteCapsulesSet".Translate(), ref settings.mergeNeedsArchites, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
-        subSection.NGTextFieldNumericLabeled<int>(line, 3, 1,
-            "GeneR_NeutroamineBase".Translate(), ref settings.mergeBaseNeutroamine, ref bufMergeBaseNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
-        subSection.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_NeutroamineComp".Translate(), ref settings.mergeComplexityNeutroamine, ref bufMergeComplexityNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
+        //neutro settings
+        subSection.NGTextFieldNumericLabeled<int>(line, 3, 0,
+            "GeneR_NeutroamineBase".Translate(), ref neutroAmount, ref bufferNeutroAmount, 
+            0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
 
-        if (consumePacks)
+        subSection.NGTextFieldNumericLabeled<int>(line, 3, 1,
+            "GeneR_NeutroamineComp".Translate(), ref neutroComplexity, ref bufferNeutroComplexity, 
+            0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
+
+        if (canRequireArchite)
         {
             subSection.Gap();
             line = subSection.GetRectLine();
             subSection.NGCheckboxLabeled(line, 3, 0,
-                "GeneR_GenepackConsume".Translate(), ref settings.consumeOnMerge, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
+                "GeneR_ArchiteCapsulesSet".Translate(), ref consumesArchite, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
+        }
+
+        if (canConsumePacks)
+        {
+            subSection.Gap();
+            line = subSection.GetRectLine();
+            subSection.NGCheckboxLabeled(line, 3, 0,
+                "GeneR_GenepackConsume".Translate(), ref consumesPacks, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
         }
     }
 
@@ -313,7 +350,7 @@ public class GenepackImprovMod : Mod
     public override void DoSettingsWindowContents(Rect inRect)
     {
 #if DEBUG
-        var debugMsg = $"{nameof(inRect)} {{ {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} }} ... {nameof(this._scrollPosition)}: {{ {nameof(this._scrollPosition.x)}: {this._scrollPosition.x};  {{ {nameof(this._scrollPosition.y)}: {this._scrollPosition.y}}} ...";
+        var debugMsg = $"{nameof(inRect)} {{ {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} }} ... {nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ...";
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
         Rect outerRect = new Rect(inRect);
