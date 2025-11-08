@@ -371,45 +371,39 @@ public class GenepackImprovMod : Mod
     private void DrawSettings_Variables(Rect settingsArea, Listing_Custom listing)
     {
         bool scrollBarVisible = _totalContentHeight > settingsArea.height;
-        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
 
 #if DEBUG
         var debugMsg = $"{nameof(settingsArea)} {{ {nameof(settingsArea.yMin)}: {settingsArea.yMin}; {nameof(settingsArea.yMax)}: {settingsArea.yMax}; {nameof(settingsArea.xMin)}: {settingsArea.xMin}; {nameof(settingsArea.xMax)}: {settingsArea.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
 
+        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
         Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
 
-        Listing_Custom settingsListing = listing.BeginSection(viewRect.height);
-
         // TODO: Add Reset and Hard buttons to the top of the window
 
-        ContentsBuildingCost(viewRect, settingsListing);
-        ContentsBuildingSettings(viewRect, settingsListing);
-        // ContentsBuildingPower(viewRect, settingsListing); TEMP: Not used.
+        ContentsBuildingCost(viewRect, listing);
+        ContentsBuildingSettings(viewRect, listing);
+        // ContentsBuildingPower(viewRect, listing); TEMP: Not used.
 
         // Work modes.
-        DrawTripleGap(settingsListing);
-        ContentsSeparating(viewRect, settingsListing);
+        DrawTripleGap(listing);
+        ContentsSeparating(viewRect, listing);
 
-        DrawTripleGap(settingsListing);
-        ContentsDuplicate(viewRect, settingsListing);
+        DrawTripleGap(listing);
+        ContentsDuplicate(viewRect, listing);
 
-        DrawTripleGap(settingsListing);
-        ContentsMerge(viewRect, settingsListing);
+        DrawTripleGap(listing);
+        ContentsMerge(viewRect, listing);
 
-        DrawTripleGap(settingsListing);
-        ContentsRecycle(viewRect, settingsListing);
+        DrawTripleGap(listing);
+        ContentsRecycle(viewRect, listing);
 
-        //End Scrollable area
-        settingsListing.EndSection(settingsListing);
+        DrawTripleGap(listing);
+        // ContentsArchiteSetting(viewRect, listing);
 
-        // Draw some buttons below the viewRect.
-
-        DrawTripleGap(settingsListing);
-        // ContentsArchiteSetting(scrollViewTotal, settingsListing);
         Widgets.EndScrollView();
     }
 
