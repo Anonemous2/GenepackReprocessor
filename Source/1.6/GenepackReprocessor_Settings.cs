@@ -118,7 +118,7 @@ public class GenepackImprovMod : Mod
 
     }
 
-    public void ContentsBuildingCost(Rect inRect, Listing_Custom listing)
+    public void ContentsBuildingCost(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the costs.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
@@ -142,7 +142,7 @@ public class GenepackImprovMod : Mod
         listing.EndSection(sub);
     }
 
-    public void ContentsBuildingSettings(Rect inRect, Listing_Custom listing)
+    public void ContentsBuildingSettings(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the stats.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
@@ -168,7 +168,7 @@ public class GenepackImprovMod : Mod
     }
 
     // TODO: Implement.
-    public void ContentsBuildingPower(Rect inRect, Listing_Custom listing)
+    public void ContentsBuildingPower(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the power drain.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
@@ -185,47 +185,47 @@ public class GenepackImprovMod : Mod
         listing.EndSection(sub);
     }
 
-    public void ContentsSeparating(Rect inRect, Listing_Custom listing)
+    public void ContentsSeparating(Listing_Custom listing, Rect inRect)
     {
-        DrawOptions_Work(inRect, listing, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
+        DrawOptions_Work(listing, inRect, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
             "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp",
             ref settings.separateBaseNeutroamine, ref bufSeparateBaseNeutroamine,
             ref settings.separateComplexityNeutroamine, ref bufSeparateComplexityNeutroamine,
             true, ref settings.separateNeedsArchites, true, ref settings.consumeOnSplit);
     }
 
-    public void ContentsDuplicate(Rect inRect, Listing_Custom parentSection)
+    public void ContentsDuplicate(Listing_Custom parentSection, Rect inRect)
     {
         bool _ = default;   //never consumes genes. Discard.
 
-        DrawOptions_Work(inRect, parentSection, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
+        DrawOptions_Work(parentSection, inRect, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
             "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp",
             ref settings.duplicateBaseNeutroamine, ref bufDuplicateBaseNeutroamine,
             ref settings.duplicateComplexityNeutroamine, ref bufDuplicateComplexityNeutroamine,
             true, ref settings.duplicateNeedsArchites, false, ref _);
     }
 
-    public void ContentsMerge(Rect inRect, Listing_Custom parentSection)
+    public void ContentsMerge(Listing_Custom parentSection, Rect inRect)
     {
-        DrawOptions_Work(inRect, parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+        DrawOptions_Work(parentSection, inRect, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
             "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp",
             ref settings.mergeBaseNeutroamine, ref bufMergeBaseNeutroamine,
             ref settings.mergeComplexityNeutroamine, ref bufMergeComplexityNeutroamine,
             true, ref settings.mergeNeedsArchites, true, ref settings.consumeOnMerge);
     }
 
-    public void ContentsRecycle(Rect inRect, Listing_Custom parentSection)
+    public void ContentsRecycle(Listing_Custom parentSection, Rect inRect)
     {
         bool _ = default;   //never uses archite, creates it. Discard.
 
-        DrawOptions_Work(inRect, parentSection, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
+        DrawOptions_Work(parentSection, inRect, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
             "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp",
             ref settings.recycleBaseNeutroamine, ref bufRecycleBaseNeutroamine,
             ref settings.recycleComplexityNeutroamine, ref bufRecycleComplexityNeutroamine,
             false, ref _, true, ref settings.consumeOnRecycle);
     }
 
-    public void DrawOptions_Work(Rect inRect, Listing_Custom parent,
+    public void DrawOptions_Work(Listing_Custom parent, Rect inRect,
         ref bool enabled, ref float workRequired, ref CurveType curve,
         string jobName, string jobHelp, string jobMultiplierHelp,
         ref int neutroAmount, ref string bufferNeutroAmount,
@@ -327,7 +327,7 @@ public class GenepackImprovMod : Mod
     }
 
     // TODO: Implement. Also add translations after.
-    public void ContentsArchiteSetting(Rect inRect, ref Listing_Custom listing)
+    public void ContentsArchiteSetting(ref Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the costs
         Rect line = new Rect(inRect.xMin, inRect.yMin, (inRect.width) / 2f, Text.LineHeight);
@@ -384,22 +384,22 @@ public class GenepackImprovMod : Mod
 
         // TODO: Add Reset and Hard buttons to the top of the window
 
-        ContentsBuildingCost(viewRect, listing);
-        ContentsBuildingSettings(viewRect, listing);
+        ContentsBuildingCost(listing, viewRect);
+        ContentsBuildingSettings(listing, viewRect);
         // ContentsBuildingPower(viewRect, listing); TEMP: Not used.
 
         // Work modes.
         DrawTripleGap(listing);
-        ContentsSeparating(viewRect, listing);
+        ContentsSeparating(listing, viewRect);
 
         DrawTripleGap(listing);
-        ContentsDuplicate(viewRect, listing);
+        ContentsDuplicate(listing, viewRect);
 
         DrawTripleGap(listing);
-        ContentsMerge(viewRect, listing);
+        ContentsMerge(listing, viewRect);
 
         DrawTripleGap(listing);
-        ContentsRecycle(viewRect, listing);
+        ContentsRecycle(listing, viewRect);
 
         DrawTripleGap(listing);
         // ContentsArchiteSetting(viewRect, listing);
