@@ -121,10 +121,10 @@ public class GenepackImprovMod : Mod
 
     }
 
-    public void ContentsBuildingCost(Listing_Custom listing, Rect inRect)
+    public void ContentsBuildingCost(Listing_Custom listing, Rect viewRect)
     {
         // Create a subsection for the costs.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
+        Rect line = new Rect(viewRect.xMin, viewRect.yMin, viewRect.width, Text.LineHeight);
         Listing_Custom sub = listing.BeginSection((line.height) * layoutRowsTextBoxes2);
 
         line = sub.GetRectLine();
@@ -135,6 +135,7 @@ public class GenepackImprovMod : Mod
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_MatAdvComp".Translate(), ref settings.costAdvCo, ref bufAdvCo, 0f, 75f, labelPart, fieldOffs, "GeneR_MatAdvCompHelp".Translate());
         sub.Gap();
+
         line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
             "GeneR_MatSteel".Translate(), ref settings.costSteel, ref bufSteel, 0f, 500f, labelPart, fieldOffs, "GeneR_MatSteelHelp".Translate());
@@ -142,6 +143,7 @@ public class GenepackImprovMod : Mod
             "GeneR_MatPlasteel".Translate(), ref settings.costPlast, ref bufPlast, 0f, 500f, labelPart, fieldOffs, "GeneR_MatPlasteelHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_MatGold".Translate(), ref settings.costGold, ref bufGold, 0f, 500f, labelPart, fieldOffs, "GeneR_MatGoldHelp".Translate());
+        
         listing.EndSection(sub);
     }
 
