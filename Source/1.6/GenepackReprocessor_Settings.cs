@@ -369,7 +369,19 @@ public class GenepackImprovMod : Mod
 
         // TODO: Add Reset and Hard buttons to the top of the window
         DrawSettings_Variables(listing, settingsArea);
+#if DEBUG
+        if (Mouse.IsOver(settingsArea))
+        {
+            Widgets.DrawHighlight(settingsArea);
+        }
+#endif
         DrawSettings_DefaultButtons(listing, bottomButtons);
+#if DEBUG
+        if (Mouse.IsOver(bottomButtons))
+        {
+            Widgets.DrawHighlight(bottomButtons);
+        }
+#endif
         listing.End();
 
         base.DoSettingsWindowContents(inRect);
