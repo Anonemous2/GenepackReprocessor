@@ -30,9 +30,12 @@ public class GenepackImprovMod : Mod
     int roundedFactor;
 
     // Magic numbers, for editing the layout from one spot.
-    private float labelPart = 0.7f;
-    private float fieldOffs = 0.1f;
-    private float floatOffset = 30f;
+    private const float labelPart = 0.7f;
+    private const float fieldOffs = 0.1f;
+    private const float floatOffset = 30f;
+    private const float layoutRowHeight = 1.1f;           //1.1 times the size of text
+    private const float layoutRowsTextBoxes2 = 2.133f;    //2 rows of text boxes, but not 1.1 * 2 :-/
+    private const float layoutEnabledWork = 3.7f;         //3 rows of enabled settings values -- checkbox, slider, radio button
 
     // Buffers for text fields!
     string bufSteel = string.Empty;
@@ -122,7 +125,7 @@ public class GenepackImprovMod : Mod
     {
         // Create a subsection for the costs.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listing.BeginSection((line.height) * 2.133f);
+        Listing_Custom sub = listing.BeginSection((line.height) * layoutRowsTextBoxes2);
 
         line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -146,7 +149,7 @@ public class GenepackImprovMod : Mod
     {
         // Create a subsection for the stats.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listing.BeginSection((line.height) * 2.133f);
+        Listing_Custom sub = listing.BeginSection((line.height) * layoutRowsTextBoxes2);
 
         line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
@@ -172,7 +175,7 @@ public class GenepackImprovMod : Mod
     {
         // Create a subsection for the power drain.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listing.BeginSection((line.height) * 1.1f);
+        Listing_Custom sub = listing.BeginSection((line.height) * layoutRowHeight);
 
         line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -237,7 +240,7 @@ public class GenepackImprovMod : Mod
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
 
         // Work settings.
-        var size = enabled ? 3.7f : 1.1f;
+        var size = enabled ? layoutEnabledWork : layoutRowHeight;
         Listing_Custom subSection = parent.BeginSection((line.height) * size);
 
         DrawOptions_Enabled(subSection, ref enabled, jobName, jobHelp);
@@ -253,7 +256,7 @@ public class GenepackImprovMod : Mod
             parent.EndSection(subSection);
 
             // Consumption.
-            size = (canConsumePacks && canRequireArchite) ? 2.133f : 1.1f;
+            size = (canConsumePacks && canRequireArchite) ? layoutRowsTextBoxes2 : layoutRowHeight;
             subSection = parent.BeginSection((line.height) * size);
             DrawOptions_Consumption(subSection, ref neutroAmount, ref bufferNeutroAmount,
                 ref neutroComplexity, ref bufferNeutroComplexity,
@@ -333,7 +336,7 @@ public class GenepackImprovMod : Mod
         Rect line = new Rect(inRect.xMin, inRect.yMin, (inRect.width) / 2f, Text.LineHeight);
 
         // Else show all the settings.
-        Listing_Custom sub = listing.CBeginSection(line, (line.height) * 1.1f);
+        Listing_Custom sub = listing.CBeginSection(line, (line.height) * layoutRowHeight);
 
         sub.NGTextFieldNumericLabeled<float>(line, 1, 0,
             "Archite Penalty Multiplier:", ref settings.architePen, ref bufArchitePen, 0f, 5f, labelPart, fieldOffs, "Multiples the penalty for Archite genes.");
