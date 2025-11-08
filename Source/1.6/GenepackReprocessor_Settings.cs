@@ -361,6 +361,8 @@ public class GenepackImprovMod : Mod
         Listing_Custom listing = new Listing_Custom();
 
         listing.Begin(outerRect);
+
+        // TODO: Add Reset and Hard buttons to the top of the window
         DrawSettings_Variables(listing, settingsArea);
         DrawSettings_DefaultButtons(listing, bottomButtons);
         listing.End();
@@ -381,9 +383,6 @@ public class GenepackImprovMod : Mod
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
         Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
-
-        // TODO: Add Reset and Hard buttons to the top of the window
-
         ContentsBuildingCost(listing, viewRect);
         ContentsBuildingSettings(listing, viewRect);
         // ContentsBuildingPower(viewRect, listing); TEMP: Not used.
