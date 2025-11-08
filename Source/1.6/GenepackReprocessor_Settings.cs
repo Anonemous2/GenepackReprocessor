@@ -64,6 +64,9 @@ public class GenepackImprovMod : Mod
 
     string bufArchitePen = string.Empty;
 
+    private Vector2 scrollPosition;
+    private float lastHeight = 1000f;
+
     /// <summary>
     /// A mandatory constructor which resolves the reference to our settings.
     /// </summary>
@@ -303,32 +306,42 @@ public class GenepackImprovMod : Mod
     /// <param name="inRect">A Unity Rect with the size of the settings window.</param>
     public override void DoSettingsWindowContents(Rect inRect)
     {
+        //restrict ourselves to a 20px border on all sides
+        Rect outRect = new Rect(inRect);
+        outRect.yMin += 20f;
+        outRect.yMax -= 20f;
+        outRect.xMin += 20f;
+        outRect.xMax -= 20f;
+
+        Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, this.lastHeight);
+        Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
+
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
-        listing.Begin(inRect);
+        listing.Begin(viewRect);
 
         // TODO: Add Reset and Hard buttons to the top of the window
 
-        ContentsBuildingCost(inRect, ref listing);
-        ContentsBuildingSettings(inRect, ref listing);
-        // ContentsBuildingPower(inRect, ref listing); TEMP: Not used.
+        ContentsBuildingCost(viewRect, ref listing);
+        ContentsBuildingSettings(viewRect, ref listing);
+        // ContentsBuildingPower(viewRect, ref listing); TEMP: Not used.
 
         // Work modes.
         //listingStandard.Label("Work Modes");
         listing.Gap(); listing.Gap(); listing.Gap();
-        ContentsSeparating(inRect, ref listing);
+        ContentsSeparating(viewRect, ref listing);
 
         listing.Gap(); listing.Gap(); listing.Gap();
-        ContentsDuplicate(inRect, ref listing);
+        ContentsDuplicate(viewRect, ref listing);
 
         listing.Gap(); listing.Gap(); listing.Gap();
-        ContentsMerge(inRect, ref listing);
+        ContentsMerge(viewRect, ref listing);
 
         listing.Gap(); listing.Gap(); listing.Gap();
-        ContentsRecycle(inRect, ref listing);
+        ContentsRecycle(viewRect, ref listing);
 
         // Draw some buttons below the Rect.
-        Rect bottom = new Rect(inRect.xMin - 10f, inRect.yMax - 80f, inRect.xMax - inRect.xMin, 40f);
+        Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
 
         listing.Gap(); listing.Gap(); listing.Gap();
         // ContentsArchiteSetting(inRect, ref listingStandard);
@@ -346,6 +359,8 @@ public class GenepackImprovMod : Mod
 
         base.DoSettingsWindowContents(inRect);
         listing.End();
+
+        this.lastHeight = listing.CurHeight + 16f;
     }
 
     // Clear buffers.
