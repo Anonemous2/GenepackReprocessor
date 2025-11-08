@@ -104,6 +104,7 @@ public class Listing_Custom : Listing_Standard
     {
         return GetRect(Text.LineHeight);
     }
+
     public void Gap()
     {
         Gap(verticalSpacing);
@@ -192,7 +193,6 @@ public class Listing_Custom : Listing_Standard
         }
         Widgets.Label(rect, label);
     }
-
 
     public bool CButtonTextLabeledPct(Rect rect, int cols, int index, string label, 
         string buttonLabel, float labelPct, TextAnchor anchor = TextAnchor.UpperLeft, 
