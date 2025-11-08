@@ -50,10 +50,10 @@ public class GenepackImprovMod : Mod
     string bufPowerIdle = string.Empty;
     string bufPowerUsin = string.Empty;
 
-    string bufSeparateBaseNeutroamine       = string.Empty;
+    string bufSeparateBaseNeutroamine = string.Empty;
     string bufSeparateComplexityNeutroamine = string.Empty;
 
-    string bufDuplicateBaseNeutroamine       = string.Empty;
+    string bufDuplicateBaseNeutroamine = string.Empty;
     string bufDuplicateComplexityNeutroamine = string.Empty;
 
     string bufRecycleBaseNeutroamine = string.Empty;
