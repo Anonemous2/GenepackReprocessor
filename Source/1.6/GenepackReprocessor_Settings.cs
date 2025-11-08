@@ -193,10 +193,16 @@ public class GenepackImprovMod : Mod
             "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp", false);
     }
 
-    public void ContentsMerge(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsMerge(Rect inRect, ref Listing_Custom parentSection)
     {
-        ContentsWork(inRect, ref listingStandard, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+        ContentsWork(inRect, ref parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
             "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp", true);
+    }
+
+    public void ContentsRecycle(Rect inRect, ref Listing_Custom parentSection)
+    {
+        ContentsWork(inRect, ref parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+            "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp", true);
     }
 
     public void ContentsWork(Rect inRect, ref Listing_Custom parent, ref bool enabled, ref float workRequired, ref CurveType curve,
