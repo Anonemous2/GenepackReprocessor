@@ -308,10 +308,10 @@ public class GenepackImprovMod : Mod
         }
         if (canRequireArchite && consumesPacks)
         {
-            size = layoutEnabledWork;
+            size = 3.3f;
         }
-        Rect line = parent.GetRectLine();
-        var subSection = parent.BeginSection((line.height) * size);
+        var subSection = parent.BeginSection((Text.LineHeight) * size);
+        Rect line = subSection.GetRectLine();
 
         //neutro settings
         subSection.NGTextFieldNumericLabeled<int>(line, 3, 0,
