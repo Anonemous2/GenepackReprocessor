@@ -68,7 +68,7 @@ public class GenepackImprovMod : Mod
     string bufArchitePen = string.Empty;
 
     private Vector2 _scrollPosition = new(0f, 0f);
-    private float _totalContentHeight = 850f;
+    private float _totalContentHeight = 800f;
     private const float SCROLL_BAR_WIDTH_MARGIN = 20f;
     private const float SETTINGS_RECT_OFFSET_FOR_BUTTONS = 60f;
     private const float SETTINGS_RECT_HEIGHT_FOR_BUTTONS = 40f;
