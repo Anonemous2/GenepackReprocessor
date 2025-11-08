@@ -435,6 +435,8 @@ public class GenepackImprovMod : Mod
         // DrawGapBetweenSections(listing);
         // ContentsArchiteSetting(listing, viewRect);
 
+        //let us dynamically size the area?
+        _totalContentHeight = listing.CurHeight;
         listing.End();
 
         Widgets.EndScrollView();
