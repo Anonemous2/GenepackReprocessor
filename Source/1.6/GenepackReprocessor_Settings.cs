@@ -354,8 +354,8 @@ public class GenepackImprovMod : Mod
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
         Rect outerRect = new Rect(inRect);
-        Rect settingsArea = new Rect(0f, 0f, outerRect.width, outerRect.height - 80f);
-        Rect bottomButtons = new Rect(outerRect.xMin - 10f, outerRect.yMax - 80f, outerRect.width - 20f, 40f);
+        Rect settingsArea = new Rect(0f, 0f, outerRect.width, outerRect.height - 50f); //10pct gap
+        Rect bottomButtons = new Rect(outerRect.xMin - 10f, outerRect.yMax - 40f, outerRect.width - 20f, 40f);
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
