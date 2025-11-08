@@ -311,7 +311,7 @@ public class GenepackImprovMod : Mod
     public override void DoSettingsWindowContents(Rect inRect)
     {
 #if DEBUG
-        var debugMsg = $"{nameof(inRect)} -- {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} ... ";
+        var debugMsg = $"{nameof(inRect)} {{ {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} }} ... {nameof(this.lastHeight)}: {this.lastHeight} ...";
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
         Rect viewRect = new Rect(0f, 0f, inRect.width - 16f, this.lastHeight);
