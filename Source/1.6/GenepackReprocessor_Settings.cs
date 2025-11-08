@@ -319,35 +319,38 @@ public class GenepackImprovMod : Mod
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
+        Listing_Custom settingsListing = listing.BeginSection(viewRect.yMax - viewRect.yMin);
         listing.Begin(viewRect);
 
         try
         {
             // TODO: Add Reset and Hard buttons to the top of the window
 
-            ContentsBuildingCost(viewRect, listing);
-            ContentsBuildingSettings(viewRect, listing);
-            // ContentsBuildingPower(viewRect, listing); TEMP: Not used.
+            ContentsBuildingCost(viewRect, settingsListing);
+            ContentsBuildingSettings(viewRect, settingsListing);
+            // ContentsBuildingPower(viewRect, settingsListing); TEMP: Not used.
 
             // Work modes.
-            //listing.Label("Work Modes");
-            DrawTripleGap(listing);
-            ContentsSeparating(viewRect, listing);
+            DrawTripleGap(settingsListing);
+            ContentsSeparating(viewRect, settingsListing);
 
-            DrawTripleGap(listing);
-            ContentsDuplicate(viewRect, listing);
+            DrawTripleGap(settingsListing);
+            ContentsDuplicate(viewRect, settingsListing);
 
-            DrawTripleGap(listing);
-            ContentsMerge(viewRect, listing);
+            DrawTripleGap(settingsListing);
+            ContentsMerge(viewRect, settingsListing);
 
-            DrawTripleGap(listing);
-            ContentsRecycle(viewRect, listing);
+            DrawTripleGap(settingsListing);
+            ContentsRecycle(viewRect, settingsListing);
+
+            //End Scrollable area
+            settingsListing.EndSection(settingsListing);
 
             // Draw some buttons below the viewRect.
             Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
 
-            DrawTripleGap(listing);
-            // ContentsArchiteSetting(inRect, listing);
+            DrawTripleGap(settingsListing);
+            // ContentsArchiteSetting(inRect, settingsListing);
 
             DrawSettingsButtons(listing, bottom);
         }
