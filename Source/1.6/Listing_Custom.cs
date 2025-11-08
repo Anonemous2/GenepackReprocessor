@@ -29,7 +29,11 @@ public class Listing_Custom : Listing_Standard
         //Gap(verticalSpacing);
     }
 
-    public Listing_Custom BeginSection(float height, float sectionBorder = 4f, float bottomBorder = 4f)
+    /// <remarks>
+    ///     `new` because this is not virtual and because we want to return this type, not the base type.
+    ///     This is otherwise identical code to the base method definition.
+    /// </remarks>
+    public new Listing_Custom BeginSection(float height, float sectionBorder = 4f, float bottomBorder = 4f)
     {
         Rect rect = GetRect(height + sectionBorder + bottomBorder);
         Widgets.DrawMenuSection(rect);
