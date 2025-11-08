@@ -261,7 +261,6 @@ public class GenepackImprovMod : Mod
             DrawOptions_Consumption(parent, ref neutroAmount, ref bufferNeutroAmount,
                 ref neutroComplexity, ref bufferNeutroComplexity,
                 canRequireArchite, ref consumesArchite, canConsumePacks, ref consumesPacks);
-            parent.EndSection(subSection);
         }
     }
 
@@ -337,6 +336,7 @@ public class GenepackImprovMod : Mod
             subSection.NGCheckboxLabeled(line, 3, 0,
                 "GeneR_GenepackConsume".Translate(), ref consumesPacks, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
         }
+        parent.EndSection(subSection);
     }
 
     // TODO: Implement. Also add translations after.
