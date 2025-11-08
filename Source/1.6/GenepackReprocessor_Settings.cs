@@ -411,6 +411,7 @@ public class GenepackImprovMod : Mod
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
+        listing.Begin(viewRect);
 
         ContentsBuildingCost(listing, viewRect);
         ContentsBuildingSettings(listing, viewRect);
@@ -433,6 +434,7 @@ public class GenepackImprovMod : Mod
         // ContentsArchiteSetting(listing, viewRect);
 
         listing.End();
+
         Widgets.EndScrollView();
 
 #if DEBUG
