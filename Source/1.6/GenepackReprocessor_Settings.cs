@@ -112,17 +112,17 @@ public class GenepackImprovMod : Mod
     /// Default and main menu when entering our mod's settings. Should allow you to
     /// navigate to the other menus. TODO: Might not need to use it.
     /// </summary>
-    /// <param name="listingStandard">Context window to add stuff into.</param>
-    public void WindowContentsMain(ref Listing_Custom listingStandard)
+    /// <param name="listing">Context window to add stuff into.</param>
+    public void WindowContentsMain(ref Listing_Custom listing)
     {
 
     }
 
-    public void ContentsBuildingCost(Rect inRect, Listing_Custom listingStandard)
+    public void ContentsBuildingCost(Rect inRect, Listing_Custom listing)
     {
         // Create a subsection for the costs.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.height) * 2.133f);
+        Listing_Custom sub = listing.BeginSection((line.height) * 2.133f);
 
         line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -139,14 +139,14 @@ public class GenepackImprovMod : Mod
             "GeneR_MatPlasteel".Translate(), ref settings.costPlast, ref bufPlast, 0f, 500f, labelPart, fieldOffs, "GeneR_MatPlasteelHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_MatGold".Translate(), ref settings.costGold, ref bufGold, 0f, 500f, labelPart, fieldOffs, "GeneR_MatGoldHelp".Translate());
-        listingStandard.EndSection(sub);
+        listing.EndSection(sub);
     }
 
-    public void ContentsBuildingSettings(Rect inRect, Listing_Custom listingStandard)
+    public void ContentsBuildingSettings(Rect inRect, Listing_Custom listing)
     {
         // Create a subsection for the stats.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.height) * 2.133f);
+        Listing_Custom sub = listing.BeginSection((line.height) * 2.133f);
 
         line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
@@ -164,15 +164,15 @@ public class GenepackImprovMod : Mod
             "GeneR_BuildSkill".Translate(), ref settings.skillNeeded, ref bufSkillNeeded, 0f, 20f, labelPart, fieldOffs, "GeneR_BuildSkillHelp".Translate());
         sub.NGCheckboxLabeled(line, 3, 2, "GeneR_Minify".Translate(), ref settings.movable, fieldOffs, "GeneR_MinifyHelp".Translate()); // TODO: Translate.
 
-        listingStandard.EndSection(sub);
+        listing.EndSection(sub);
     }
 
     // TODO: Implement.
-    public void ContentsBuildingPower(Rect inRect, Listing_Custom listingStandard)
+    public void ContentsBuildingPower(Rect inRect, Listing_Custom listing)
     {
         // Create a subsection for the power drain.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.height) * 1.1f);
+        Listing_Custom sub = listing.BeginSection((line.height) * 1.1f);
 
         line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -182,12 +182,12 @@ public class GenepackImprovMod : Mod
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "Working Drain:", ref settings.powerUsin, ref bufPowerUsin, 0f, 1000f, labelPart, fieldOffs, "How many Watts of power does this building consume while working.");
 
-        listingStandard.EndSection(sub);
+        listing.EndSection(sub);
     }
 
-    public void ContentsSeparating(Rect inRect, Listing_Custom listingStandard)
+    public void ContentsSeparating(Rect inRect, Listing_Custom listing)
     {
-        DrawOptions_Work(inRect, listingStandard, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
+        DrawOptions_Work(inRect, listing, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
             "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp",
             ref settings.separateBaseNeutroamine, ref bufSeparateBaseNeutroamine,
             ref settings.separateComplexityNeutroamine, ref bufSeparateComplexityNeutroamine,
@@ -327,20 +327,20 @@ public class GenepackImprovMod : Mod
     }
 
     // TODO: Implement. Also add translations after.
-    public void ContentsArchiteSetting(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsArchiteSetting(Rect inRect, ref Listing_Custom listing)
     {
         // Create a subsection for the costs
         Rect line = new Rect(inRect.xMin, inRect.yMin, (inRect.width) / 2f, Text.LineHeight);
 
         // Else show all the settings.
-        Listing_Custom sub = listingStandard.CBeginSection(line, (line.height) * 1.1f);
+        Listing_Custom sub = listing.CBeginSection(line, (line.height) * 1.1f);
 
         sub.NGTextFieldNumericLabeled<float>(line, 1, 0,
             "Archite Penalty Multiplier:", ref settings.architePen, ref bufArchitePen, 0f, 5f, labelPart, fieldOffs, "Multiples the penalty for Archite genes.");
         roundedFactor = (int)(100f * settings.architePen);
         settings.architePen = (float)roundedFactor * 0.01f;
 
-        listingStandard.EndSection(sub);
+        listing.EndSection(sub);
     }
 
     /// <summary>
