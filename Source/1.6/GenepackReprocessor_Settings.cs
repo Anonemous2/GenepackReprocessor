@@ -117,9 +117,10 @@ public class GenepackImprovMod : Mod
 
     }
 
-    public void ContentsBuildingCost(Rect inRect, ref Listing_Custom listingStandard) {
+    public void ContentsBuildingCost(Rect inRect, ref Listing_Custom listingStandard)
+    {
         // Create a subsection for the costs.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin,Text.LineHeight);
+        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
         Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
 
         line = sub.GetRectLine();
@@ -135,11 +136,12 @@ public class GenepackImprovMod : Mod
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_MatPlasteel".Translate(), ref settings.costPlast, ref bufPlast, 0f, 500f, labelPart, fieldOffs, "GeneR_MatPlasteelHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_MatGold".Translate(), ref settings.costGold,  ref bufGold, 0f, 500f, labelPart, fieldOffs, "GeneR_MatGoldHelp".Translate());
+            "GeneR_MatGold".Translate(), ref settings.costGold, ref bufGold, 0f, 500f, labelPart, fieldOffs, "GeneR_MatGoldHelp".Translate());
         listingStandard.EndSection(sub);
     }
 
-    public void ContentsBuildingSettings(Rect inRect, ref Listing_Custom listingStandard) {
+    public void ContentsBuildingSettings(Rect inRect, ref Listing_Custom listingStandard)
+    {
         // Create a subsection for the stats.
         Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
         Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
@@ -150,7 +152,7 @@ public class GenepackImprovMod : Mod
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_BuildWork".Translate(), ref settings.buildWork, ref bufBuildWork, 0f, 100000f, labelPart, fieldOffs, "GeneR_BuildWorkHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_Mass".Translate(), ref settings.mass,  ref bufMass, 1f, 100f, labelPart, fieldOffs, "GeneR_MassHelp".Translate());
+            "GeneR_Mass".Translate(), ref settings.mass, ref bufMass, 1f, 100f, labelPart, fieldOffs, "GeneR_MassHelp".Translate());
         sub.Gap(); line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<float>(line, 3, 0,
             "GeneR_Flam".Translate(), ref settings.flammability, ref bufFlammability, 0f, 1f, labelPart, fieldOffs, "GeneR_FlamHelp".Translate());
@@ -342,7 +344,8 @@ public class GenepackImprovMod : Mod
     }
 
     // Clear buffers.
-    public void ClearBuffers() {
+    public void ClearBuffers()
+    {
         // Reset Buffers.
         bufSteel = settings.costSteel.ToString();
         bufPlast = settings.costPlast.ToString();
@@ -375,7 +378,8 @@ public class GenepackImprovMod : Mod
     }
 
     // Defaults reset.
-    public void ResetToDefaults() {
+    public void ResetToDefaults()
+    {
         settings.hp = 600;
         settings.buildWork = 24000;
         settings.movable = false;
@@ -540,7 +544,6 @@ public class GenepackReprocessor_OnDefsLoaded
 
     public static void ApplySettingsToDefs()
     {
-
         // ThingDef that we might want to change, best to took them up once.
         // It might be worth taking a note of what defs got changed, then only look them up if there's
         // a performance hit.
