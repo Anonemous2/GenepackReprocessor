@@ -2,17 +2,13 @@
  * User: Anonemous2
  * Date: 13-06-2024
  */
-using GenepackReprocessor.Properties;
-using RimWorld;
 using System;
-using UnityEngine;
-using Verse;
-using Verse.Noise;
 using HarmonyLib;
 using Multiplayer.API;
-
+using RimWorld;
+using UnityEngine;
+using Verse;
 using static GenepackReprocessor.GenepackReprocessorSettings;
-using static HarmonyLib.Code;
 
 namespace GenepackReprocessor;
 
