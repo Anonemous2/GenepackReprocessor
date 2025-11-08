@@ -60,6 +60,9 @@ public class GenepackImprovMod : Mod
     string bufDuplicateBaseNeutroamine       = string.Empty;
     string bufDuplicateComplexityNeutroamine = string.Empty;
 
+    string bufRecycleBaseNeutroamine = string.Empty;
+    string bufRecycleComplexityNeutroamine = string.Empty;
+
     string bufMergeBaseNeutroamine = string.Empty;
     string bufMergeComplexityNeutroamine = string.Empty;
 
@@ -97,6 +100,9 @@ public class GenepackImprovMod : Mod
 
         bufMergeBaseNeutroamine = settings.mergeBaseNeutroamine.ToString();
         bufMergeComplexityNeutroamine = settings.mergeComplexityNeutroamine.ToString();
+
+        bufRecycleBaseNeutroamine = settings.recycleBaseNeutroamine.ToString();
+        bufRecycleComplexityNeutroamine = settings.recycleComplexityNeutroamine.ToString();
 
         bufArchitePen = settings.architePen.ToString();
     }
@@ -361,6 +367,9 @@ public class GenepackImprovMod : Mod
 
         bufMergeBaseNeutroamine = settings.mergeBaseNeutroamine.ToString();
         bufMergeComplexityNeutroamine = settings.mergeComplexityNeutroamine.ToString();
+
+        bufRecycleBaseNeutroamine = settings.recycleBaseNeutroamine.ToString();
+        bufRecycleComplexityNeutroamine = settings.recycleComplexityNeutroamine.ToString();
 
         bufArchitePen = settings.architePen.ToString();
     }
