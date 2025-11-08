@@ -326,9 +326,9 @@ public class GenepackImprovMod : Mod
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
         listing.Begin(viewRect);
+
         try
         {
-
             // TODO: Add Reset and Hard buttons to the top of the window
 
             ContentsBuildingCost(viewRect, ref listing);
@@ -355,16 +355,7 @@ public class GenepackImprovMod : Mod
             DrawTripleGap(listing);
             // ContentsArchiteSetting(inRect, ref listingStandard);
 
-            if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
-            {
-                ResetToDefaults();
-                Messages.Message("GeneR_SetDefaultMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
-            }
-            if (listing.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
-            {
-                ResetToSimple();
-                Messages.Message("GeneR_SetSimpleMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
-            }
+            DrawSettingsButtons(listing, bottom);
         }
         finally
         {
@@ -372,6 +363,23 @@ public class GenepackImprovMod : Mod
             listing.End();
 
             this.lastHeight = listing.CurHeight + 16f;
+        }
+    }
+
+    private void DrawSettingsButtons(Listing_Custom listing, Rect bottom)
+    {
+        //did this "Default Settings" button just get pressed?
+        if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
+        {
+            ResetToDefaults();
+            Messages.Message("GeneR_SetDefaultMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
+        }
+
+        //did this "Simple Settings" button just get pressed?
+        if (listing.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
+        {
+            ResetToSimple();
+            Messages.Message("GeneR_SetSimpleMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
         }
     }
 
