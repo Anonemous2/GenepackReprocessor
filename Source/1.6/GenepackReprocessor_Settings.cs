@@ -467,9 +467,7 @@ public class GenepackImprovMod : Mod
 
     public void DrawGapBetweenSections(Listing_Custom listing)
     {
-        listing.Gap();
-        listing.Gap();
-        listing.Gap();
+        listing.Gap(20f);
     }
 
     // Clear buffers.
