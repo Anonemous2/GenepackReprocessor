@@ -89,7 +89,6 @@ public class GenepackReprocessorSettings : ModSettings
     /// </summary>
     public override void ExposeData()
     {
-
         // General settings.
         // Construction.
         Scribe_Values.Look(ref hp,          "hp",           600);
@@ -139,10 +138,10 @@ public class GenepackReprocessorSettings : ModSettings
         Scribe_Values.Look(ref mergeNeedsArchites,          "mergeNeedsArchites",           true);
 
         // Recycle settings
-        Scribe_Values.Look(ref merge, "recycle", CurveType.Log);
+        Scribe_Values.Look(ref recycle, "recycle", CurveType.Exponetial);
         Scribe_Values.Look(ref recycleEnabled, "recycleEnabled", true);
-        Scribe_Values.Look(ref consumeOnRecycle, "consumeOnRecycle", false);
-        Scribe_Values.Look(ref workToRecycle, "workToRecycle", 1.0f);
+        Scribe_Values.Look(ref consumeOnRecycle, "consumeOnRecycle", true);
+        Scribe_Values.Look(ref workToRecycle, "workToRecycle", 3.0f);
         // Recycle materials cost.
         Scribe_Values.Look(ref recycleBaseNeutroamine, "recycleBaseNeutroamine", 6);
         Scribe_Values.Look(ref recycleComplexityNeutroamine, "recycleComplexityNeutroamine", 3);

@@ -413,6 +413,15 @@ public class GenepackImprovMod : Mod
         settings.mergeComplexityNeutroamine = 3;
         settings.mergeNeedsArchites = true;
 
+        // Recycle settings
+        settings.recycle = CurveType.Exponetial;
+        settings.recycleEnabled = true;
+        settings.consumeOnRecycle = true;
+        settings.workToRecycle = 3.0f;
+        // Recycle materials cost.
+        settings.recycleBaseNeutroamine = 12;
+        settings.recycleComplexityNeutroamine = 6;
+
         settings.architePen = 1f;
 
     // TODO:
@@ -439,6 +448,12 @@ public class GenepackImprovMod : Mod
 
         // Merge settings
         settings.mergeEnabled = false;
+
+        // Separate settings
+        settings.separateEnabled = false;
+
+        // Recycle settings
+        settings.recycleEnabled = false;
 
         // Reset Buffers
         ClearBuffers();
