@@ -124,7 +124,7 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingCost(Listing_Custom listing, Rect viewRect)
     {
         // Create a subsection for the costs.
-        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2, width: viewRect.width);
 
         Rect line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -149,7 +149,7 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingSettings(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the stats.
-        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2, width: inRect.width);
 
         Rect line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
@@ -174,7 +174,7 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingPower(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the power drain.
-        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowHeight);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowHeight, width: inRect.width);
 
         Rect line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
@@ -236,11 +236,8 @@ public class GenepackImprovMod : Mod
         bool canConsumePacks, ref bool consumesPacks)
     {
         // Create a subsection.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.width, Text.LineHeight);
-
-        // Work settings.
         var size = enabled ? layoutEnabledWork : layoutRowHeight;
-        Listing_Custom subSection = parent.BeginSection((line.height) * size);
+        Listing_Custom subSection = parent.BeginSection(Text.LineHeight * size, width: inRect.width);
 
         DrawOptions_Enabled(subSection, ref enabled, jobName, jobHelp);
         if (!enabled)   //If it's not enabled, there's no reason to show them.
@@ -255,7 +252,7 @@ public class GenepackImprovMod : Mod
             parent.EndSection(subSection);
 
             // Consumption.
-            DrawOptions_Consumption(parent, ref neutroAmount, ref bufferNeutroAmount,
+            DrawOptions_Consumption(parent, inRect, ref neutroAmount, ref bufferNeutroAmount,
                 ref neutroComplexity, ref bufferNeutroComplexity,
                 canRequireArchite, ref consumesArchite, canConsumePacks, ref consumesPacks);
         }
@@ -297,7 +294,7 @@ public class GenepackImprovMod : Mod
         }
     }
 
-    private void DrawOptions_Consumption(Listing_Custom parent,
+    private void DrawOptions_Consumption(Listing_Custom parent, Rect inRect,
         ref int neutroAmount, ref string bufferNeutroAmount,
         ref int neutroComplexity, ref string bufferNeutroComplexity,
         bool canRequireArchite, ref bool consumesArchite,
@@ -312,7 +309,7 @@ public class GenepackImprovMod : Mod
         {
             size = 3.3f;
         }
-        var subSection = parent.BeginSection((Text.LineHeight) * size);
+        var subSection = parent.BeginSection((Text.LineHeight) * size, width: inRect.width);
         Rect line = subSection.GetRectLine();
 
         //neutro settings
