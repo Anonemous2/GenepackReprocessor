@@ -349,16 +349,13 @@ public class GenepackImprovMod : Mod
         DrawTripleGap(settingsListing);
         // ContentsArchiteSetting(inRect, settingsListing);
 
-        DrawSettingsButtons(listing, bottom);
-
-        base.DoSettingsWindowContents(inRect);
-        listing.End();
+        DrawSettings_DefaultButtons(listing, bottom);
         Widgets.EndScrollView();
 
         this.lastHeight = listing.CurHeight + 16f;
     }
 
-    private void DrawSettingsButtons(Listing_Custom listing, Rect bottom)
+    private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect bottom)
     {
         //did this "Default Settings" button just get pressed?
         if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
