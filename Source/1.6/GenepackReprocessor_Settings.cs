@@ -69,7 +69,6 @@ public class GenepackImprovMod : Mod
 
     private Vector2 _scrollPosition = new(0f, 0f);
     private float _totalContentHeight = 1000f;
-    private float _lastHeight = 1000f;
     private const float SCROLL_BAR_WIDTH_MARGIN = 20f;
 
     /// <summary>
