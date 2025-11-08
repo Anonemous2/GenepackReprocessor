@@ -328,6 +328,9 @@ public class GenepackImprovMod : Mod
         listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
         ContentsMerge(inRect, ref listingStandard);
 
+        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
+        ContentsRecycle(inRect, ref listingStandard);
+
         // Draw some buttons below the Rect.
         Rect bottom = new Rect(inRect.xMin - 10f, inRect.yMax - 80f, inRect.xMax - inRect.xMin, 40f);
 
