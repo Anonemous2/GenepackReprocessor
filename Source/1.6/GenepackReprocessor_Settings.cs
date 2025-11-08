@@ -215,16 +215,16 @@ public class GenepackImprovMod : Mod
         var size = enabled ? 3.7f : 1.1f;
         Listing_Custom subSection = parent.BeginSection((line.yMax - line.yMin) * size);
 
-        DrawOptions_Enabled(parent, ref enabled, jobName, jobHelp);
+        DrawOptions_Enabled(subSection, ref enabled, jobName, jobHelp);
         if (!enabled)
             parent.EndSection(subSection);
         else    // Else show all the settings.
         {
             // Work multiplier.
-            DrawOptions_WorkMultiplier(ref workRequired, jobMultiplierHelp, subSection);
+            DrawOptions_WorkMultiplier(subSection, ref workRequired, jobMultiplierHelp);
 
             // Work curve.
-            DrawOptions_WorkCurve(ref curve, parent, subSection);
+            DrawOptions_WorkCurve(parent, subSection, ref curve);
             parent.EndSection(subSection);
 
             // Consumption.
@@ -235,21 +235,21 @@ public class GenepackImprovMod : Mod
         }
     }
 
-    private void DrawOptions_Enabled(Listing_Custom subt, ref bool enabled, string jobName, string jobHelp)
+    private void DrawOptions_Enabled(Listing_Custom subSection, ref bool enabled, string jobName, string jobHelp)
     {
-        var line = subt.GetRectLine();
-        subt.NGCheckboxLabeled(line, 1, 0, jobName.Translate(), ref enabled, fieldOffs / 4.5f,
+        var line = subSection.GetRectLine();
+        subSection.NGCheckboxLabeled(line, 1, 0, jobName.Translate(), ref enabled, fieldOffs / 4.5f,
             jobHelp.Translate());
     }
 
-    private void DrawOptions_WorkMultiplier(ref float workRequired, string jobMultiplierHelp, Listing_Custom sub)
+    private void DrawOptions_WorkMultiplier(Listing_Custom subSection, ref float workRequired, string jobMultiplierHelp)
     {
         var sliderLabel = "GeneR_WorkMultiplier".Translate() + workRequired.ToString("0.0") + "GeneR_X".Translate();
-        roundedFactor = (int)(10f * sub.SliderLabeled(sliderLabel, workRequired, 0.1f, 5, 0.25f, jobMultiplierHelp.Translate()));
+        roundedFactor = (int)(10f * subSection.SliderLabeled(sliderLabel, workRequired, 0.1f, 5, 0.25f, jobMultiplierHelp.Translate()));
         workRequired = (float)roundedFactor * 0.1f;
     }
 
-    private void DrawOptions_WorkCurve(ref CurveType curve, Listing_Custom parentSection, Listing_Custom subSection)
+    private void DrawOptions_WorkCurve(Listing_Custom parentSection, Listing_Custom subSection, ref CurveType curve)
     {
         Rect line = subSection.GetRectLine();
         if (parentSection.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
