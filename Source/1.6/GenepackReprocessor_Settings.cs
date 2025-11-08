@@ -363,10 +363,8 @@ public class GenepackImprovMod : Mod
     /// <param name="inRect">A Unity Rect with the size of the settings window.</param>
     public override void DoSettingsWindowContents(Rect inRect)
     {
-#if DEBUG
-        var debugMsg = $"{nameof(inRect)} {{ {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} }} ... {nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ...";
-        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
-#endif
+        // Debug_Rect(inRect);
+
         Rect outerRect = new Rect(inRect);
         Rect settingsArea = new Rect(outerRect.xMin, outerRect.yMin, outerRect.width, outerRect.height - SETTINGS_RECT_OFFSET_FOR_BUTTONS);
         Rect bottomButtons = new Rect(outerRect.xMin - 10f,
@@ -378,13 +376,9 @@ public class GenepackImprovMod : Mod
         listing.Begin(outerRect);
 
         // TODO: Add Reset and Hard buttons to the top of the window
+
         DrawSettings_DefaultButtons(listing, bottomButtons);
-#if DEBUG
-        if (Mouse.IsOver(bottomButtons))
-        {
-            Widgets.DrawHighlight(bottomButtons);
-        }
-#endif
+        // Debug_HighlightRect(bottomButtons);
         listing.End();
 
         DrawSettings_Variables(settingsArea);
@@ -392,24 +386,54 @@ public class GenepackImprovMod : Mod
         base.DoSettingsWindowContents(inRect);
     }
 
+    #region Debug Helpers
+    private static void DebugRect_Highlight(Rect rect)
+    {
+#if DEBUG
+        if (Mouse.IsOver(rect))
+        {
+            Widgets.DrawHighlight(rect);
+        }
+#endif
+    }
+
+    private void DebugRect(Rect rect)
+    {
+#if DEBUG
+        var debugMsg = $"{nameof(rect)} {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax} }} ... {nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ...";
+        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
+#endif
+    }
+
+    private void DebugRect_ScrollPosition(Rect rect)
+    {
+#if DEBUG
+        var debugMsg = $"{nameof(rect)} {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax} }} ... {nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ...";
+        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
+#endif
+    }
+
+    private void DebugRect_ScrollPosition(Rect rect, Boolean scrollBarVisible)
+    {
+#if DEBUG
+        var debugMsg = $"{nameof(rect)} {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
+        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
+#endif
+    }
+    #endregion
+
     private void DrawSettings_Variables(Rect settingsArea)
     {
         bool scrollBarVisible = _totalContentHeight > settingsArea.height;
 
-#if DEBUG
-        var debugMsg = $"{nameof(settingsArea)} {{ {nameof(settingsArea.yMin)}: {settingsArea.yMin}; {nameof(settingsArea.yMax)}: {settingsArea.yMax}; {nameof(settingsArea.xMin)}: {settingsArea.xMin}; {nameof(settingsArea.xMax)}: {settingsArea.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
-        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
-#endif
+        // DebugRect_ScrollPosition(settingsArea, scrollBarVisible);
 
         Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
         Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
 
-#if DEBUG
-        debugMsg = $"{nameof(viewRect)} {{ {nameof(viewRect.yMin)}: {viewRect.yMin}; {nameof(viewRect.yMax)}: {viewRect.yMax}; {nameof(viewRect.xMin)}: {viewRect.xMin}; {nameof(viewRect.xMax)}: {viewRect.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
-        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
-#endif
+        // DebugRect_ScrollPosition(viewRect, scrollBarVisible);
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
@@ -441,12 +465,7 @@ public class GenepackImprovMod : Mod
 
         Widgets.EndScrollView();
 
-#if DEBUG
-        if (Mouse.IsOver(settingsArea))
-        {
-            Widgets.DrawHighlight(settingsArea);
-        }
-#endif
+        // DebugRect_Highlight(settingsArea);
     }
 
     private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect bottom)
