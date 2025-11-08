@@ -309,6 +309,10 @@ public class GenepackImprovMod : Mod
     /// <param name="inRect">A Unity Rect with the size of the settings window.</param>
     public override void DoSettingsWindowContents(Rect inRect)
     {
+#if DEBUG
+        var debugMsg = $"{nameof(inRect)} -- {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} ... ";
+        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
+#endif
         //restrict ourselves to a 20px border on all sides
         Rect outRect = new Rect(inRect);
         outRect.yMin += 20f;
@@ -322,48 +326,53 @@ public class GenepackImprovMod : Mod
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
         listing.Begin(viewRect);
-
-        // TODO: Add Reset and Hard buttons to the top of the window
-
-        ContentsBuildingCost(viewRect, ref listing);
-        ContentsBuildingSettings(viewRect, ref listing);
-        // ContentsBuildingPower(viewRect, ref listing); TEMP: Not used.
-
-        // Work modes.
-        //listingStandard.Label("Work Modes");
-        DrawTripleGap(listing);
-        ContentsSeparating(viewRect, ref listing);
-
-        DrawTripleGap(listing);
-        ContentsDuplicate(viewRect, ref listing);
-
-        DrawTripleGap(listing);
-        ContentsMerge(viewRect, ref listing);
-
-        DrawTripleGap(listing);
-        ContentsRecycle(viewRect, ref listing);
-
-        // Draw some buttons below the Rect.
-        Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
-
-        DrawTripleGap(listing);
-        // ContentsArchiteSetting(inRect, ref listingStandard);
-
-        if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
+        try
         {
-            ResetToDefaults();
-            Messages.Message("GeneR_SetDefaultMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
+
+            // TODO: Add Reset and Hard buttons to the top of the window
+
+            ContentsBuildingCost(viewRect, ref listing);
+            ContentsBuildingSettings(viewRect, ref listing);
+            // ContentsBuildingPower(viewRect, ref listing); TEMP: Not used.
+
+            // Work modes.
+            //listingStandard.Label("Work Modes");
+            DrawTripleGap(listing);
+            ContentsSeparating(viewRect, ref listing);
+
+            DrawTripleGap(listing);
+            ContentsDuplicate(viewRect, ref listing);
+
+            DrawTripleGap(listing);
+            ContentsMerge(viewRect, ref listing);
+
+            DrawTripleGap(listing);
+            ContentsRecycle(viewRect, ref listing);
+
+            // Draw some buttons below the Rect.
+            Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.xMax - viewRect.xMin, 40f);
+
+            DrawTripleGap(listing);
+            // ContentsArchiteSetting(inRect, ref listingStandard);
+
+            if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
+            {
+                ResetToDefaults();
+                Messages.Message("GeneR_SetDefaultMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
+            }
+            if (listing.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
+            {
+                ResetToSimple();
+                Messages.Message("GeneR_SetSimpleMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
+            }
         }
-        if (listing.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
+        finally
         {
-            ResetToSimple();
-            Messages.Message("GeneR_SetSimpleMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
+            base.DoSettingsWindowContents(inRect);
+            listing.End();
+
+            this.lastHeight = listing.CurHeight + 16f;
         }
-
-        base.DoSettingsWindowContents(inRect);
-        listing.End();
-
-        this.lastHeight = listing.CurHeight + 16f;
     }
 
     public void DrawTripleGap(Listing_Custom listing)
