@@ -64,8 +64,10 @@ public class GenepackImprovMod : Mod
 
     string bufArchitePen = string.Empty;
 
-    private Vector2 scrollPosition;
-    private float lastHeight = 1000f;
+    private Vector2 _scrollPosition = new(0f, 0f);
+    private float _totalContentHeight = 1000f;
+    private float _lastHeight = 1000f;
+    private const float SCROLL_BAR_WIDTH_MARGIN = 20f;
 
     /// <summary>
     /// A mandatory constructor which resolves the reference to our settings.
@@ -311,14 +313,33 @@ public class GenepackImprovMod : Mod
     public override void DoSettingsWindowContents(Rect inRect)
     {
 #if DEBUG
-        var debugMsg = $"{nameof(inRect)} {{ {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} }} ... {nameof(this.lastHeight)}: {this.lastHeight} ...";
+        var debugMsg = $"{nameof(inRect)} {{ {nameof(inRect.yMin)}: {inRect.yMin}; {nameof(inRect.yMax)}: {inRect.yMax}; {nameof(inRect.xMin)}: {inRect.xMin}; {nameof(inRect.xMax)}: {inRect.xMax} }} ... {nameof(this._scrollPosition)}: {{ {nameof(this._scrollPosition.x)}: {this._scrollPosition.x};  {{ {nameof(this._scrollPosition.y)}: {this._scrollPosition.y}}} ...";
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
-        Rect viewRect = new Rect(0f, 0f, inRect.width - 16f, this.lastHeight);
-        Widgets.BeginScrollView(inRect, ref this.scrollPosition, viewRect);
+        Rect outerRect = new Rect(inRect);
+        Rect settingsArea = new Rect(0f, 0f, outerRect.width, outerRect.height - 80f);
+        Rect bottomButtons = new Rect(outerRect.xMin - 10f, outerRect.yMax - 80f, outerRect.width - 20f, 40f);
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
+
+        listing.Begin(outerRect);
+        DrawSettings_Variables(settingsArea, listing);
+        DrawSettings_DefaultButtons(listing, bottomButtons);
+        listing.End();
+
+        base.DoSettingsWindowContents(inRect);
+    }
+
+    private void DrawSettings_Variables(Rect settingsArea, Listing_Custom listing)
+    {
+        bool scrollBarVisible = _totalContentHeight > settingsArea.height;
+        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0), _totalContentHeight);
+
+        Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
+
+        Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
+
         Listing_Custom settingsListing = listing.BeginSection(viewRect.height);
 
         // TODO: Add Reset and Hard buttons to the top of the window
@@ -344,15 +365,10 @@ public class GenepackImprovMod : Mod
         settingsListing.EndSection(settingsListing);
 
         // Draw some buttons below the viewRect.
-        Rect bottom = new Rect(viewRect.xMin - 10f, viewRect.yMax - 80f, viewRect.width, 40f);
 
         DrawTripleGap(settingsListing);
         // ContentsArchiteSetting(inRect, settingsListing);
-
-        DrawSettings_DefaultButtons(listing, bottom);
         Widgets.EndScrollView();
-
-        this.lastHeight = listing.CurHeight + 16f;
     }
 
     private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect bottom)
