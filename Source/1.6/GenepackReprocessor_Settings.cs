@@ -363,7 +363,7 @@ public class GenepackImprovMod : Mod
     /// <param name="inRect">A Unity Rect with the size of the settings window.</param>
     public override void DoSettingsWindowContents(Rect inRect)
     {
-        // Debug_Rect(inRect);
+        DebugRect(inRect, nameof(inRect));
 
         Rect outerRect = new Rect(inRect);
         Rect settingsArea = new Rect(outerRect.xMin, outerRect.yMin, outerRect.width, outerRect.height - SETTINGS_RECT_OFFSET_FOR_BUTTONS);
@@ -378,7 +378,7 @@ public class GenepackImprovMod : Mod
         // TODO: Add Reset and Hard buttons to the top of the window
 
         DrawSettings_DefaultButtons(listing, bottomButtons);
-        // Debug_HighlightRect(bottomButtons);
+        DebugRect_Highlight(bottomButtons);
         listing.End();
 
         DrawSettings_Variables(settingsArea);
@@ -397,26 +397,44 @@ public class GenepackImprovMod : Mod
 #endif
     }
 
-    private void DebugRect(Rect rect)
+    private static string Debug_BuildRectString(Rect rect, string rectName)
+    {
+        var debugMsg = $"{rectName}: {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax}; {nameof(rect.width)}: {rect.width}; {nameof(rect.height)}: {rect.height} }}; ... ";
+        return debugMsg;
+    }
+
+    private string Debug_BuildScrollbarPositionString()
+    {
+        var debugMsg = $"{nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ... ";
+        return debugMsg;
+    }
+
+    private static string Debug_BuildScrollBarVisibleString(bool scrollBarVisible)
+    {
+        var debugMsg = $"{nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
+        return debugMsg;
+    }
+
+    private void DebugRect(Rect rect, string rectName)
     {
 #if DEBUG
-        var debugMsg = $"{nameof(rect)} {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax} }} ... {nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ...";
+        var debugMsg = Debug_BuildRectString(rect, rectName);
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
     }
 
-    private void DebugRect_ScrollPosition(Rect rect)
+    private void DebugRect_ScrollBar(Rect rect, string rectName, bool scrollBarVisible)
     {
 #if DEBUG
-        var debugMsg = $"{nameof(rect)} {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax} }} ... {nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ...";
+        var debugMsg = Debug_BuildRectString(rect, rectName) + Debug_BuildScrollBarVisibleString(scrollBarVisible) + Debug_BuildScrollbarPositionString();
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
     }
 
-    private void DebugRect_ScrollPosition(Rect rect, Boolean scrollBarVisible)
+    private void DebugRect_ScrollVisible(Rect rect, string rectName, bool scrollBarVisible)
     {
 #if DEBUG
-        var debugMsg = $"{nameof(rect)} {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
+        var debugMsg = Debug_BuildRectString(rect, rectName) + Debug_BuildScrollBarVisibleString(scrollBarVisible);
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
     }
@@ -426,14 +444,14 @@ public class GenepackImprovMod : Mod
     {
         bool scrollBarVisible = _totalContentHeight > settingsArea.height;
 
-        // DebugRect_ScrollPosition(settingsArea, scrollBarVisible);
+        DebugRect_ScrollVisible(settingsArea, nameof(settingsArea), scrollBarVisible);
 
         Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
         Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
 
-        // DebugRect_ScrollPosition(viewRect, scrollBarVisible);
+        DebugRect_ScrollBar(viewRect, nameof(viewRect), scrollBarVisible);
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
@@ -465,25 +483,22 @@ public class GenepackImprovMod : Mod
 
         Widgets.EndScrollView();
 
-        // DebugRect_Highlight(settingsArea);
+        DebugRect_Highlight(settingsArea);
     }
 
-    private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect bottom)
+    private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect buttonArea)
     {
-#if DEBUG
-        var debugMsg = $"{nameof(bottom)} {{ {nameof(bottom.yMin)}: {bottom.yMin}; {nameof(bottom.yMax)}: {bottom.yMax}; {nameof(bottom.xMin)}: {bottom.xMin}; {nameof(bottom.xMax)}: {bottom.xMax} }} ... ";
-        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
-#endif
+        DebugRect(buttonArea, nameof(buttonArea));
 
         //did this "Default Settings" button just get pressed?
-        if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
+        if (listing.CButtonText(buttonArea, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
         {
             ResetToDefaults();
             Messages.Message("GeneR_SetDefaultMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
         }
 
         //did this "Simple Settings" button just get pressed?
-        if (listing.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
+        if (listing.CButtonText(buttonArea, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
         {
             ResetToSimple();
             Messages.Message("GeneR_SetSimpleMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
