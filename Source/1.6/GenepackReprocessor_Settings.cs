@@ -154,6 +154,7 @@ public class GenepackImprovMod : Mod
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_Mass".Translate(), ref settings.mass, ref bufMass, 1f, 100f, labelPart, fieldOffs, "GeneR_MassHelp".Translate());
         sub.Gap();
+
         line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<float>(line, 3, 0,
             "GeneR_Flam".Translate(), ref settings.flammability, ref bufFlammability, 0f, 1f, labelPart, fieldOffs, "GeneR_FlamHelp".Translate());
