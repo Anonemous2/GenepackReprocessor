@@ -304,48 +304,48 @@ public class GenepackImprovMod : Mod
     public override void DoSettingsWindowContents(Rect inRect)
     {
         // Create the generic listing, which we'll fill with our settings.
-        Listing_Custom listingStandard = new Listing_Custom();
-        listingStandard.Begin(inRect);
+        Listing_Custom listing = new Listing_Custom();
+        listing.Begin(inRect);
 
         // TODO: Add Reset and Hard buttons to the top of the window
 
-        ContentsBuildingCost(inRect, ref listingStandard);
-        ContentsBuildingSettings(inRect, ref listingStandard);
-        // ContentsBuildingPower(inRect, ref listingStandard); TEMP: Not used.
+        ContentsBuildingCost(inRect, ref listing);
+        ContentsBuildingSettings(inRect, ref listing);
+        // ContentsBuildingPower(inRect, ref listing); TEMP: Not used.
 
         // Work modes.
         //listingStandard.Label("Work Modes");
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
-        ContentsSeparating(inRect, ref listingStandard);
+        listing.Gap(); listing.Gap(); listing.Gap();
+        ContentsSeparating(inRect, ref listing);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
-        ContentsDuplicate(inRect, ref listingStandard);
+        listing.Gap(); listing.Gap(); listing.Gap();
+        ContentsDuplicate(inRect, ref listing);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
-        ContentsMerge(inRect, ref listingStandard);
+        listing.Gap(); listing.Gap(); listing.Gap();
+        ContentsMerge(inRect, ref listing);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
-        ContentsRecycle(inRect, ref listingStandard);
+        listing.Gap(); listing.Gap(); listing.Gap();
+        ContentsRecycle(inRect, ref listing);
 
         // Draw some buttons below the Rect.
         Rect bottom = new Rect(inRect.xMin - 10f, inRect.yMax - 80f, inRect.xMax - inRect.xMin, 40f);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
+        listing.Gap(); listing.Gap(); listing.Gap();
         // ContentsArchiteSetting(inRect, ref listingStandard);
 
-        if (listingStandard.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
+        if (listing.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
         {
             ResetToDefaults();
             Messages.Message("GeneR_SetDefaultMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
         }
-        if (listingStandard.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
+        if (listing.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
         {
             ResetToSimple();
             Messages.Message("GeneR_SetSimpleMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
         }
 
         base.DoSettingsWindowContents(inRect);
-        listingStandard.End();
+        listing.End();
     }
 
     // Clear buffers.
