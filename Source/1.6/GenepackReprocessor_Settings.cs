@@ -313,13 +313,13 @@ public class GenepackImprovMod : Mod
 
         // Work modes.
         //listingStandard.Label("Work Modes");
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
+        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
         ContentsSeparating(inRect, ref listingStandard);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
+        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
         ContentsDuplicate(inRect, ref listingStandard);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
+        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
         ContentsMerge(inRect, ref listingStandard);
 
         // Draw some buttons below the Rect.
@@ -437,9 +437,9 @@ public class GenepackImprovMod : Mod
 
         settings.architePen = 1f;
 
-    // TODO:
-    // Worker settings
-    settings.skillImportance = 1f;   // Multiplier on the skill's benefit/harm to work speed.
+        // TODO:
+        // Worker settings
+        settings.skillImportance = 1f;   // Multiplier on the skill's benefit/harm to work speed.
         settings.skillGain = 1f;   // Multiplier on the skill gain from creating genepacks.
 
         // Reset Buffers
@@ -613,7 +613,7 @@ public class GenepackReprocessor_OnDefsLoaded
         GeneSeparator_DefOfs.GenepackCreationSpeed.skillNeedFactors.Clear();
         GeneSeparator_DefOfs.GenepackCreationSpeed.skillNeedFactors.Add(new SkillNeed_BaseBonus() { skill = DefDatabase<SkillDef>.GetNamed("Intellectual"),
             baseValue = ,
-            bonusPerLevel = 
+            bonusPerLevel =
         });*/
 
 
@@ -630,9 +630,9 @@ public class GenepackReprocessor_OnDefsLoaded
         }
         if (flag)
         {
-            // CompProperties = 
+            // CompProperties =
             CompPowerTrader tempIn = new CompPowerTrader();
-            tempIn 
+            tempIn
 
             CompProperties_Power tempC = new CompProperties_Power();
             tempC.compClass = tempIn;
