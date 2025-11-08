@@ -183,29 +183,29 @@ public class GenepackImprovMod : Mod
 
     public void ContentsSeparating(Rect inRect, ref Listing_Custom listingStandard)
     {
-        ContentsWork(inRect, ref listingStandard, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
+        DrawOptions_Work(inRect, ref listingStandard, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
             "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp", true);
     }
 
     public void ContentsDuplicate(Rect inRect, ref Listing_Custom parentSection)
     {
-        ContentsWork(inRect, ref parentSection, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
+        DrawOptions_Work(inRect, ref parentSection, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.merge,
             "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp", false);
     }
 
     public void ContentsMerge(Rect inRect, ref Listing_Custom parentSection)
     {
-        ContentsWork(inRect, ref parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+        DrawOptions_Work(inRect, ref parentSection, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
             "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp", true);
     }
 
     public void ContentsRecycle(Rect inRect, ref Listing_Custom parentSection)
     {
-        ContentsWork(inRect, ref parentSection, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
+        DrawOptions_Work(inRect, ref parentSection, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
             "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp", true);
     }
 
-    public void ContentsWork(Rect inRect, ref Listing_Custom parent, ref bool enabled, ref float workRequired, ref CurveType curve,
+    public void DrawOptions_Work(Rect inRect, ref Listing_Custom parent, ref bool enabled, ref float workRequired, ref CurveType curve,
         string jobName, string jobHelp, string jobMultiplierHelp, bool consumePacks)
     {
         // Create a subsection.
