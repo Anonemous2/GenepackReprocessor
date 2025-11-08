@@ -376,7 +376,6 @@ public class GenepackImprovMod : Mod
         listing.Begin(outerRect);
 
         // TODO: Add Reset and Hard buttons to the top of the window
-        DrawSettings_Variables(listing, settingsArea);
         DrawSettings_DefaultButtons(listing, bottomButtons);
 #if DEBUG
         if (Mouse.IsOver(bottomButtons))
@@ -386,10 +385,12 @@ public class GenepackImprovMod : Mod
 #endif
         listing.End();
 
+        DrawSettings_Variables(settingsArea);
+
         base.DoSettingsWindowContents(inRect);
     }
 
-    private void DrawSettings_Variables(Listing_Custom listing, Rect settingsArea)
+    private void DrawSettings_Variables(Rect settingsArea)
     {
         bool scrollBarVisible = _totalContentHeight > settingsArea.height;
 
@@ -407,6 +408,9 @@ public class GenepackImprovMod : Mod
         debugMsg = $"{nameof(viewRect)} {{ {nameof(viewRect.yMin)}: {viewRect.yMin}; {nameof(viewRect.yMax)}: {viewRect.yMax}; {nameof(viewRect.xMin)}: {viewRect.xMin}; {nameof(viewRect.xMax)}: {viewRect.xMax} }} ... {nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
         Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
 #endif
+
+        // Create the generic listing, which we'll fill with our settings.
+        Listing_Custom listing = new Listing_Custom();
 
         ContentsBuildingCost(listing, viewRect);
         ContentsBuildingSettings(listing, viewRect);
@@ -428,12 +432,13 @@ public class GenepackImprovMod : Mod
         DrawTripleGap(listing);
         // ContentsArchiteSetting(listing, viewRect);
 
+        listing.End();
         Widgets.EndScrollView();
 
 #if DEBUG
-        if (Mouse.IsOver(viewRect))
+        if (Mouse.IsOver(settingsArea))
         {
-            Widgets.DrawHighlight(viewRect);
+            Widgets.DrawHighlight(settingsArea);
         }
 #endif
     }
