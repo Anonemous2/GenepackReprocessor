@@ -888,40 +888,28 @@ public class Building_GeneSeparator : Building, IThingHolder
         command_Separate.defaultLabel = "GeneR_SeparateGenepack".Translate() + "...";
         command_Separate.defaultDesc = "GeneR_SeparateDesc".Translate();
         command_Separate.icon = SeparateIcon.Texture;
-        command_Separate.action = delegate
-        {
-            SeparateGenepack();
-        };
+        command_Separate.action = SeparateGenepack;
 
         // Duplicate Genepack
         Command_Action command_Duplicate = new Command_Action();
         command_Duplicate.defaultLabel = "GeneR_DublicGenepack".Translate() + "...";
         command_Duplicate.defaultDesc = "GeneR_DublicDesc".Translate();
         command_Duplicate.icon = DuplicateIcon.Texture;
-        command_Duplicate.action = delegate
-        {
-            DuplicateGenepack();
-        };
+        command_Duplicate.action = DuplicateGenepack;
 
         // Merge Genepacks
         Command_Action command_Merge = new Command_Action();
         command_Merge.defaultLabel = "GeneR_MergeGenepack".Translate() + "...";
         command_Merge.defaultDesc = "GeneR_MergeDesc".Translate();
         command_Merge.icon = MergeIcon.Texture;
-        command_Merge.action = delegate
-        {
-            MergeGenepack();
-        };
+        command_Merge.action = MergeGenepack;
 
         // Recycle Archite Genepack
         Command_Action command_Recycle = new Command_Action();
         command_Merge.defaultLabel = "GeneR_RecycleGenepack".Translate() + "...";
         command_Merge.defaultDesc = "GeneR_RecycleDesc".Translate();
         command_Merge.icon = RecycleIcon.Texture;
-        command_Merge.action = delegate
-        {
-            RecycleGenepack();
-        };
+        command_Merge.action = RecycleGenepack;
 
         // TODO: see if we need to change this if the description is specific to the assembler
         if (!def.IsResearchFinished)
