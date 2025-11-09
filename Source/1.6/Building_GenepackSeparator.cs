@@ -560,9 +560,6 @@ public class Building_GeneSeparator : Building, IThingHolder
                 if (Settings.consumeOnSplit) { DestroyGeneBankHoldingPack(genepackToWork); }
 
                 // Lastly, check if we should queue another separate job.
-
-
-                // Lastly, check if we should queue another separate job.
                 if (doForever)
                 {
                     // Make sure we don't repeat separating the last job, as the packs won't have been loaded into banks yet.
