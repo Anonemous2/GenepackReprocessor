@@ -50,6 +50,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\DebugMessaging.cs" />
     <Compile Include="WorkGiver_Genes.cs" />
   </ItemGroup>
   <ItemGroup>
