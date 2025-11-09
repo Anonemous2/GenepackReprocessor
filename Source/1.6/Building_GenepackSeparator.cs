@@ -876,6 +876,17 @@ public class Building_GeneSeparator : Building, IThingHolder
         }
     }
 
+    private Command_Action BuildGizmo(string label, string description, Texture icon, Action action, bool labelEllipsis = true)
+    {
+        Command_Action command = new Command_Action();
+        command.defaultLabel = label.Translate() + (labelEllipsis ? "..." : string.Empty);
+        command.defaultDesc = description.Translate();
+        command.icon = icon;
+        command.action = action;
+
+        return command;
+    }
+
     /*
      Implement: Critical, allows us to set up the split job.
      public override IEnumerable<Gizmo> GetGizmos() { }
@@ -887,33 +898,11 @@ public class Building_GeneSeparator : Building, IThingHolder
             yield return gizmo;
         }
 
-        // Split Genepack
-        Command_Action command_Separate = new Command_Action();
-        command_Separate.defaultLabel = "GeneR_SeparateGenepack".Translate() + "...";
-        command_Separate.defaultDesc = "GeneR_SeparateDesc".Translate();
-        command_Separate.icon = SeparateIcon.Texture;
-        command_Separate.action = SeparateGenepack;
-
-        // Duplicate Genepack
-        Command_Action command_Duplicate = new Command_Action();
-        command_Duplicate.defaultLabel = "GeneR_DublicGenepack".Translate() + "...";
-        command_Duplicate.defaultDesc = "GeneR_DublicDesc".Translate();
-        command_Duplicate.icon = DuplicateIcon.Texture;
-        command_Duplicate.action = DuplicateGenepack;
-
-        // Merge Genepacks
-        Command_Action command_Merge = new Command_Action();
-        command_Merge.defaultLabel = "GeneR_MergeGenepack".Translate() + "...";
-        command_Merge.defaultDesc = "GeneR_MergeDesc".Translate();
-        command_Merge.icon = MergeIcon.Texture;
-        command_Merge.action = MergeGenepack;
-
-        // Recycle Archite Genepack
-        Command_Action command_Recycle = new Command_Action();
-        command_Recycle.defaultLabel = "GeneR_RecycleGenepack".Translate() + "...";
-        command_Recycle.defaultDesc = "GeneR_RecycleDesc".Translate();
-        command_Recycle.icon = RecycleIcon.Texture;
-        command_Recycle.action = RecycleGenepack;
+        //Commands
+        Command_Action command_Separate = BuildGizmo("GeneR_SeparateGenepack", "GeneR_SeparateDesc", SeparateIcon.Texture, SeparateGenepack);
+        Command_Action command_Duplicate = BuildGizmo("GeneR_DublicGenepack", "GeneR_DublicDesc", DuplicateIcon.Texture, DuplicateGenepack);
+        Command_Action command_Merge = BuildGizmo("GeneR_MergeGenepack", "GeneR_MergeDesc", MergeIcon.Texture, MergeGenepack);
+        Command_Action command_Recycle = BuildGizmo("GeneR_RecycleGenepack", "GeneR_RecycleDesc", RecycleIcon.Texture, RecycleGenepack);
 
         // TODO: see if we need to change this if the description is specific to the assembler
         if (!def.IsResearchFinished)
@@ -960,11 +949,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 
         if (Working)
         {
-            Command_Action command_Cancel = new Command_Action();
-            command_Cancel.defaultLabel = "GeneR_CancelGenepack".Translate();
-            command_Cancel.defaultDesc = "GeneR_CancelGenepackDesc".Translate();
-            command_Cancel.action = Reset;
-            command_Cancel.icon = CancelIcon;
+            Command_Action command_Cancel = BuildGizmo("GeneR_CancelGenepack", "GeneR_CancelGenepackDesc", CancelIcon, Reset);
             yield return command_Cancel;
 
             // Add repeat toggle
