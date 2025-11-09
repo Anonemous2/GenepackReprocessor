@@ -4,6 +4,7 @@
  */
 using System.Collections.Generic;
 using System.Linq;
+using GenepackReprocessor.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -934,6 +935,12 @@ public class Building_GeneSeparator : Building, IThingHolder
             command_Recycle.Disable(cannotUseReason);
         }
 
+        //DEBUG which jobs are enabled
+        DebugMessaging.DebugMessage_JobEnabled(nameof(Settings.separateEnabled), Settings.separateEnabled);
+        DebugMessaging.DebugMessage_JobEnabled(nameof(Settings.duplicateEnabled), Settings.duplicateEnabled);
+        DebugMessaging.DebugMessage_JobEnabled(nameof(Settings.mergeEnabled), Settings.mergeEnabled);
+        DebugMessaging.DebugMessage_JobEnabled(nameof(Settings.recycleEnabled), Settings.recycleEnabled);
+
         // Hide the buttons if that command is disabled.
         if (Settings.separateEnabled) { yield return command_Separate; }
         if (Settings.duplicateEnabled) { yield return command_Duplicate; }
@@ -993,7 +1000,7 @@ public class Building_GeneSeparator : Building, IThingHolder
             {
                 text += "\n";
             }
-            text = text + workJob switch
+            DebugMessaging.DebugMessage_WorkJob(workJob);
             text += workJob switch
             {
                 WorkJob.Merge => (string)"GeneR_MergeJob".Translate(),
