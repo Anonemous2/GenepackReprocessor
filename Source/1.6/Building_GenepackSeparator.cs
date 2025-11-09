@@ -2,6 +2,7 @@
  * User: Anonemous2
  * Date: 13-06-2024
  */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GenepackReprocessor.Utilities;
@@ -306,16 +307,22 @@ public class Building_GeneSeparator : Building, IThingHolder
      */
     public void StartSplit(Genepack pack, int architesRequired)
     {
-        genepackToWork = pack;
-        workJob = WorkJob.Split;
-        StartJob(Settings.split, Settings.separateNeedsArchites, architesRequired, Settings.separateBaseNeutroamine, Settings.separateComplexityNeutroamine, Settings.workToSplit);
+        Action setWork = () =>
+        {
+            genepackToWork = pack;
+            workJob = WorkJob.Split;
+        };
+        StartJob(Settings.split, setWork, Settings.separateNeedsArchites, architesRequired, Settings.separateBaseNeutroamine, Settings.separateComplexityNeutroamine, Settings.workToSplit);
     }
 
     public void StartDuplicate(Genepack pack, int architesRequired)
     {
-        genepackToWork = pack;
-        workJob = WorkJob.Copy;
-        StartJob(Settings.dupli, Settings.duplicateNeedsArchites, architesRequired, Settings.duplicateBaseNeutroamine, Settings.duplicateComplexityNeutroamine, Settings.workToDupli);
+        Action setWork = () =>
+        {
+            genepackToWork = pack;
+            workJob = WorkJob.Copy;
+        };
+        StartJob(Settings.dupli, setWork, Settings.duplicateNeedsArchites, architesRequired, Settings.duplicateBaseNeutroamine, Settings.duplicateComplexityNeutroamine, Settings.workToDupli);
     }
 
     /*
@@ -324,19 +331,25 @@ public class Building_GeneSeparator : Building, IThingHolder
      */
     public void StartMerge(List<Genepack> packs, int architesRequired)
     {
-        genepacksToMerge = packs;
-        workJob = WorkJob.Merge;
-        StartJob(Settings.merge, Settings.mergeNeedsArchites, architesRequired, Settings.mergeBaseNeutroamine, Settings.mergeComplexityNeutroamine, Settings.workToMerge);
+        Action setWork = () =>
+        {
+            genepacksToMerge = packs;
+            workJob = WorkJob.Merge;
+        };
+        StartJob(Settings.merge, setWork, Settings.mergeNeedsArchites, architesRequired, Settings.mergeBaseNeutroamine, Settings.mergeComplexityNeutroamine, Settings.workToMerge);
     }
 
     public void StartRecycle(Genepack pack, int architesInGenes)
     {
-        genepackToWork = pack;
-        workJob = WorkJob.Recycle;
-        StartJob(Settings.recycle, false, architesInGenes, Settings.recycleBaseNeutroamine, Settings.recycleComplexityNeutroamine, Settings.workToRecycle);
+        Action setWork = () =>
+        {
+            genepackToWork = pack;
+            workJob = WorkJob.Recycle;
+        };
+        StartJob(Settings.recycle, setWork, false, architesInGenes, Settings.recycleBaseNeutroamine, Settings.recycleComplexityNeutroamine, Settings.workToRecycle);
     }
 
-    protected void StartJob(GenepackReprocessorSettings.CurveType curve, bool architesNeeded, int architesRequiredTotal, int baseNeutroamine, int complexityNeutroamine, float work)
+    protected void StartJob(GenepackReprocessorSettings.CurveType curve, Action setWork, bool architesNeeded, int architesRequiredTotal, int baseNeutroamine, int complexityNeutroamine, float work)
     {
         Reset();
         this.architesInGenes = architesRequiredTotal;
@@ -348,6 +361,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         {
             this.architesRequired = 0;
         }
+        setWork();
 
         //extracted the individual job set and merge/split genepack references from this location
 
