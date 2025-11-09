@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -68,6 +69,24 @@ namespace GenepackReprocessor.Utilities
             {
                 var debugMsg = Debug_BuildRectString(rect, rectName) + Debug_BuildScrollBarVisibleString(scrollBarVisible);
                 Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
+            }
+        }
+
+        public static void DebugMessage_JobEnabled(string name, bool setting)
+        {
+            if (PerformDebugActions)
+            {
+                var debugMsg = $"Job {name} enabled: {setting}";
+                Messages.Message(debugMsg, null, MessageTypeDefOf.NeutralEvent, historical: false);
+            }
+        }
+
+        public static void DebugMessage_WorkJob(WorkJob job)
+        {
+            if (PerformDebugActions)
+            {
+                var debugMsg = $"Current job is: {Enum.GetName(typeof(WorkJob), job)}";
+                Messages.Message(debugMsg, null, MessageTypeDefOf.NeutralEvent, historical: false);
             }
         }
     }
