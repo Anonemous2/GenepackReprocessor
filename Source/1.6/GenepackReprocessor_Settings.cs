@@ -3,6 +3,7 @@
  * Date: 13-06-2024
  */
 using System;
+using GenepackReprocessor.Utilities;
 using HarmonyLib;
 using Multiplayer.API;
 using RimWorld;
@@ -363,7 +364,7 @@ public class GenepackImprovMod : Mod
     /// <param name="inRect">A Unity Rect with the size of the settings window.</param>
     public override void DoSettingsWindowContents(Rect inRect)
     {
-        DebugRect(inRect, nameof(inRect));
+        DebugMessaging.DebugRect(inRect, nameof(inRect));
 
         Rect outerRect = new Rect(inRect);
         Rect settingsArea = new Rect(outerRect.xMin, outerRect.yMin, outerRect.width, outerRect.height - SETTINGS_RECT_OFFSET_FOR_BUTTONS);
@@ -378,7 +379,7 @@ public class GenepackImprovMod : Mod
         // TODO: Add Reset and Hard buttons to the top of the window
 
         DrawSettings_DefaultButtons(listing, bottomButtons);
-        DebugRect_Highlight(bottomButtons);
+        DebugMessaging.DebugRect_Highlight(bottomButtons);
         listing.End();
 
         DrawSettings_Variables(settingsArea);
@@ -386,72 +387,18 @@ public class GenepackImprovMod : Mod
         base.DoSettingsWindowContents(inRect);
     }
 
-    #region Debug Helpers
-    private static void DebugRect_Highlight(Rect rect)
-    {
-#if DEBUG
-        if (Mouse.IsOver(rect))
-        {
-            Widgets.DrawHighlight(rect);
-        }
-#endif
-    }
-
-    private static string Debug_BuildRectString(Rect rect, string rectName)
-    {
-        var debugMsg = $"{rectName}: {{ {nameof(rect.yMin)}: {rect.yMin}; {nameof(rect.yMax)}: {rect.yMax}; {nameof(rect.xMin)}: {rect.xMin}; {nameof(rect.xMax)}: {rect.xMax}; {nameof(rect.width)}: {rect.width}; {nameof(rect.height)}: {rect.height} }}; ... ";
-        return debugMsg;
-    }
-
-    private string Debug_BuildScrollbarPositionString()
-    {
-        var debugMsg = $"{nameof(_scrollPosition)}: {{ {nameof(_scrollPosition.x)}: {_scrollPosition.x}; {nameof(_scrollPosition.y)}: {_scrollPosition.y} }} ... ";
-        return debugMsg;
-    }
-
-    private static string Debug_BuildScrollBarVisibleString(bool scrollBarVisible)
-    {
-        var debugMsg = $"{nameof(scrollBarVisible)}:{scrollBarVisible} ... ";
-        return debugMsg;
-    }
-
-    private void DebugRect(Rect rect, string rectName)
-    {
-#if DEBUG
-        var debugMsg = Debug_BuildRectString(rect, rectName);
-        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
-#endif
-    }
-
-    private void DebugRect_ScrollBar(Rect rect, string rectName, bool scrollBarVisible)
-    {
-#if DEBUG
-        var debugMsg = Debug_BuildRectString(rect, rectName) + Debug_BuildScrollBarVisibleString(scrollBarVisible) + Debug_BuildScrollbarPositionString();
-        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
-#endif
-    }
-
-    private void DebugRect_ScrollVisible(Rect rect, string rectName, bool scrollBarVisible)
-    {
-#if DEBUG
-        var debugMsg = Debug_BuildRectString(rect, rectName) + Debug_BuildScrollBarVisibleString(scrollBarVisible);
-        Messages.Message(debugMsg, null, MessageTypeDefOf.TaskCompletion, historical: false);
-#endif
-    }
-    #endregion
-
     private void DrawSettings_Variables(Rect settingsArea)
     {
         bool scrollBarVisible = _totalContentHeight > settingsArea.height;
 
-        DebugRect_ScrollVisible(settingsArea, nameof(settingsArea), scrollBarVisible);
+        DebugMessaging.DebugRect_ScrollVisible(settingsArea, nameof(settingsArea), scrollBarVisible);
 
         Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
         Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
 
         Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
 
-        DebugRect_ScrollBar(viewRect, nameof(viewRect), scrollBarVisible);
+        DebugMessaging.DebugRect_ScrollBar(viewRect, nameof(viewRect), scrollBarVisible, this._scrollPosition);
 
         // Create the generic listing, which we'll fill with our settings.
         Listing_Custom listing = new Listing_Custom();
@@ -483,12 +430,12 @@ public class GenepackImprovMod : Mod
 
         Widgets.EndScrollView();
 
-        DebugRect_Highlight(settingsArea);
+        DebugMessaging.DebugRect_Highlight(settingsArea);
     }
 
     private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect buttonArea)
     {
-        DebugRect(buttonArea, nameof(buttonArea));
+        DebugMessaging.DebugRect(buttonArea, nameof(buttonArea));
 
         //did this "Default Settings" button just get pressed?
         if (listing.CButtonText(buttonArea, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
