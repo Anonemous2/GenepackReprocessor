@@ -27,14 +27,6 @@ public class Building_GeneSeparator : Building, IThingHolder
     private List<Genepack> genepacksToMerge;
 
     // Work vars
-    private enum WorkJob : int
-    {
-        None = -1,
-        Copy = 0,
-        Split = 1,
-        Merge = 2,
-        Recycle = 3,
-    }
     private bool doForever = false;     // If true, after splitting, it will see if there's more genes that can be isolated.
 
     private WorkJob workJob;

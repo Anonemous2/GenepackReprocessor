@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Utilities\DebugMessaging.cs" />
     <Compile Include="WorkGiver_Genes.cs" />
+    <Compile Include="WorkJob.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\Settings.settings">
