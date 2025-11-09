@@ -346,7 +346,7 @@ public class Building_GeneSeparator : Building, IThingHolder
     protected void StartJob(GenepackReprocessorSettings.CurveType curve, bool architesNeeded, int architesRequiredTotal, int baseNeutroamine, int complexityNeutroamine, float work)
     {
         Reset();
-        architesInGenes = architesRequiredTotal;
+        this.architesInGenes = architesRequiredTotal;
         if (architesNeeded)
         {
             this.architesRequired = architesRequiredTotal;
@@ -358,7 +358,7 @@ public class Building_GeneSeparator : Building, IThingHolder
 
         //extracted the individual job set and merge/split genepack references from this location
 
-        workingInt = true;
+        this.workingInt = true;
 
         switch (curve)
         {
