@@ -994,6 +994,7 @@ public class Building_GeneSeparator : Building, IThingHolder
                 text += "\n";
             }
             text = text + workJob switch
+            text += workJob switch
             {
                 WorkJob.Merge => (string)"GeneR_MergeJob".Translate(),
                 WorkJob.Split => (string)("GeneR_SeparateJob".Translate() + ": " + genepackToWork.LabelNoCount.CapitalizeFirst()),
@@ -1001,8 +1002,8 @@ public class Building_GeneSeparator : Building, IThingHolder
                 WorkJob.Recycle => (string)("GeneR_GenepackRecycle".Translate() + ": " + genepackToWork.LabelNoCount.CapitalizeFirst()),
                 _ => string.Empty,
             };
-            text = text + "\n" + "GeneR_ComplexityPenalty".Translate() + ": " + TotalGCX;
-            text = text + workJob switch
+            text += "\n" + "GeneR_ComplexityPenalty".Translate() + ": " + TotalGCX;
+            text += workJob switch
             {
                 WorkJob.Merge or WorkJob.Split or WorkJob.Copy =>
                     (architesInGenes > 0)
@@ -1010,24 +1011,27 @@ public class Building_GeneSeparator : Building, IThingHolder
                         : string.Empty,
                 _ => string.Empty,
             };
+
             text += "\n" + "Progress".Translate() + ": " + ProgressPercent.ToStringPercent();
             int numTicks = Mathf.RoundToInt((totalWorkRequired - workDone) / ((lastWorkAmount > 0f) ? lastWorkAmount : this.GetStatValue(StatDefOf.AssemblySpeedFactor)));
-            text = text + " (" + "DurationLeft".Translate(numTicks.ToStringTicksToPeriod()).Resolve() + ")";
+            text += " (" + "DurationLeft".Translate(numTicks.ToStringTicksToPeriod()).Resolve() + ")";
 
             if (architesRequired > 0)
             {
-                text = text + (string)("\n" + "ArchitesRequired".Translate() + ": ") + ArchitesCount + " / " + architesRequired;
+                text += ("\n" + "ArchitesRequired".Translate() + ": ") + ArchitesCount + " / " + architesRequired;
             }
+
             if (neutroamineRequired > 0)
             {
-                text = text + (string)("\n" + "GeneR_NeutroamineRequired".Translate() + ": ") + NeutroamineCount + " / " + neutroamineRequired;
+                text += ("\n" + "GeneR_NeutroamineRequired".Translate() + ": ") + NeutroamineCount + " / " + neutroamineRequired;
             }
 
             if (!canBeWorkedOnNow.Accepted && !canBeWorkedOnNow.Reason.NullOrEmpty())
             {
-                text = text + "\n" + ("AssemblyPaused".Translate() + ": " + canBeWorkedOnNow.Reason).Colorize(ColorLibrary.RedReadable);
+                text += "\n" + ("AssemblyPaused".Translate() + ": " + canBeWorkedOnNow.Reason).Colorize(ColorLibrary.RedReadable);
             }
         }
+
         return text;
     }
 
