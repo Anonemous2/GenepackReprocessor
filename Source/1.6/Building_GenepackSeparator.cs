@@ -882,12 +882,13 @@ public class Building_GeneSeparator : Building, IThingHolder
         {
             yield return gizmo;
         }
+
         // Split Genepack
-        Command_Action command_Action = new Command_Action();
-        command_Action.defaultLabel = "GeneR_SeparateGenepack".Translate() + "...";
-        command_Action.defaultDesc = "GeneR_SeparateDesc".Translate();
-        command_Action.icon = SeparateIcon.Texture;
-        command_Action.action = delegate
+        Command_Action command_Separate = new Command_Action();
+        command_Separate.defaultLabel = "GeneR_SeparateGenepack".Translate() + "...";
+        command_Separate.defaultDesc = "GeneR_SeparateDesc".Translate();
+        command_Separate.icon = SeparateIcon.Texture;
+        command_Separate.action = delegate
         {
             SeparateGenepack();
         };
@@ -931,7 +932,7 @@ public class Building_GeneSeparator : Building, IThingHolder
                    where !x.IsFinished
                    select x.label).ToCommaList(useAnd: true).CapitalizeFirst();
 
-            command_Action.Disable(disableReason);
+            command_Separate.Disable(disableReason);
             command_Merge.Disable(disableReason);
             command_Duplicate.Disable(disableReason);
             command_Recycle.Disable(disableReason);
@@ -939,7 +940,7 @@ public class Building_GeneSeparator : Building, IThingHolder
         else if (!PowerOn)
         {
             var cannotUseReason = "CannotUseNoPower".Translate();
-            command_Action.Disable(cannotUseReason);
+            command_Separate.Disable(cannotUseReason);
             command_Duplicate.Disable(cannotUseReason);
             command_Merge.Disable(cannotUseReason);
             command_Recycle.Disable(cannotUseReason);
@@ -947,26 +948,26 @@ public class Building_GeneSeparator : Building, IThingHolder
         else if (!GetGenepacks(includePowered: true, includeUnpowered: false).Any())
         {
             var cannotUseReason = "CannotUseReason".Translate("NoGenepacksAvailable".Translate().CapitalizeFirst());
-            command_Action.Disable(cannotUseReason);
+            command_Separate.Disable(cannotUseReason);
             command_Duplicate.Disable(cannotUseReason);
             command_Merge.Disable(cannotUseReason);
             command_Recycle.Disable(cannotUseReason);
         }
 
         // Hide the buttons if that command is disabled.
-        if (Settings.separateEnabled) { yield return command_Action; }
+        if (Settings.separateEnabled) { yield return command_Separate; }
         if (Settings.duplicateEnabled) { yield return command_Duplicate; }
         if (Settings.mergeEnabled) { yield return command_Merge; }
         if (Settings.recycleEnabled) { yield return command_Recycle; }
 
         if (Working)
         {
-            Command_Action command_Action2 = new Command_Action();
-            command_Action2.defaultLabel = "GeneR_CancelGenepack".Translate();
-            command_Action2.defaultDesc = "GeneR_CancelGenepackDesc".Translate();
-            command_Action2.action = Reset;
-            command_Action2.icon = CancelIcon;
-            yield return command_Action2;
+            Command_Action command_Cancel = new Command_Action();
+            command_Cancel.defaultLabel = "GeneR_CancelGenepack".Translate();
+            command_Cancel.defaultDesc = "GeneR_CancelGenepackDesc".Translate();
+            command_Cancel.action = Reset;
+            command_Cancel.icon = CancelIcon;
+            yield return command_Cancel;
 
             // Add repeat toggle
             if (workJob == WorkJob.Split)
@@ -982,10 +983,11 @@ public class Building_GeneSeparator : Building, IThingHolder
 
             if (DebugSettings.ShowDevGizmos)
             {
-                Command_Action command_Action3 = new Command_Action();
-                command_Action3.defaultLabel = "DEV: Finish Genepack";
-                command_Action3.action = Finish;
-                yield return command_Action3;
+                Command_Action command_DevInstantFinish = new Command_Action();
+                command_DevInstantFinish.defaultLabel = "DEV: Finish Genepack";
+                command_DevInstantFinish.action = Finish;
+                yield return command_DevInstantFinish;
+
                 if (NeutroamineRequiredNow > 0 || ArchitesRequiredNow > 0)
                 {
                     Command_Action command_ActionFill = new Command_Action();
