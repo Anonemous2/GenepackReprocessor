@@ -6,10 +6,11 @@ namespace GenepackReprocessor.Utilities
 {
     internal static class DebugMessaging
     {
-        private static bool PerformDebugActions = false;
+        private static bool PerformDebugActions;
 
         static DebugMessaging()
         {
+            PerformDebugActions = false;
 #if DEBUG
             PerformDebugActions = true;
 #endif
