@@ -910,10 +910,10 @@ public class Building_GeneSeparator : Building, IThingHolder
 
         // Recycle Archite Genepack
         Command_Action command_Recycle = new Command_Action();
-        command_Merge.defaultLabel = "GeneR_RecycleGenepack".Translate() + "...";
-        command_Merge.defaultDesc = "GeneR_RecycleDesc".Translate();
-        command_Merge.icon = RecycleIcon.Texture;
-        command_Merge.action = RecycleGenepack;
+        command_Recycle.defaultLabel = "GeneR_RecycleGenepack".Translate() + "...";
+        command_Recycle.defaultDesc = "GeneR_RecycleDesc".Translate();
+        command_Recycle.icon = RecycleIcon.Texture;
+        command_Recycle.action = RecycleGenepack;
 
         // TODO: see if we need to change this if the description is specific to the assembler
         if (!def.IsResearchFinished)
