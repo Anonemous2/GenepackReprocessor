@@ -118,20 +118,20 @@ public class GenepackReprocessorSettings : ModSettings
         Scribe_Values.Look(ref separateNeedsArchites,           "separateNeedsArchites",            false);
 
         // Duplicate settings
-        Scribe_Values.Look(ref dupli,           "dupli",            CurveType.Linear);
-        Scribe_Values.Look(ref duplicateEnabled,"duplicateEnabled", true);
-        Scribe_Values.Look(ref workToDupli,     "workToDupli",      1.0f);
+        Scribe_Values.Look(ref dupli,               "dupli",            CurveType.Linear);
+        Scribe_Values.Look(ref duplicateEnabled,    "duplicateEnabled", true);
+        Scribe_Values.Look(ref workToDupli,         "workToDupli",      1.0f);
         // Duplicate materials cost.
         Scribe_Values.Look(ref duplicateBaseNeutroamine,        "duplicateBaseNeutroamine",         8);
         Scribe_Values.Look(ref duplicateComplexityNeutroamine,  "duplicateComplexityNeutroamine",   4);
         Scribe_Values.Look(ref duplicateNeedsArchites,          "duplicateNeedsArchites",           true);
 
         // Merge settings
-        Scribe_Values.Look(ref merge,           "merge",            CurveType.Log);
-        Scribe_Values.Look(ref mergeEnabled,    "mergeEnabled",     true);
-        Scribe_Values.Look(ref consumeOnMerge,  "consumeOnMerge",   false);
-        Scribe_Values.Look(ref workToMerge,     "workToMerge",      1.0f);
-        Scribe_Values.Look(ref genepackMergeMax,"genepackMergeMax", 9);
+        Scribe_Values.Look(ref merge,               "merge",            CurveType.Log);
+        Scribe_Values.Look(ref mergeEnabled,        "mergeEnabled",     true);
+        Scribe_Values.Look(ref consumeOnMerge,      "consumeOnMerge",   false);
+        Scribe_Values.Look(ref workToMerge,         "workToMerge",      1.0f);
+        Scribe_Values.Look(ref genepackMergeMax,    "genepackMergeMax", 9);
         // Merge materials cost.
         Scribe_Values.Look(ref mergeBaseNeutroamine,        "mergeBaseNeutroamine",         6);
         Scribe_Values.Look(ref mergeComplexityNeutroamine,  "mergeComplexityNeutroamine",   3);
