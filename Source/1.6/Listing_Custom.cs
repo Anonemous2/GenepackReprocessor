@@ -29,9 +29,24 @@ public class Listing_Custom : Listing_Standard
         //Gap(verticalSpacing);
     }
 
-    public Listing_Custom BeginSection(float height, float sectionBorder = 4f, float bottomBorder = 4f)
+    /// <remarks>
+    ///     `new` because this is not virtual and because we want to return this type, not the base type.
+    ///     This is otherwise identical code to the base method definition.
+    /// </remarks>
+    public new Listing_Custom BeginSection(float height, float sectionBorder = 4f, float bottomBorder = 4f)
     {
         Rect rect = GetRect(height + sectionBorder + bottomBorder);
+        Widgets.DrawMenuSection(rect);
+        Listing_Custom listing_Standard = new Listing_Custom();
+        Rect rect2 = new Rect(rect.x + sectionBorder, rect.y + sectionBorder, rect.width - sectionBorder * 2f, rect.height - (sectionBorder + bottomBorder));
+        listing_Standard.Begin(rect2);
+        return listing_Standard;
+    }
+
+    public Listing_Custom BeginSection(float height, float width, float sectionBorder = 4f, float bottomBorder = 4f)
+    {
+        Rect rect = GetRect(height + sectionBorder + bottomBorder);
+        rect.width = width;
         Widgets.DrawMenuSection(rect);
         Listing_Custom listing_Standard = new Listing_Custom();
         Rect rect2 = new Rect(rect.x + sectionBorder, rect.y + sectionBorder, rect.width - sectionBorder * 2f, rect.height - (sectionBorder + bottomBorder));
@@ -104,6 +119,7 @@ public class Listing_Custom : Listing_Standard
     {
         return GetRect(Text.LineHeight);
     }
+
     public void Gap()
     {
         Gap(verticalSpacing);
@@ -192,7 +208,6 @@ public class Listing_Custom : Listing_Standard
         }
         Widgets.Label(rect, label);
     }
-
 
     public bool CButtonTextLabeledPct(Rect rect, int cols, int index, string label, 
         string buttonLabel, float labelPct, TextAnchor anchor = TextAnchor.UpperLeft, 

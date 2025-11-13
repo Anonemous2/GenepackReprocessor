@@ -2,15 +2,13 @@
  * User: Anonemous2
  * Date: 13-06-2024
  */
-using GenepackReprocessor.Properties;
-using RimWorld;
 using System;
-using UnityEngine;
-using Verse;
-using Verse.Noise;
+using GenepackReprocessor.Utilities;
 using HarmonyLib;
 using Multiplayer.API;
-
+using RimWorld;
+using UnityEngine;
+using Verse;
 using static GenepackReprocessor.GenepackReprocessorSettings;
 
 namespace GenepackReprocessor;
@@ -33,9 +31,12 @@ public class GenepackImprovMod : Mod
     int roundedFactor;
 
     // Magic numbers, for editing the layout from one spot.
-    private float labelPart = 0.7f;
-    private float fieldOffs = 0.1f;
-    private float floatOffset = 30f;
+    private const float labelPart = 0.7f;
+    private const float fieldOffs = 0.1f;
+    private const float floatOffset = 30f;
+    private const float layoutRowHeight = 1.1f;           //1.1 times the size of text
+    private const float layoutRowsTextBoxes2 = 2.133f;    //2 rows of text boxes, but not 1.1 * 2 :-/
+    private const float layoutEnabledWork = 3.7f;         //3 rows of enabled settings values -- checkbox, slider, radio button
 
     // Buffers for text fields!
     string bufSteel = string.Empty;
@@ -53,16 +54,25 @@ public class GenepackImprovMod : Mod
     string bufPowerIdle = string.Empty;
     string bufPowerUsin = string.Empty;
 
-    string bufSeparateBaseNeutroamine       = string.Empty;
+    string bufSeparateBaseNeutroamine = string.Empty;
     string bufSeparateComplexityNeutroamine = string.Empty;
 
-    string bufDuplicateBaseNeutroamine       = string.Empty;
+    string bufDuplicateBaseNeutroamine = string.Empty;
     string bufDuplicateComplexityNeutroamine = string.Empty;
+
+    string bufRecycleBaseNeutroamine = string.Empty;
+    string bufRecycleComplexityNeutroamine = string.Empty;
 
     string bufMergeBaseNeutroamine = string.Empty;
     string bufMergeComplexityNeutroamine = string.Empty;
 
     string bufArchitePen = string.Empty;
+
+    private Vector2 _scrollPosition = new(0f, 0f);
+    private float _totalContentHeight = 800f;
+    private const float SCROLL_BAR_WIDTH_MARGIN = 20f;
+    private const float SETTINGS_RECT_OFFSET_FOR_BUTTONS = 60f;
+    private const float SETTINGS_RECT_HEIGHT_FOR_BUTTONS = 40f;
 
     /// <summary>
     /// A mandatory constructor which resolves the reference to our settings.
@@ -97,6 +107,9 @@ public class GenepackImprovMod : Mod
         bufMergeBaseNeutroamine = settings.mergeBaseNeutroamine.ToString();
         bufMergeComplexityNeutroamine = settings.mergeComplexityNeutroamine.ToString();
 
+        bufRecycleBaseNeutroamine = settings.recycleBaseNeutroamine.ToString();
+        bufRecycleComplexityNeutroamine = settings.recycleComplexityNeutroamine.ToString();
+
         bufArchitePen = settings.architePen.ToString();
     }
 
@@ -104,64 +117,68 @@ public class GenepackImprovMod : Mod
     /// Default and main menu when entering our mod's settings. Should allow you to
     /// navigate to the other menus. TODO: Might not need to use it.
     /// </summary>
-    /// <param name="listingStandard">Context window to add stuff into.</param>
-    public void WindowContentsMain(ref Listing_Custom listingStandard)
+    /// <param name="listing">Context window to add stuff into.</param>
+    public void WindowContentsMain(ref Listing_Custom listing)
     {
 
     }
 
-    public void ContentsBuildingCost(Rect inRect, ref Listing_Custom listingStandard) {
+    public void ContentsBuildingCost(Listing_Custom listing, Rect viewRect)
+    {
         // Create a subsection for the costs.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin,Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2, width: viewRect.width);
 
-        line = sub.GetRectLine();
+        Rect line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
             "GeneR_Materials".Translate(), "GeneR_MaterialsHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_MatComp".Translate(), ref settings.costCompo, ref bufCompo, 0f, 75f, labelPart, fieldOffs, "GeneR_MatCompHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "GeneR_MatAdvComp".Translate(), ref settings.costAdvCo, ref bufAdvCo, 0f, 75f, labelPart, fieldOffs, "GeneR_MatAdvCompHelp".Translate());
-        sub.Gap(); line = sub.GetRectLine();
+        sub.Gap();
+
+        line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
             "GeneR_MatSteel".Translate(), ref settings.costSteel, ref bufSteel, 0f, 500f, labelPart, fieldOffs, "GeneR_MatSteelHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_MatPlasteel".Translate(), ref settings.costPlast, ref bufPlast, 0f, 500f, labelPart, fieldOffs, "GeneR_MatPlasteelHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_MatGold".Translate(), ref settings.costGold,  ref bufGold, 0f, 500f, labelPart, fieldOffs, "GeneR_MatGoldHelp".Translate());
-        listingStandard.EndSection(sub);
+            "GeneR_MatGold".Translate(), ref settings.costGold, ref bufGold, 0f, 500f, labelPart, fieldOffs, "GeneR_MatGoldHelp".Translate());
+        
+        listing.EndSection(sub);
     }
 
-    public void ContentsBuildingSettings(Rect inRect, ref Listing_Custom listingStandard) {
+    public void ContentsBuildingSettings(Listing_Custom listing, Rect inRect)
+    {
         // Create a subsection for the stats.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2, width: inRect.width);
 
-        line = sub.GetRectLine();
+        Rect line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
             "GeneR_HP".Translate(), ref settings.hp, ref bufHP, 1f, 10000, labelPart, fieldOffs, "GeneR_HPHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_BuildWork".Translate(), ref settings.buildWork, ref bufBuildWork, 0f, 100000f, labelPart, fieldOffs, "GeneR_BuildWorkHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_Mass".Translate(), ref settings.mass,  ref bufMass, 1f, 100f, labelPart, fieldOffs, "GeneR_MassHelp".Translate());
-        sub.Gap(); line = sub.GetRectLine();
+            "GeneR_Mass".Translate(), ref settings.mass, ref bufMass, 1f, 100f, labelPart, fieldOffs, "GeneR_MassHelp".Translate());
+        sub.Gap();
+
+        line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<float>(line, 3, 0,
             "GeneR_Flam".Translate(), ref settings.flammability, ref bufFlammability, 0f, 1f, labelPart, fieldOffs, "GeneR_FlamHelp".Translate());
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_BuildSkill".Translate(), ref settings.skillNeeded, ref bufSkillNeeded, 0f, 20f, labelPart, fieldOffs, "GeneR_BuildSkillHelp".Translate());
         sub.NGCheckboxLabeled(line, 3, 2, "GeneR_Minify".Translate(), ref settings.movable, fieldOffs, "GeneR_MinifyHelp".Translate()); // TODO: Translate.
 
-        listingStandard.EndSection(sub);
+        listing.EndSection(sub);
     }
 
     // TODO: Implement.
-    public void ContentsBuildingPower(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsBuildingPower(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the power drain.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowHeight, width: inRect.width);
 
-        line = sub.GetRectLine();
+        Rect line = sub.GetRectLine();
         sub.ColLabel(line, 3, 0,
             "Building Power Usage (W)", "How many Watts of power does this building consume while working.");
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
@@ -169,191 +186,176 @@ public class GenepackImprovMod : Mod
         sub.NGTextFieldNumericLabeled<int>(line, 3, 2,
             "Working Drain:", ref settings.powerUsin, ref bufPowerUsin, 0f, 1000f, labelPart, fieldOffs, "How many Watts of power does this building consume while working.");
 
-        listingStandard.EndSection(sub);
+        listing.EndSection(sub);
     }
 
-    public void ContentsSeparting(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsSeparating(Listing_Custom listing, Rect inRect)
     {
-        // Create a subsection.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
-
-        // Separate settings. If it's not enabled, there's no reason to show them.
-        if (!settings.separateEnabled) { 
-            Listing_Custom subt = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-            line = subt.GetRectLine();
-            subt.NGCheckboxLabeled(line, 1, 0, "GeneR_CanSeparate".Translate(), ref settings.separateEnabled, fieldOffs / 4.5f,
-                "GeneR_CanSeparateHelp".Translate());
-            listingStandard.EndSection(subt); 
-            return;
-        }
-        // Else show all the settings.
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 3.7f);
-        line = sub.GetRectLine();
-        sub.NGCheckboxLabeled(line, 1, 0, "GeneR_CanSeparate".Translate(), ref settings.separateEnabled, fieldOffs / 4.5f,
-            "GeneR_CanSeparateHelp".Translate());
-        // Work multiplier.
-        roundedFactor = (int)(10f * sub.SliderLabeled("GeneR_WorkMultiplier".Translate() + settings.workToSplit.ToString("0.0") + "GeneR_X".Translate(),
-                settings.workToSplit, 0.1f, 5, 0.25f, "GeneR_SeparateMultiplierHelp".Translate()));
-        settings.workToSplit = (float)roundedFactor * 0.1f;
-
-        // Work curve.
-        line = sub.GetRectLine();
-        if (listingStandard.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
-            settings.split == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
-        { settings.split = CurveType.Log; }
-
-        if (listingStandard.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
-            settings.split == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
-        { settings.split = CurveType.Linear; }
-
-        if (listingStandard.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
-            settings.split == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
-        { settings.split = CurveType.Exponetial; }
-
-        listingStandard.EndSection(sub);
-
-        // Consumption.
-        Listing_Custom sub2 = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
-        line = sub2.GetRectLine();
-        
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_ArchiteCapsulesSet".Translate(), ref settings.separateNeedsArchites, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 1,
-            "GeneR_NeutroamineBase".Translate(), ref settings.separateBaseNeutroamine, ref bufSeparateBaseNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_NeutroamineComp".Translate(), ref settings.separateComplexityNeutroamine, ref bufSeparateComplexityNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
-        sub2.Gap(); line = sub2.GetRectLine();
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_GenepackConsume".Translate(), ref settings.consumeOnSplit, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
-        listingStandard.EndSection(sub2);
+        DrawOptions_Work(listing, inRect, ref settings.separateEnabled, ref settings.workToSplit, ref settings.split,
+            "GeneR_CanSeparate", "GeneR_CanSeparateHelp", "GeneR_SeparateMultiplierHelp",
+            ref settings.separateBaseNeutroamine, ref bufSeparateBaseNeutroamine,
+            ref settings.separateComplexityNeutroamine, ref bufSeparateComplexityNeutroamine,
+            true, ref settings.separateNeedsArchites, true, ref settings.consumeOnSplit);
     }
 
-    public void ContentsDuplicate(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsDuplicate(Listing_Custom parentSection, Rect inRect)
+    {
+        bool _ = default;   //never consumes genes. Discard.
+
+        DrawOptions_Work(parentSection, inRect, ref settings.duplicateEnabled, ref settings.workToDupli, ref settings.dupli,
+            "GeneR_CanDuplicate", "GeneR_CanDuplicateHelp", "GeneR_DuplicateMultiplierHelp",
+            ref settings.duplicateBaseNeutroamine, ref bufDuplicateBaseNeutroamine,
+            ref settings.duplicateComplexityNeutroamine, ref bufDuplicateComplexityNeutroamine,
+            true, ref settings.duplicateNeedsArchites, false, ref _);
+    }
+
+    public void ContentsMerge(Listing_Custom parentSection, Rect inRect)
+    {
+        DrawOptions_Work(parentSection, inRect, ref settings.mergeEnabled, ref settings.workToMerge, ref settings.merge,
+            "GeneR_CanMerge", "GeneR_CanMergeHelp", "GeneR_MergeMultiplierHelp",
+            ref settings.mergeBaseNeutroamine, ref bufMergeBaseNeutroamine,
+            ref settings.mergeComplexityNeutroamine, ref bufMergeComplexityNeutroamine,
+            true, ref settings.mergeNeedsArchites, true, ref settings.consumeOnMerge);
+    }
+
+    public void ContentsRecycle(Listing_Custom parentSection, Rect inRect)
+    {
+        bool _ = default;   //never uses archite, creates it. Discard.
+
+        DrawOptions_Work(parentSection, inRect, ref settings.recycleEnabled, ref settings.workToRecycle, ref settings.recycle,
+            "GeneR_CanRecycle", "GeneR_CanRecycleHelp", "GeneR_RecycleMultiplierHelp",
+            ref settings.recycleBaseNeutroamine, ref bufRecycleBaseNeutroamine,
+            ref settings.recycleComplexityNeutroamine, ref bufRecycleComplexityNeutroamine,
+            false, ref _, true, ref settings.consumeOnRecycle);
+    }
+
+    public void DrawOptions_Work(Listing_Custom parent, Rect inRect,
+        ref bool enabled, ref float workRequired, ref CurveType curve,
+        string jobName, string jobHelp, string jobMultiplierHelp,
+        ref int neutroAmount, ref string bufferNeutroAmount,
+        ref int neutroComplexity, ref string bufferNeutroComplexity,
+        bool canRequireArchite, ref bool consumesArchite,
+        bool canConsumePacks, ref bool consumesPacks)
     {
         // Create a subsection.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
+        var size = enabled ? layoutEnabledWork : layoutRowHeight;
+        Listing_Custom subSection = parent.BeginSection(Text.LineHeight * size, width: inRect.width);
 
-        // Duplicate settings. If it's not enabled, there's no reason to show them.
-        if (!settings.duplicateEnabled)
+        DrawOptions_Enabled(subSection, ref enabled, jobName, jobHelp);
+        if (!enabled)   //If it's not enabled, there's no reason to show them.
+            parent.EndSection(subSection);
+        else            // Else show all the settings.
         {
-            Listing_Custom subt = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-            line = subt.GetRectLine();
-            subt.NGCheckboxLabeled(line, 1, 0, "GeneR_CanDuplicate".Translate(), ref settings.duplicateEnabled, fieldOffs / 4.5f,
-                "GeneR_CanDuplicateHelp".Translate());
-            listingStandard.EndSection(subt);
-            return;
+            // Work multiplier.
+            DrawOptions_WorkMultiplier(subSection, ref workRequired, jobMultiplierHelp);
+
+            // Work curve.
+            DrawOptions_WorkCurve(parent, subSection, ref curve);
+            parent.EndSection(subSection);
+
+            // Consumption.
+            DrawOptions_Consumption(parent, inRect, ref neutroAmount, ref bufferNeutroAmount,
+                ref neutroComplexity, ref bufferNeutroComplexity,
+                canRequireArchite, ref consumesArchite, canConsumePacks, ref consumesPacks);
         }
-        // Else show all the settings.
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 3.7f);
-        line = sub.GetRectLine();
-        sub.NGCheckboxLabeled(line, 1, 0, "GeneR_CanDuplicate".Translate(), ref settings.duplicateEnabled, fieldOffs / 4.5f,
-            "GeneR_CanDuplicateHelp".Translate());
-        // Work multiplier.
-        roundedFactor = (int)(10f * sub.SliderLabeled("GeneR_WorkMultiplier".Translate() + settings.workToDupli.ToString("0.0") + "GeneR_X".Translate(),
-                settings.workToDupli, 0.1f, 5, 0.25f, "GeneR_DuplicateMultiplierHelp".Translate()));
-        settings.workToDupli = (float)roundedFactor * 0.1f;
-
-        // Work curve.
-        line = sub.GetRectLine();
-        if (listingStandard.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
-            settings.dupli == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
-        { settings.dupli = CurveType.Log; }
-
-        if (listingStandard.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
-            settings.dupli == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
-        { settings.dupli = CurveType.Linear; }
-
-        if (listingStandard.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
-            settings.dupli == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
-        { settings.dupli = CurveType.Exponetial; }
-
-        listingStandard.EndSection(sub);
-
-        // Consumption.
-        Listing_Custom sub2 = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-        line = sub2.GetRectLine();
-
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_ArchiteCapsulesSet".Translate(), ref settings.duplicateNeedsArchites, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 1,
-            "GeneR_NeutroamineBase".Translate(), ref settings.duplicateBaseNeutroamine, ref bufDuplicateBaseNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_NeutroamineComp".Translate(), ref settings.duplicateComplexityNeutroamine, ref bufDuplicateComplexityNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
-        listingStandard.EndSection(sub2);
     }
 
-    public void ContentsMerge(Rect inRect, ref Listing_Custom listingStandard)
+    private void DrawOptions_Enabled(Listing_Custom subSection, ref bool enabled, string jobName, string jobHelp)
     {
-        // Create a subsection.
-        Rect line = new Rect(inRect.xMin, inRect.yMin, inRect.xMax - inRect.xMin, Text.LineHeight);
+        var line = subSection.GetRectLine();
+        subSection.NGCheckboxLabeled(line, 1, 0, jobName.Translate(), ref enabled, fieldOffs / 4.5f,
+            jobHelp.Translate());
+    }
 
-        // Merge settings. If it's not enabled, there's no reason to show them.
-        if (!settings.mergeEnabled)
+    private void DrawOptions_WorkMultiplier(Listing_Custom subSection, ref float workRequired, string jobMultiplierHelp)
+    {
+        var sliderLabel = "GeneR_WorkMultiplier".Translate() + workRequired.ToString("0.0") + "GeneR_X".Translate();
+        roundedFactor = (int)(10f * subSection.SliderLabeled(sliderLabel, workRequired, 0.1f, 5, 0.25f, jobMultiplierHelp.Translate()));
+        workRequired = (float)roundedFactor * 0.1f;
+    }
+
+    private void DrawOptions_WorkCurve(Listing_Custom parentSection, Listing_Custom subSection, ref CurveType curve)
+    {
+        Rect line = subSection.GetRectLine();
+        if (parentSection.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
+            curve == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
         {
-            Listing_Custom subt = listingStandard.BeginSection((line.yMax - line.yMin) * 1.1f);
-            line = subt.GetRectLine();
-            subt.NGCheckboxLabeled(line, 1, 0, "GeneR_CanMerge".Translate(), ref settings.mergeEnabled, fieldOffs / 4.5f,
-                "GeneR_CanMergeHelp".Translate());
-            listingStandard.EndSection(subt);
-            return;
+            curve = CurveType.Log;
         }
-        // Else show all the settings.
-        Listing_Custom sub = listingStandard.BeginSection((line.yMax - line.yMin) * 3.7f);
-        line = sub.GetRectLine();
-        sub.NGCheckboxLabeled(line, 1, 0, "GeneR_CanMerge".Translate(), ref settings.mergeEnabled, fieldOffs / 4.5f,
-            "GeneR_CanMergeHelp".Translate());
-        // Work multiplier.
-        roundedFactor = (int)(10f * sub.SliderLabeled("GeneR_WorkMultiplier".Translate() + settings.workToMerge.ToString("0.0") + "GeneR_X".Translate(),
-                settings.workToMerge, 0.1f, 5, 0.25f, "GeneR_MergeMultiplierHelp".Translate()));
-        settings.workToMerge = (float)roundedFactor * 0.1f;
 
-        // Work curve.
-        line = sub.GetRectLine();
-        if (listingStandard.NGRadioButton(line, 3, 0, "GeneR_Logarithmic".Translate(),
-            settings.merge == GenepackReprocessorSettings.CurveType.Log, fieldOffs, "GeneR_LogarithmicHelp".Translate()))
-        { settings.merge = CurveType.Log; }
+        if (parentSection.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
+            curve == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
+        {
+            curve = CurveType.Linear;
+        }
 
-        if (listingStandard.NGRadioButton(line, 3, 1, "GeneR_Linear".Translate(),
-            settings.merge == GenepackReprocessorSettings.CurveType.Linear, fieldOffs, "GeneR_LinearHelp".Translate()))
-        { settings.merge = CurveType.Linear; }
+        if (parentSection.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
+            curve == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
+        { 
+            curve = CurveType.Exponetial;
+        }
+    }
 
-        if (listingStandard.NGRadioButton(line, 3, 2, "GeneR_Exponential".Translate(),
-            settings.merge == GenepackReprocessorSettings.CurveType.Exponetial, fieldOffs, "GeneR_ExponentialHelp".Translate()))
-        { settings.merge = CurveType.Exponetial; }
+    private void DrawOptions_Consumption(Listing_Custom parent, Rect inRect,
+        ref int neutroAmount, ref string bufferNeutroAmount,
+        ref int neutroComplexity, ref string bufferNeutroComplexity,
+        bool canRequireArchite, ref bool consumesArchite,
+        bool canConsumePacks, ref bool consumesPacks)
+    {
+        var size = layoutRowHeight;
+        if (canRequireArchite || consumesPacks)
+        {
+            size = layoutRowsTextBoxes2;
+        }
+        if (canRequireArchite && consumesPacks)
+        {
+            size = 3.3f;
+        }
+        var subSection = parent.BeginSection((Text.LineHeight) * size, width: inRect.width);
+        Rect line = subSection.GetRectLine();
 
-        listingStandard.EndSection(sub);
+        //neutro settings
+        subSection.NGTextFieldNumericLabeled<int>(line, 3, 0,
+            "GeneR_NeutroamineBase".Translate(), ref neutroAmount, ref bufferNeutroAmount,
+            0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
 
-        // Consumption.
-        Listing_Custom sub2 = listingStandard.BeginSection((line.yMax - line.yMin) * 2.133f);
-        line = sub2.GetRectLine();
+        subSection.NGTextFieldNumericLabeled<int>(line, 3, 1,
+            "GeneR_NeutroamineComp".Translate(), ref neutroComplexity, ref bufferNeutroComplexity,
+            0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
 
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_ArchiteCapsulesSet".Translate(), ref settings.mergeNeedsArchites, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 1,
-            "GeneR_NeutroamineBase".Translate(), ref settings.mergeBaseNeutroamine, ref bufMergeBaseNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineBaseHelp".Translate());
-        sub2.NGTextFieldNumericLabeled<int>(line, 3, 2,
-            "GeneR_NeutroamineComp".Translate(), ref settings.mergeComplexityNeutroamine, ref bufMergeComplexityNeutroamine, 0f, 150f, labelPart, fieldOffs, "GeneR_NeutroamineCompHelp".Translate());
-        sub2.Gap(); line = sub2.GetRectLine();
-        sub2.NGCheckboxLabeled(line, 3, 0,
-            "GeneR_GenepackConsume".Translate(), ref settings.consumeOnMerge, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
-        listingStandard.EndSection(sub2);
+        if (canRequireArchite)
+        {
+            subSection.Gap();
+            line = subSection.GetRectLine();
+            subSection.NGCheckboxLabeled(line, 3, 0,
+                "GeneR_ArchiteCapsulesSet".Translate(), ref consumesArchite, fieldOffs, "GeneR_ArchiteCapsulesSetHelp".Translate());
+        }
+
+        if (canConsumePacks)
+        {
+            subSection.Gap();
+            line = subSection.GetRectLine();
+            subSection.NGCheckboxLabeled(line, 3, 0,
+                "GeneR_GenepackConsume".Translate(), ref consumesPacks, fieldOffs, "GeneR_GenepackConsumeHelp".Translate());
+        }
+        parent.EndSection(subSection);
     }
 
     // TODO: Implement. Also add translations after.
-    public void ContentsArchiteSetting(Rect inRect, ref Listing_Custom listingStandard)
+    public void ContentsArchiteSetting(ref Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the costs
-        Rect line = new Rect(inRect.xMin, inRect.yMin, (inRect.xMax - inRect.xMin) / 2f, Text.LineHeight);
+        Rect line = new Rect(inRect.xMin, inRect.yMin, (inRect.width) / 2f, Text.LineHeight);
 
         // Else show all the settings.
-        Listing_Custom sub = listingStandard.CBeginSection(line, (line.yMax - line.yMin) * 1.1f);
+        Listing_Custom sub = listing.CBeginSection(line, (line.height) * layoutRowHeight);
 
         sub.NGTextFieldNumericLabeled<float>(line, 1, 0,
             "Archite Penalty Multiplier:", ref settings.architePen, ref bufArchitePen, 0f, 5f, labelPart, fieldOffs, "Multiples the penalty for Archite genes.");
         roundedFactor = (int)(100f * settings.architePen);
         settings.architePen = (float)roundedFactor * 0.01f;
 
-        listingStandard.EndSection(sub);
+        listing.EndSection(sub);
     }
 
     /// <summary>
@@ -362,50 +364,102 @@ public class GenepackImprovMod : Mod
     /// <param name="inRect">A Unity Rect with the size of the settings window.</param>
     public override void DoSettingsWindowContents(Rect inRect)
     {
+        DebugMessaging.DebugRect(inRect, nameof(inRect));
+
+        Rect outerRect = new Rect(inRect);
+        Rect settingsArea = new Rect(outerRect.xMin, outerRect.yMin, outerRect.width, outerRect.height - SETTINGS_RECT_OFFSET_FOR_BUTTONS);
+        Rect bottomButtons = new Rect(outerRect.xMin - 10f,
+            outerRect.yMax - (SETTINGS_RECT_HEIGHT_FOR_BUTTONS * 2),
+            outerRect.width - 20f, SETTINGS_RECT_HEIGHT_FOR_BUTTONS);
+
         // Create the generic listing, which we'll fill with our settings.
-        Listing_Custom listingStandard = new Listing_Custom();
-        listingStandard.Begin(inRect);
+        Listing_Custom listing = new Listing_Custom();
+        listing.Begin(outerRect);
 
         // TODO: Add Reset and Hard buttons to the top of the window
 
-        ContentsBuildingCost(inRect, ref listingStandard);
-        ContentsBuildingSettings(inRect, ref listingStandard);
-        // ContentsBuildingPower(inRect, ref listingStandard); TEMP: Not used.
+        DrawSettings_DefaultButtons(listing, bottomButtons);
+        DebugMessaging.DebugRect_Highlight(bottomButtons);
+        listing.End();
+
+        DrawSettings_Variables(settingsArea);
+
+        base.DoSettingsWindowContents(inRect);
+    }
+
+    private void DrawSettings_Variables(Rect settingsArea)
+    {
+        bool scrollBarVisible = _totalContentHeight > settingsArea.height;
+
+        DebugMessaging.DebugRect_ScrollVisible(settingsArea, nameof(settingsArea), scrollBarVisible);
+
+        Rect scrollViewTotal = new Rect(0f, 0f, settingsArea.width - (scrollBarVisible ? SCROLL_BAR_WIDTH_MARGIN : 0f), _totalContentHeight);
+        Widgets.BeginScrollView(settingsArea, ref _scrollPosition, scrollViewTotal);
+
+        Rect viewRect = new Rect(0f, 0f, scrollViewTotal.width, 9999f);
+
+        DebugMessaging.DebugRect_ScrollBar(viewRect, nameof(viewRect), scrollBarVisible, this._scrollPosition);
+
+        // Create the generic listing, which we'll fill with our settings.
+        Listing_Custom listing = new Listing_Custom();
+        listing.Begin(viewRect);
+
+        ContentsBuildingCost(listing, viewRect);
+        ContentsBuildingSettings(listing, viewRect);
+        // ContentsBuildingPower(listing, viewRect); TEMP: Not used.
 
         // Work modes.
-        //listingStandard.Label("Work Modes");
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
-        ContentsSeparting(inRect, ref listingStandard);
+        DrawGapBetweenSections(listing);
+        ContentsSeparating(listing, viewRect);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
-        ContentsDuplicate(inRect, ref listingStandard);
+        DrawGapBetweenSections(listing);
+        ContentsDuplicate(listing, viewRect);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap(); 
-        ContentsMerge(inRect, ref listingStandard);
+        DrawGapBetweenSections(listing);
+        ContentsMerge(listing, viewRect);
 
-        // Draw some buttons below the Rect.
-        Rect bottom = new Rect(inRect.xMin - 10f, inRect.yMax - 80f, inRect.xMax - inRect.xMin, 40f);
+        DrawGapBetweenSections(listing);
+        ContentsRecycle(listing, viewRect);
 
-        listingStandard.Gap(); listingStandard.Gap(); listingStandard.Gap();
-        // ContentsArchiteSetting(inRect, ref listingStandard);
+        // DrawGapBetweenSections(listing);
+        // ContentsArchiteSetting(listing, viewRect);
 
-        if (listingStandard.CButtonText(bottom, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
+        //let us dynamically size the area?
+        _totalContentHeight = listing.CurHeight;
+        listing.End();
+
+        Widgets.EndScrollView();
+
+        DebugMessaging.DebugRect_Highlight(settingsArea);
+    }
+
+    private void DrawSettings_DefaultButtons(Listing_Custom listing, Rect buttonArea)
+    {
+        DebugMessaging.DebugRect(buttonArea, nameof(buttonArea));
+
+        //did this "Default Settings" button just get pressed?
+        if (listing.CButtonText(buttonArea, 6, 4, "GeneR_SetDefault".Translate(), null, "GeneR_SetDefaultHelp".Translate()))
         {
             ResetToDefaults();
             Messages.Message("GeneR_SetDefaultMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
         }
-        if (listingStandard.CButtonText(bottom, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
+
+        //did this "Simple Settings" button just get pressed?
+        if (listing.CButtonText(buttonArea, 6, 5, "GeneR_SetSimple".Translate(), null, "GeneR_SetSimpleHelp".Translate()))
         {
             ResetToSimple();
             Messages.Message("GeneR_SetSimpleMes".Translate(), null, MessageTypeDefOf.TaskCompletion, historical: false);
         }
+    }
 
-        base.DoSettingsWindowContents(inRect);
-        listingStandard.End();
+    public void DrawGapBetweenSections(Listing_Custom listing)
+    {
+        listing.Gap(20f);
     }
 
     // Clear buffers.
-    public void ClearBuffers() {
+    public void ClearBuffers()
+    {
         // Reset Buffers.
         bufSteel = settings.costSteel.ToString();
         bufPlast = settings.costPlast.ToString();
@@ -431,11 +485,15 @@ public class GenepackImprovMod : Mod
         bufMergeBaseNeutroamine = settings.mergeBaseNeutroamine.ToString();
         bufMergeComplexityNeutroamine = settings.mergeComplexityNeutroamine.ToString();
 
+        bufRecycleBaseNeutroamine = settings.recycleBaseNeutroamine.ToString();
+        bufRecycleComplexityNeutroamine = settings.recycleComplexityNeutroamine.ToString();
+
         bufArchitePen = settings.architePen.ToString();
     }
 
     // Defaults reset.
-    public void ResetToDefaults() {
+    public void ResetToDefaults()
+    {
         settings.hp = 600;
         settings.buildWork = 24000;
         settings.movable = false;
@@ -482,11 +540,20 @@ public class GenepackImprovMod : Mod
         settings.mergeComplexityNeutroamine = 3;
         settings.mergeNeedsArchites = true;
 
+        // Recycle settings
+        settings.recycle = CurveType.Exponetial;
+        settings.recycleEnabled = true;
+        settings.consumeOnRecycle = true;
+        settings.workToRecycle = 3.0f;
+        // Recycle materials cost.
+        settings.recycleBaseNeutroamine = 12;
+        settings.recycleComplexityNeutroamine = 6;
+
         settings.architePen = 1f;
 
-    // TODO:
-    // Worker settings
-    settings.skillImportance = 1f;   // Multiplier on the skill's benefit/harm to work speed.
+        // TODO:
+        // Worker settings
+        settings.skillImportance = 1f;   // Multiplier on the skill's benefit/harm to work speed.
         settings.skillGain = 1f;   // Multiplier on the skill gain from creating genepacks.
 
         // Reset Buffers
@@ -508,6 +575,12 @@ public class GenepackImprovMod : Mod
 
         // Merge settings
         settings.mergeEnabled = false;
+
+        // Separate settings
+        settings.separateEnabled = false;
+
+        // Recycle settings
+        settings.recycleEnabled = false;
 
         // Reset Buffers
         ClearBuffers();
@@ -537,9 +610,9 @@ public class GenepackImprovMod : Mod
 public class GenepackReprocessor_OnDefsLoaded
 {
     // Settings for mod
-    private static GenepackReprocessorSettings? _settings;
-    public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
+    private static GenepackReprocessorSettings _settings;
 
+    public static GenepackReprocessorSettings Settings => _settings ??= LoadedModManager.GetMod<GenepackImprovMod>().GetSettings<GenepackReprocessorSettings>();
 
     static GenepackReprocessor_OnDefsLoaded()
     {
@@ -585,7 +658,6 @@ public class GenepackReprocessor_OnDefsLoaded
 
     public static void ApplySettingsToDefs()
     {
-
         // ThingDef that we might want to change, best to took them up once.
         // It might be worth taking a note of what defs got changed, then only look them up if there's
         // a performance hit.
@@ -616,7 +688,7 @@ public class GenepackReprocessor_OnDefsLoaded
                 // Add the help message about getting advanced components
                 ResearchProjectDef process = DefDatabase<ResearchProjectDef>.GetNamed("GeneProcessor");
                 process.discoveredLetterTitle = "GeneR_ResearchMes".Translate();
-                process.discoveredLetterText  = "GeneR_ResearchMesDes".Translate();
+                process.discoveredLetterText = "GeneR_ResearchMesDes".Translate();
             }
             // Update Stats.
             reprocessor.statBases.Clear();
@@ -655,7 +727,7 @@ public class GenepackReprocessor_OnDefsLoaded
         GeneSeparator_DefOfs.GenepackCreationSpeed.skillNeedFactors.Clear();
         GeneSeparator_DefOfs.GenepackCreationSpeed.skillNeedFactors.Add(new SkillNeed_BaseBonus() { skill = DefDatabase<SkillDef>.GetNamed("Intellectual"),
             baseValue = ,
-            bonusPerLevel = 
+            bonusPerLevel =
         });*/
 
 
@@ -672,9 +744,9 @@ public class GenepackReprocessor_OnDefsLoaded
         }
         if (flag)
         {
-            // CompProperties = 
+            // CompProperties =
             CompPowerTrader tempIn = new CompPowerTrader();
-            tempIn 
+            tempIn
 
             CompProperties_Power tempC = new CompProperties_Power();
             tempC.compClass = tempIn;

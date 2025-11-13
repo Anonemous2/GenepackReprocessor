@@ -67,6 +67,16 @@ public class GenepackReprocessorSettings : ModSettings
     public int  mergeComplexityNeutroamine      = 3;
     public bool mergeNeedsArchites              = true;
 
+    //Recycle settings
+    public CurveType recycle = CurveType.Exponetial;
+    public bool recycleEnabled      = true;
+    public bool consumeOnRecycle    = true;
+    public float workToRecycle      = 3.0f;
+    // materials cost
+    public int recycleBaseNeutroamine = 12;
+    public int recycleComplexityNeutroamine = 6;
+
+
     // Archite penalty
     public float architePen = 1;
 
@@ -79,7 +89,6 @@ public class GenepackReprocessorSettings : ModSettings
     /// </summary>
     public override void ExposeData()
     {
-
         // General settings.
         // Construction.
         Scribe_Values.Look(ref hp,          "hp",           600);
@@ -109,24 +118,33 @@ public class GenepackReprocessorSettings : ModSettings
         Scribe_Values.Look(ref separateNeedsArchites,           "separateNeedsArchites",            false);
 
         // Duplicate settings
-        Scribe_Values.Look(ref dupli,           "dupli",            CurveType.Linear);
-        Scribe_Values.Look(ref duplicateEnabled,"duplicateEnabled", true);
-        Scribe_Values.Look(ref workToDupli,     "workToDupli",      1.0f);
+        Scribe_Values.Look(ref dupli,               "dupli",            CurveType.Linear);
+        Scribe_Values.Look(ref duplicateEnabled,    "duplicateEnabled", true);
+        Scribe_Values.Look(ref workToDupli,         "workToDupli",      1.0f);
         // Duplicate materials cost.
         Scribe_Values.Look(ref duplicateBaseNeutroamine,        "duplicateBaseNeutroamine",         8);
         Scribe_Values.Look(ref duplicateComplexityNeutroamine,  "duplicateComplexityNeutroamine",   4);
         Scribe_Values.Look(ref duplicateNeedsArchites,          "duplicateNeedsArchites",           true);
 
         // Merge settings
-        Scribe_Values.Look(ref merge,           "merge",            CurveType.Log);
-        Scribe_Values.Look(ref mergeEnabled,    "mergeEnabled",     true);
-        Scribe_Values.Look(ref consumeOnMerge,  "consumeOnMerge",   false);
-        Scribe_Values.Look(ref workToMerge,     "workToMerge",      1.0f);
-        Scribe_Values.Look(ref genepackMergeMax,"genepackMergeMax", 9);
+        Scribe_Values.Look(ref merge,               "merge",            CurveType.Log);
+        Scribe_Values.Look(ref mergeEnabled,        "mergeEnabled",     true);
+        Scribe_Values.Look(ref consumeOnMerge,      "consumeOnMerge",   false);
+        Scribe_Values.Look(ref workToMerge,         "workToMerge",      1.0f);
+        Scribe_Values.Look(ref genepackMergeMax,    "genepackMergeMax", 9);
         // Merge materials cost.
         Scribe_Values.Look(ref mergeBaseNeutroamine,        "mergeBaseNeutroamine",         6);
         Scribe_Values.Look(ref mergeComplexityNeutroamine,  "mergeComplexityNeutroamine",   3);
         Scribe_Values.Look(ref mergeNeedsArchites,          "mergeNeedsArchites",           true);
+
+        // Recycle settings
+        Scribe_Values.Look(ref recycle, "recycle", CurveType.Exponetial);
+        Scribe_Values.Look(ref recycleEnabled, "recycleEnabled", true);
+        Scribe_Values.Look(ref consumeOnRecycle, "consumeOnRecycle", true);
+        Scribe_Values.Look(ref workToRecycle, "workToRecycle", 3.0f);
+        // Recycle materials cost.
+        Scribe_Values.Look(ref recycleBaseNeutroamine, "recycleBaseNeutroamine", 6);
+        Scribe_Values.Look(ref recycleComplexityNeutroamine, "recycleComplexityNeutroamine", 3);
 
         // Archite Penalty
         Scribe_Values.Look(ref architePen, "architePen", 1f);

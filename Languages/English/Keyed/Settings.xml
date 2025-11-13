@@ -55,6 +55,10 @@
 	<GeneR_CanMerge>Merge Task Enabled</GeneR_CanMerge>
 	<GeneR_CanMergeHelp>Can the Genepack Reprocessor merge genes?</GeneR_CanMergeHelp>
 	<GeneR_MergeMultiplierHelp>The multiplier for how long merging takes.</GeneR_MergeMultiplierHelp>
+	<!-- Recycle Settings -->
+	<GeneR_CanRecycle>Extract Archite Task Enabled</GeneR_CanRecycle>
+	<GeneR_CanRecycleHelp>Can the Genepack Reprocessor extract archite from archite genepacks?</GeneR_CanRecycleHelp>
+	<GeneR_RecycleMultiplierHelp>The multiplier for how long archite extraction takes.</GeneR_RecycleMultiplierHelp>
 	<!-- Settings Set -->
 	<GeneR_SetsSaved>Building settings require restarting to update. Job settings applied for next job.</GeneR_SetsSaved>
 	<GeneR_SetDefault>Default Settings</GeneR_SetDefault>
@@ -66,5 +70,5 @@
 	<!-- Research Message -->
 	<GeneR_ResearchMes>About: Getting advanced components</GeneR_ResearchMes>
 	<GeneR_ResearchMesDes>You now have the technology to build a genepack reprocessor - but it also requires advanced components. You can collect advanced components several ways:\n\n  -All outlander settlements sell advanced components. Send a caravan to buy some.\n  -Some visiting traders sell advanced components. Invite or wait for them.\n  -Some quests are rewarded with advanced components.</GeneR_ResearchMesDes>
-	
+
 </LanguageData>
