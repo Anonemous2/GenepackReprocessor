@@ -25,19 +25,19 @@ public class Dialog_DuplicateGenepack : DialogBase_GenepackReprocessor
     protected override bool CanAccept()
     {
         List<GeneDef> selectedGenes = SelectedGenes;
-        foreach (GeneDef selectedGene in SelectedGenes)
+        if (!selectedGenepacks.Any())
         {
-            if (selectedGene.prerequisite != null && !selectedGenes.Contains(selectedGene.prerequisite))
-            {
-                Messages.Message("MessageGeneMissingPrerequisite".Translate(selectedGene.label).CapitalizeFirst() + ": " + selectedGene.prerequisite.LabelCap, null, MessageTypeDefOf.RejectInput, historical: false);
-                return false;
-            }
-            if (!selectedGenepacks.Any())
-            {
-                Messages.Message("MessageNoSelectedGenepack".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);
-                return false;
-            }
+            Messages.Message("GeneR_MessageNoSelectedGenepack".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);
+            return false;
         }
+        // foreach (GeneDef selectedGene in SelectedGenes)
+        // {
+        // if (selectedGene.prerequisite != null && !selectedGenes.Contains(selectedGene.prerequisite))
+        // {
+        // Messages.Message("MessageGeneMissingPrerequisite".Translate(selectedGene.label).CapitalizeFirst() + ": " + selectedGene.prerequisite.LabelCap, null, MessageTypeDefOf.RejectInput, historical: false);
+        // return false;
+        // }
+        // }
         return true;
     }
 

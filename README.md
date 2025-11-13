@@ -11,6 +11,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.13] - 2025-11-13
+### Features
+- Added new reprocessor ability 'Recycle archite genepacks' (Commited by BardezAnAvatar)
+### Fixes
+- Fixed allowing 'Can accept' on jobs with no genepacks selected.
+
 ## [1.0.12] - 2025-07-31
 ### Features
 - "Gene Banks Expanded" patch updated to reflect new mod name. https://steamcommunity.com/sharedfiles/filedetails/?id=3138968978

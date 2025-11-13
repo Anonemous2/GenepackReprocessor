@@ -43,6 +43,7 @@
 	<GeneR_GenepackDuration>Reprocessing duration</GeneR_GenepackDuration>
 	<GeneR_GenepackDurationDesc>Time need to create new genepacks.</GeneR_GenepackDurationDesc>
 
+	<GeneR_MessageNoSelectedGenepack>Must select a genepack to reprocess.</GeneR_MessageNoSelectedGenepack>
 	<GeneR_MessageSelectMoreGenepacks>Must select two or more genepacks to merge.</GeneR_MessageSelectMoreGenepacks>
 	<GeneR_MessageTooFewGenes>Must select a genepack with at least 2 genes to separate.</GeneR_MessageTooFewGenes>
 	<GeneR_MessageTooManyGenes>Can not create a merged genepack, total genes must be less than {0}.</GeneR_MessageTooManyGenes>

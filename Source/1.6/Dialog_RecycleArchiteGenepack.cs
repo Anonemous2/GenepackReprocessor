@@ -24,13 +24,13 @@ public class Dialog_RecycleArchiteGenepack : DialogBase_GenepackReprocessor
     protected override bool CanAccept()
     {
         List<GeneDef> selectedGenes = SelectedGenes;
+        if (!selectedGenepacks.Any())
+        {
+            Messages.Message("GeneR_MessageNoSelectedGenepack".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);
+            return false;
+        }
         foreach (GeneDef selectedGene in SelectedGenes)
         {
-            if (!selectedGenepacks.Any())
-            {
-                Messages.Message("MessageNoSelectedGenepack".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);
-                return false;
-            }
             if (selectedGenepacks.Sum(gene => gene.GeneSet.ArchitesTotal) < 1)
             {
                 Messages.Message("GeneR_MessageNoArchiteGenes".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);

@@ -577,7 +577,7 @@ public class GenepackImprovMod : Mod
         settings.mergeEnabled = false;
 
         // Separate settings
-        settings.separateEnabled = false;
+        settings.separateEnabled = true;
 
         // Recycle settings
         settings.recycleEnabled = false;
