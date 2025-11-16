@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.13] - 2025-11-13
 ### Features
-- Added new reprocessor ability 'Recycle archite genepacks' (Commited by BardezAnAvatar)
+- (Rimworld 1.6) Added new reprocessor ability 'Recycle archite genepacks' (Commited by BardezAnAvatar)
 ### Fixes
 - Fixed allowing 'Can accept' on jobs with no genepacks selected.
 
