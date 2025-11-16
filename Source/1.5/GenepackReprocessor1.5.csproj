@@ -26,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Assemblies\</OutputPath>
+    <OutputPath>..\..\1.5\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -57,18 +57,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\..\..\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="0MultiplayerAPI">
-      <HintPath>..\..\..\..\..\..\workshop\content\294100\2606448745\1.5\Assemblies\0MultiplayerAPI.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
@@ -76,36 +64,17 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="Unity.Collections">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Unity.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Unity.TextMeshPro.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextCoreFontEngineModule">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextCoreTextEngineModule">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextCoreTextEngineModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref">
+      <Version>1.5.4409</Version>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony">
+      <Version>2.4.2</Version>
+    </PackageReference>
+    <PackageReference Include="RimWorld.MultiplayerAPI">
+      <Version>0.6.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

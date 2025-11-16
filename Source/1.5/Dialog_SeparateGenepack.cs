@@ -93,6 +93,11 @@ public class Dialog_SeparateGenepack : GeneCreationDialogBase
     protected override bool CanAccept()
     {
         List<GeneDef> selectedGenes = SelectedGenes;
+        if (!selectedGenepacks.Any())
+        {
+            Messages.Message("GeneR_MessageNoSelectedGenepack".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);
+            return false;
+        }
         foreach (GeneDef selectedGene in SelectedGenes)
         {
             // if (selectedGene.prerequisite != null && !selectedGenes.Contains(selectedGene.prerequisite))
@@ -100,11 +105,6 @@ public class Dialog_SeparateGenepack : GeneCreationDialogBase
             //    Messages.Message("MessageGeneMissingPrerequisite".Translate(selectedGene.label).CapitalizeFirst() + ": " + selectedGene.prerequisite.LabelCap, null, MessageTypeDefOf.RejectInput, historical: false);
             //    return false;
             // }
-            if (!selectedGenepacks.Any())
-            {
-                Messages.Message("MessageNoSelectedGenepack".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);
-                return false;
-            }
             if (selectedGenes.Count < 2)
             {
                 Messages.Message("GeneR_MessageTooFewGenes".Translate(), null, MessageTypeDefOf.RejectInput, historical: false);
