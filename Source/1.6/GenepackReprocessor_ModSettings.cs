@@ -35,6 +35,9 @@ public class GenepackReprocessorSettings : ModSettings
     public int powerIdle = 25;
     public int powerUsin = 200;
 
+    // Genebank settings.
+    public float genebankMaxDistance = 12.9f;
+
     // Separate settings.
     public CurveType split = CurveType.Exponetial; // Work needed for x complexity.
     public bool separateEnabled     = true; // Is this work mode usable ingame?
@@ -106,6 +109,9 @@ public class GenepackReprocessorSettings : ModSettings
         // Power drain.
         Scribe_Values.Look(ref powerIdle, "powerIdle", 25);
         Scribe_Values.Look(ref powerUsin, "powerUsin", 200);
+
+        // Genebank settings.
+        Scribe_Values.Look(ref genebankMaxDistance, "genebankMaxDistance", 12.9f);
 
         // Separate settings.
         Scribe_Values.Look(ref split,           "split",            CurveType.Exponetial);

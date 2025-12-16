@@ -70,5 +70,8 @@
 	<!-- Research Message -->
 	<GeneR_ResearchMes>About: Getting advanced components</GeneR_ResearchMes>
 	<GeneR_ResearchMesDes>You now have the technology to build a genepack reprocessor - but it also requires advanced components. You can collect advanced components several ways:\n\n  -All outlander settlements sell advanced components. Send a caravan to buy some.\n  -Some visiting traders sell advanced components. Invite or wait for them.\n  -Some quests are rewarded with advanced components.</GeneR_ResearchMesDes>
+	<!-- Genebank Link Settings -->
+	<GeneR_GenebankMaxRange>Max Genebank Distance: </GeneR_GenebankMaxRange>
+	<GeneR_GenebankMaxRangeHelp>The maximum distance in map cells a genebank can link to other buildings.</GeneR_GenebankMaxRangeHelp>
 
 </LanguageData>

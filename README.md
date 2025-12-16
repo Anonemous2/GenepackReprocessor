@@ -11,6 +11,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.14] - 2025-12-16
+### Features
+- (Rimworld 1.6) Added Genebank max link range setting.
+
 ## [1.0.13] - 2025-11-13
 ### Features
 - (Rimworld 1.6) Added new reprocessor ability 'Recycle archite genepacks' (Commited by BardezAnAvatar)

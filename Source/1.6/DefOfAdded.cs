@@ -15,6 +15,7 @@ public static class GeneSeparator_DefOfs
 {
 
     public static WorkGiverDef  SeparateGenepack;
+    public static ThingDef      GeneBank;
     public static ThingDef      GeneSeparator;
     public static ThingDef      Neutroamine;
     public static StatDef       GenepackCreationSpeed;

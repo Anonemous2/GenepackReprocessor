@@ -151,7 +151,7 @@ public class GenepackImprovMod : Mod
     public void ContentsBuildingSettings(Listing_Custom listing, Rect inRect)
     {
         // Create a subsection for the stats.
-        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2, width: inRect.width);
+        Listing_Custom sub = listing.BeginSection(Text.LineHeight * layoutRowsTextBoxes2 * 1.7f, width: inRect.width);
 
         Rect line = sub.GetRectLine();
         sub.NGTextFieldNumericLabeled<int>(line, 3, 0,
@@ -168,6 +168,12 @@ public class GenepackImprovMod : Mod
         sub.NGTextFieldNumericLabeled<int>(line, 3, 1,
             "GeneR_BuildSkill".Translate(), ref settings.skillNeeded, ref bufSkillNeeded, 0f, 20f, labelPart, fieldOffs, "GeneR_BuildSkillHelp".Translate());
         sub.NGCheckboxLabeled(line, 3, 2, "GeneR_Minify".Translate(), ref settings.movable, fieldOffs, "GeneR_MinifyHelp".Translate()); // TODO: Translate.
+        sub.Gap();
+
+        // Genebank Settings
+        var sliderLabel = "GeneR_GenebankMaxRange".Translate() + settings.genebankMaxDistance.ToString("0.0");
+        roundedFactor = (int)(10f * sub.SliderLabeled(sliderLabel, settings.genebankMaxDistance, 12.9f, 100f, 0.25f, "GeneR_GenebankMaxRangeHelp".Translate()));
+        settings.genebankMaxDistance = (float)roundedFactor * 0.1f;
 
         listing.EndSection(sub);
     }
@@ -510,6 +516,9 @@ public class GenepackImprovMod : Mod
         settings.powerIdle = 25;
         settings.powerUsin = 200;
 
+        // Genebank settings.
+        settings.genebankMaxDistance = 12.9f;
+
         // Separate settings.
         settings.split = CurveType.Exponetial; // Work needed for x complexity.
         settings.separateEnabled = true; // Is this work mode usable ingame?
@@ -720,6 +729,14 @@ public class GenepackReprocessor_OnDefsLoaded
                 reprocessor.minifiedDef = null;
                 reprocessor.thingCategories.Clear();
             }
+        }
+
+        // Genebank max range.
+        try {
+            GeneSeparator_DefOfs.GeneBank.GetCompProperties<CompProperties_Facility>().maxDistance = Settings.genebankMaxDistance;
+        }
+        catch { 
+            // Do nothing :)
         }
 
         /* TEMP: Code that doesn't work yet. Don't worry about it.
