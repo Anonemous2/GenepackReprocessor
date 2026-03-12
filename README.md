@@ -3,13 +3,20 @@
 ## TODO 
 - Multiplayer compatablity Settings Sync
 - 1.4 Support (Maybe)
+- 1.5 Recycle archite support (Maybe)
 - Enhance mod settings (More features, better UI layout.)
 - Settings for archite penalty.
 - Change working on archite genes to need archite tech.
-- Add custom link range settings.
+- Add custom link range settings, for modded banks?
 
 # Changelog
 All notable changes to this project will be documented in this file.
+
+## [1.0.15] - 2025-03-12
+### Changes
+- Added Biotech as a mod dependency, forced loading after it.
+### Compatibility
+- "Obsidia Expansion" patch added. https://steamcommunity.com/sharedfiles/filedetails/?id=2519492373
 
 ## [1.0.14] - 2025-12-16
 ### Features

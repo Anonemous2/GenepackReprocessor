@@ -11,4 +11,13 @@
   \nYou can finally isolate archite genes, or specific genes out of larger packs.
   \nCheck out the mod settings if you feel the genepack reprocessor is too strong/weak, or just want to simplify its functionality.
   </description>
+	<modDependencies>
+		<li>
+			<packageId>Ludeon.RimWorld.Biotech</packageId>
+			<displayName>Biotech</displayName>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>Ludeon.Rimworld.Biotech</li>
+	</loadAfter>
 </ModMetaData>
